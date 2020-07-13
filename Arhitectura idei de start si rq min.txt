@@ -135,6 +135,5 @@ Profesor:
 	- Nu poate citi posturile adresate parintilor.
 	- Poate scrie un post si trimite catre validare catre admin.
 	- Chat cu parintii 30 zile istoric.
-	
 Posibil front template:
 https://www.creative-tim.com/product/paper-dashboard-2-pro
