@@ -14,7 +14,7 @@ Arhitectura de baza va fi compusa din:
 -> S3 Glacier backup saptamanal la toate datele.
 -> IAM role drepturi
 -> VPC container pentru backend + DB
--> API gateway
+-> API gateway + OpenAPI
 -> CloudFrond CDN (S3 public data)
 -> CloudWatch loguri
 -> SqS - trimitere email/notificare mobil 
