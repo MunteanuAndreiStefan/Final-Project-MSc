@@ -127,31 +127,6 @@
                 ]
             }
         },
-        "SMBucket": {
-            "Type": "AWS::S3::Bucket",
-            "Properties": {
-                "BucketName": "social-media-bucket"
-            }
-        },
-        "SMDatabase": {
-            "Type": "AWS::RDS::DBInstance",
-            "Properties": {
-                "DBSecurityGroups": [
-                    {
-                        "Ref": "MyDbSecurityByEC2SecurityGroup"
-                    },
-                    {
-                        "Ref": "MyDbSecurityByCIDRIPGroup"
-                    }
-                ],
-                "AllocatedStorage": "10",
-                "DBInstanceClass": "db.t2.micro",
-                "Engine": "PostgreSQL",
-                "MasterUsername": "munteanu",
-                "MasterUserPassword": "munteanu"
-            },
-            "DeletionPolicy": "Snapshot"
-        },
         "SMLambda": {
             "Type": "AWS::Lambda::Function",
             "DependsOn": [
@@ -300,14 +275,6 @@
                             }
                         }
                     },
-                    "securityDefinitions": {
-                        "sigv4": {
-                            "type": "apiKey",
-                            "name": "Authorization",
-                            "in": "header",
-                            "x-amazon-apigateway-authtype": "awsSigv4"
-                        }
-                    },
                     "definitions": {
                         "Empty": {
                             "type": "object",
@@ -360,7 +327,7 @@
                 "RestApiId": {
                     "Ref": "SMRestApi"
                 },
-                "StageName": "dummy"
+                "StageName": "SMDeploy"
             }
         }
     }

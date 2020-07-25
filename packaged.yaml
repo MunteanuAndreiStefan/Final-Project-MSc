@@ -1,0 +1,78 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  SocialMediaBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicReadWrite
+      BucketName: social-media-bucket
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+    DeletionPolicy: Retain
+  SocialMediaBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      PolicyDocument:
+        Id: SocialMediaPolicyOne
+        Version: 2012-10-17
+        Statement:
+        - Sid: PublicReadForGetBucketObjects
+          Effect: Allow
+          Principal: '*'
+          Action: s3:PutObject
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:s3:::'
+              - Ref: SocialMediaBucket
+              - /*
+      Bucket:
+        Ref: SocialMediaBucket
+  SocialMediaAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      Auth:
+        DefaultAuthorizer: SocialMediaTokenAuthorizer
+        Authorizers:
+          SocialMediaTokenAuthorizer:
+            FunctionArn:
+              Fn::GetAtt:
+              - SocialMediaAuthFunction
+              - Arn
+  SocialMediaCoreFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: handler.core
+      Runtime: nodejs10.x
+      CodeUri: s3://cf-templates-1j38krxlf5m0l-eu-west-1/e81ff539e18568950c4775089e71f043
+      Events:
+        HelloAPI:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: SocialMediaAPI
+            Path: /core
+            Method: GET
+  SocialMediaAuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://cf-templates-1j38krxlf5m0l-eu-west-1/f14edd9e52295d0217b22b75136fb78f
+      Handler: handler.authorizer
+      Runtime: nodejs10.x
+Outputs:
+  Region:
+    Description: Region
+    Value:
+      Ref: AWS::Region
+  ApiId:
+    Description: API ID
+    Value:
+      Ref: SocialMediaAPI
+  ApiUrl:
+    Description: API endpoint URL for Prod environment
+    Value:
+      Fn::Sub: https://${SocialMediaAPI}.execute-api.${AWS::Region}.amazonaws.com/dev/

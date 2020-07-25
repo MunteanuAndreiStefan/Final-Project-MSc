@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+
+Resources:
+  SocialMediaAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      Auth:
+        DefaultAuthorizer: SocialMediaTokenAuthorizer
+        Authorizers:
+          SocialMediaTokenAuthorizer:
+            FunctionArn: !GetAtt SocialMediaAuthFunction.Arn
+    
+  SocialMediaCoreFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handler.core
+      Runtime: nodejs10.x
+      CodeUri: ./core
+      Events:
+        HelloAPI:
+          Type: Api
+          Properties:
+            RestApiId: !Ref SocialMediaAPI
+            Path: /core
+            Method: GET
+  
+  SocialMediaAuthFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      CodeUri: ./authorizer
+      Handler: handler.authorizer
+      Runtime: nodejs10.x
+  
+Outputs:
+  Region:
+    Description: "Region"
+    Value: !Ref AWS::Region
+
+  ApiId:
+    Description: "API ID"
+    Value: !Ref SocialMediaAPI
+
+  ApiUrl:
+    Description: "API endpoint URL for Prod environment"
+    Value: !Sub 'https://${SocialMediaAPI}.execute-api.${AWS::Region}.amazonaws.com/dev/'
