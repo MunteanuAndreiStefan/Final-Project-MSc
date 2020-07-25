@@ -1,68 +1,81 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Resources:
-  SocialMediaBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      AccessControl: PublicReadWrite
-      BucketName: social-media-bucket
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: false
-        BlockPublicPolicy: false
-        IgnorePublicAcls: false
-        RestrictPublicBuckets: false
-    DeletionPolicy: Retain
-  SocialMediaBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      PolicyDocument:
-        Id: SocialMediaPolicyOne
-        Version: 2012-10-17
-        Statement:
-        - Sid: PublicReadForGetBucketObjects
-          Effect: Allow
-          Principal: '*'
-          Action: s3:PutObject
-          Resource:
-            Fn::Join:
-            - ''
-            - - 'arn:aws:s3:::'
-              - Ref: SocialMediaBucket
-              - /*
-      Bucket:
-        Ref: SocialMediaBucket
-  SocialMediaAPI:
+  MyApi:
     Type: AWS::Serverless::Api
     Properties:
       StageName: dev
+      Cors:
+        AllowMethods: '''*'''
+        AllowHeaders: '''*'''
+        AllowOrigin: '''*'''
       Auth:
-        DefaultAuthorizer: SocialMediaTokenAuthorizer
+        DefaultAuthorizer: MyCognitoUserPoolAuthorizer
+        AddDefaultAuthorizerToCorsPreflight: false
         Authorizers:
-          SocialMediaTokenAuthorizer:
-            FunctionArn:
+          MyCognitoUserPoolAuthorizer:
+            UserPoolArn:
               Fn::GetAtt:
-              - SocialMediaAuthFunction
+              - MyCognitoUserPool
               - Arn
-  SocialMediaCoreFunction:
+  HelloFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: handler.core
+      Handler: handler.hello
       Runtime: nodejs10.x
-      CodeUri: s3://cf-templates-1j38krxlf5m0l-eu-west-1/e81ff539e18568950c4775089e71f043
+      CodeUri: s3://cf-templates-1j38krxlf5m0l-eu-west-1/cf7234702897ec8ba0aba96a44fa1489
       Events:
         HelloAPI:
           Type: Api
           Properties:
             RestApiId:
-              Ref: SocialMediaAPI
-            Path: /core
+              Ref: MyApi
+            Path: /hello
             Method: GET
-  SocialMediaAuthFunction:
+  MyCognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: sam_api_gateway_cup_auth_cognito_user_pool
+      LambdaConfig:
+        PreSignUp:
+          Fn::GetAtt:
+          - PreSignupLambdaFunction
+          - Arn
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+      UsernameAttributes:
+      - email
+      Schema:
+      - AttributeDataType: String
+        Name: email
+        Required: false
+  CognitoUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: sam_api_gateway_cup_auth_cognito_client
+      UserPoolId:
+        Ref: MyCognitoUserPool
+  PreSignupLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://cf-templates-1j38krxlf5m0l-eu-west-1/f14edd9e52295d0217b22b75136fb78f
-      Handler: handler.authorizer
+      InlineCode: "exports.handler = async (event, context, callback) => {\n  event.response\
+        \ = { autoConfirmUser: true }\n  return event\n}\n"
+      Handler: index.handler
+      MemorySize: 128
       Runtime: nodejs10.x
+      Timeout: 3
+  LambdaCognitoUserPoolExecutionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+        - PreSignupLambdaFunction
+        - Arn
+      Principal: cognito-idp.amazonaws.com
+      SourceArn:
+        Fn::Sub: arn:${AWS::Partition}:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${MyCognitoUserPool}
 Outputs:
   Region:
     Description: Region
@@ -71,8 +84,16 @@ Outputs:
   ApiId:
     Description: API ID
     Value:
-      Ref: SocialMediaAPI
+      Ref: MyApi
   ApiUrl:
     Description: API endpoint URL for Prod environment
     Value:
-      Fn::Sub: https://${SocialMediaAPI}.execute-api.${AWS::Region}.amazonaws.com/dev/
+      Fn::Sub: https://${MyApi}.execute-api.${AWS::Region}.amazonaws.com/dev/
+  CognitoUserPoolId:
+    Description: Cognito User Pool Id
+    Value:
+      Ref: MyCognitoUserPool
+  CognitoUserPoolClientId:
+    Description: Cognito User Pool Client Id
+    Value:
+      Ref: CognitoUserPoolClient
