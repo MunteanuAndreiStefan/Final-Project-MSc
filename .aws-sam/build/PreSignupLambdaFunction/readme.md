@@ -1,10 +1,10 @@
 # Social Media Builder App
 
-SHORT RESUME Foobar is a library for dealing with word pluralization.
+Social Media Builder short description
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+From the root folder run the following command:
 
 ```
 npm run deploy
@@ -12,18 +12,7 @@ npm run deploy
 
 ## Usage
 
-```python
-import foobar
-
-foobar.pluralize('word') # returns 'words'
-foobar.pluralize('goose') # returns 'geese'
-foobar.singularize('phenomena') # returns 'phenomenon'
+From the webapp folder run the following command:
 ```
-
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
-
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
+npm start
+```

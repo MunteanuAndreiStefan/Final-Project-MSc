@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PageHeader, ListGroup } from 'react-bootstrap';
+import { ListGroup } from 'react-bootstrap';
 import { API, Auth } from 'aws-amplify';
 import './Home.css';
 
@@ -62,7 +62,7 @@ export default class Home extends Component {
 	renderTest() {
 		return (
 			<div className="test">
-				<PageHeader>Test API call</PageHeader>
+				{/*<PageHeader>Test API call</PageHeader>*/}
 				<ListGroup>{!this.state.isLoading && this.renderTestAPI(this.state.testApiCall)}</ListGroup>
 			</div>
 		);

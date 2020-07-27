@@ -2,8 +2,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 
 Resources:
-
-  MyApi:
+  SocialMediaAPI:
     Type: AWS::Serverless::Api
     Properties:
       StageName: dev
@@ -12,14 +11,14 @@ Resources:
         AllowHeaders: "'*'"
         AllowOrigin: "'*'"
       Auth:
-        DefaultAuthorizer: MyCognitoUserPoolAuthorizer
+        DefaultAuthorizer: SocialMediaCognitoUserPoolAuthorizer
         AddDefaultAuthorizerToCorsPreflight: False
         Authorizers:
-          MyCognitoUserPoolAuthorizer:
-            UserPoolArn: !GetAtt MyCognitoUserPool.Arn
+          SocialMediaCognitoUserPoolAuthorizer:
+            UserPoolArn: !GetAtt SocialMediaCognitoUserPool.Arn
 
-  HelloFunction:
-    Type: 'AWS::Serverless::Function'
+  SocialMediaCore:
+    Type: AWS::Serverless::Function
     Properties:
       Handler: handler.hello
       Runtime: nodejs10.x
@@ -28,11 +27,11 @@ Resources:
         HelloAPI:
           Type: Api
           Properties:
-            RestApiId: !Ref MyApi
+            RestApiId: !Ref SocialMediaAPI
             Path: /hello
             Method: GET
 
-  MyCognitoUserPool:
+  SocialMediaCognitoUserPool:
     Type: AWS::Cognito::UserPool
     Properties:
       UserPoolName: sam_api_gateway_cup_auth_cognito_user_pool
@@ -48,11 +47,30 @@ Resources:
           Name: email
           Required: false
 
+  SocialMediaCognitoUserDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      Domain: !Ref SocialMediaAPI
+      UserPoolId: !Ref SocialMediaCognitoUserPool
+
   CognitoUserPoolClient:
     Type: AWS::Cognito::UserPoolClient
     Properties:
       ClientName: sam_api_gateway_cup_auth_cognito_client
-      UserPoolId: !Ref MyCognitoUserPool
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthFlows:
+        - 'code'
+        - 'implicit'
+      AllowedOAuthScopes:
+        - 'email'
+        - 'openid'
+      CallbackURLs:
+        - 'http://localhost:3000/'
+      LogoutURLs:
+        - 'http://localhost:3000/'
+      SupportedIdentityProviders:
+        - 'COGNITO'
+      UserPoolId: !Ref SocialMediaCognitoUserPool
 
   PreSignupLambdaFunction:
     Type: AWS::Serverless::Function
@@ -73,7 +91,29 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !GetAtt PreSignupLambdaFunction.Arn
       Principal: cognito-idp.amazonaws.com
-      SourceArn: !Sub 'arn:${AWS::Partition}:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${MyCognitoUserPool}'
+      SourceArn: !Sub 'arn:${AWS::Partition}:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${SocialMediaCognitoUserPool}'
+
+  DbSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: 'EC2SecurityGroupPolicy'
+      SecurityGroupIngress:
+        - IpProtocol: '-1'
+          CidrIp: '0.0.0.0/0'
+
+  SocialMediaMasterDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: '20'
+      DBInstanceClass: 'db.t2.micro'
+      DBInstanceIdentifier: 'socialmediadb'
+      DBName: 'SocialMediaMasterDB'
+      Engine: postgres
+      MasterUsername: 'socialmediauser'
+      MasterUserPassword: 'socialmediapass'
+      VPCSecurityGroups:
+        - !GetAtt DbSecurityGroup.GroupId
+    DeletionPolicy: Snapshot
 
 Outputs:
   Region:
@@ -82,15 +122,15 @@ Outputs:
 
   ApiId:
     Description: "API ID"
-    Value: !Ref MyApi
+    Value: !Ref SocialMediaAPI
 
   ApiUrl:
     Description: "API endpoint URL for Prod environment"
-    Value: !Sub 'https://${MyApi}.execute-api.${AWS::Region}.amazonaws.com/dev/'
+    Value: !Sub 'https://${SocialMediaAPI}.execute-api.${AWS::Region}.amazonaws.com/dev/'
 
   CognitoUserPoolId:
     Description: "Cognito User Pool Id"
-    Value: !Ref MyCognitoUserPool
+    Value: !Ref SocialMediaCognitoUserPool
 
   CognitoUserPoolClientId:
     Description: "Cognito User Pool Client Id"
