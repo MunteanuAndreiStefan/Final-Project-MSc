@@ -1,6 +1,43 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
+Mappings:
+  Database:
+    Name:
+      Value: SocialMediaMasterDB
+    Username:
+      Value: socialmediauser
+    Password:
+      Value: socialmediapass
+    Identifier:
+      Value: socialmediadb
 Resources:
+  SocialMediaMasterDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: '20'
+      DBInstanceClass: db.t2.micro
+      DBInstanceIdentifier:
+        Fn::FindInMap:
+        - Database
+        - Identifier
+        - Value
+      DBName:
+        Fn::FindInMap:
+        - Database
+        - Name
+        - Value
+      Engine: postgres
+      MasterUsername:
+        Fn::FindInMap:
+        - Database
+        - Username
+        - Value
+      MasterUserPassword:
+        Fn::FindInMap:
+        - Database
+        - Password
+        - Value
+    DeletionPolicy: Snapshot
   SocialMediaAPI:
     Type: AWS::Serverless::Api
     Properties:
@@ -23,7 +60,26 @@ Resources:
     Properties:
       Handler: handler.hello
       Runtime: nodejs10.x
-      CodeUri: s3://cf-templates-1j38krxlf5m0l-eu-west-1/340d3911f3869586ac96ae89c1a905ce
+      CodeUri: s3://cf-templates-1j38krxlf5m0l-eu-west-1/f2e954958f427b1b7a5a9244c935d38f
+      Environment:
+        Variables:
+          DB_HOST:
+            Fn::Sub: socialmediadb.${SocialMediaMasterDB}.${AWS::Region}.rds.amazonaws.com
+          DB_NAME:
+            Fn::FindInMap:
+            - Database
+            - Name
+            - Value
+          DB_USER:
+            Fn::FindInMap:
+            - Database
+            - Username
+            - Value
+          DB_PASS:
+            Fn::FindInMap:
+            - Database
+            - Password
+            - Value
       Events:
         HelloAPI:
           Type: Api
@@ -96,28 +152,6 @@ Resources:
       Principal: cognito-idp.amazonaws.com
       SourceArn:
         Fn::Sub: arn:${AWS::Partition}:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${SocialMediaCognitoUserPool}
-  DbSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: EC2SecurityGroupPolicy
-      SecurityGroupIngress:
-      - IpProtocol: '-1'
-        CidrIp: 0.0.0.0/0
-  SocialMediaMasterDB:
-    Type: AWS::RDS::DBInstance
-    Properties:
-      AllocatedStorage: '20'
-      DBInstanceClass: db.t2.micro
-      DBInstanceIdentifier: socialmediadb
-      DBName: SocialMediaMasterDB
-      Engine: postgres
-      MasterUsername: socialmediauser
-      MasterUserPassword: socialmediapass
-      VPCSecurityGroups:
-      - Fn::GetAtt:
-        - DbSecurityGroup
-        - GroupId
-    DeletionPolicy: Snapshot
 Outputs:
   Region:
     Description: Region
