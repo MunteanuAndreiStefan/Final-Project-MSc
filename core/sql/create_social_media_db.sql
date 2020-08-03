@@ -1,5 +1,4 @@
-DROP SCHEMA IF EXISTS social_media_db
-CASCADE;
+DROP SCHEMA IF EXISTS social_media_db CASCADE;
 CREATE SCHEMA social_media_db;
 
 CREATE TABLE social_media_db.questionnaire (
