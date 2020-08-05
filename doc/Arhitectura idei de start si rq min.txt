@@ -41,8 +41,10 @@ Engine de chestionare:
 	- Orice chestioanr are o lista de tag-uri care pot fi diferite de cele din intrebari.
 	- Orice intrebare are obligatoriu un titlu.
 	- Orice intrebare ar putea avea si o descriere, dar nu e obligatoriu.
-	- Creezi intrebari cu raspunsuri multiple userul va fi lasat sa aleaga modul de afisare: una sub alta sau in aceasi linie (in cazul in care nu incap intr-o line vor fi scrise una sub alta)
-	- Creezi intrebari cu raspunsuri unice userul va fi lasat sa aleaga modul de afisare: una sub alta sau in aceasi linie (in cazul in care nu incap intr-o line vor fi scrise una sub alta)
+	- Creezi intrebari cu raspunsuri multiple userul va fi lasat sa aleaga modul de afisare:
+	una sub alta sau in aceasi linie (in cazul in care nu incap intr-o line vor fi scrise una sub alta)
+	- Creezi intrebari cu raspunsuri unice userul va fi lasat sa aleaga modul de afisare:
+	una sub anlta sau in aceasi linie (in cazul in care nu incap intr-o line vor fi scrise una sub alta)
 	- Intrebari cu raspuns intr-un range numeric exemplu 1,2,3,4,5 sau 1,2,3,4,5,6,7,8,9,10 (scara liniara)
 	- O intrebare poate avea raspuns imagini in loc de text, imaginile vor fi afisate in mod grid, la upload li se va face resize si vor fi stocate in S3.
 	
