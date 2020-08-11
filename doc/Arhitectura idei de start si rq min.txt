@@ -56,32 +56,45 @@ Engine de chestionare:
 				ex: 3 raspunsuri de la 3 intrebari diferite pe pozitii diferite vor putea fi conectate pentru a putea oferi unul sau mai multe taguri noi cu %, pe langa tagurile pe care le ofereau si ele.
 			- Pentru linkare multipla de raspunsuri se va oferi si varianta de null (pentru intrebarile respective nu se va adauga nici un tag in cazul in care raspunsurile selectate fac match)
 	
-	- Sistemul va putea fi setat sa prioritiezeze mai mult ultimele raspunsuri fata de celelalte, ai. TagValue cu cat data e mai recenta ponderea procentului din total sa fie mai mare.
-	- Tagurile vor fi salvate in cognito sau in dynamoDB sub forma: UserID - Map<Tag, TagValue> TagValue va fi calculat in functie de setarile sistemului puse de admin. De asemenea va exista si UserID - Map<Tag, List<Tuple(Percent, Date)>>
-	- Cand un user raspunde la un chestionr in cazul in care a mai raspuns o data la el vor fi extrase din S3 raspunsurile vechi si vor fi setate ca default. Un user poate vedea un numar limitat de chestionare. Limitarea va fi facuta
-		din cognito intr-un int, daca e setat pe -1 va putea completa toate chestionarele. By default orice user va putea sa completeze un chestionar.
+	- Sistemul va putea fi setat sa prioritiezeze mai mult ultimele raspunsuri fata de celelalte, ai.
+	TagValue cu cat data e mai recenta ponderea procentului din total sa fie mai mare.
+	- Tagurile vor fi salvate in cognito sau in dynamoDB sub forma: UserID - Map<Tag, TagValue> TagValue
+	va fi calculat in functie de setarile sistemului puse de admin. De asemenea va exista si UserID -
+	Map<Tag, List<Tuple(Percent, Date)>>
+	- Cand un user raspunde la un chestionr in cazul in care a mai raspuns o data la el vor fi extrase din S3
+	raspunsurile vechi si vor fi setate ca default. Un user poate vedea un numar limitat de chestionare. Limitarea
+	va fi facuta din cognito intr-un int, daca e setat pe -1 va putea completa toate chestionarele. By default orice
+	user va putea sa completeze un chestionar.
 	
 Engine posturi.
 	- Un post poate contine: text, imagini, sau continut HTML el va fi stocat in S3.
 	- Un post va avea un nr. de recomandari mereu.
-	- La crearea unui post i se va atribui unul sau mai multe taguri si un % de interes cu fiecare tag, datele vor fi stocate in dynamoDB.
+	- La crearea unui post i se va atribui unul sau mai multe taguri si un % de interes cu fiecare tag,
+	datele vor fi stocate in dynamoDB.1234
 	- Doar contul de tip ADMIN va putea sa creeze un post nou.
-	- Userul va putea sa citeasca un numar limitat de posturi. Limitarea va fi facuta in cognito printr-un int, care in cazul in care este -1 va putea sa citeasca un nr nelimitat.
+	- Userul va putea sa citeasca un numar limitat de posturi. Limitarea va fi facuta in cognito printr-un int,
+	care in cazul in care este -1 va putea sa citeasca un nr nelimitat.
 	- By default orice user poate sa citeasca 2 posturi.
 	
 User: 
 	- Create cont, cu captcha de la google
 	- Resetare parola cu captcha de la google
-	- Isi creeaza profilul: Username, email, First name last name, address(optional), city, country, zip code, about me(optional), isi alege un mode white/dark
-	- La login se va trimite un request care ii va oferi lista de posturi recomandate. (Daca sunt posturi care nu le poate vedea din cauza nr. le va putea vizualiza numai pe primele la care are drept iar restul vor afisa un mesaj (procesare in backend))
-	- In cazul in care intra si pe chestionare va primi si o lista cu chestionare pe care sa le poata completa. (Daca sunt chestionare care nu le poate completa din cauza nr. il va putea vizualiza numai pe primul iar restul vor afisa un mesaj (procesare in backend))
+	- Isi creeaza profilul: Username, email, First name last name, address(optional), city, country, zip code,
+	about me(optional), isi alege un mode white/dark
+	- La login se va trimite un request care ii va oferi lista de posturi recomandate. (Daca sunt posturi care
+	nu le poate vedea din cauza nr. le va putea vizualiza numai pe primele la care are drept iar restul vor afisa
+	un mesaj (procesare in backend))
+	- In cazul in care intra si pe chestionare va primi si o lista cu chestionare pe care sa le poata completa.
+	(Daca sunt chestionare care nu le poate completa din cauza nr. il va putea vizualiza numai pe primul iar
+	restul vor afisa un mesaj (procesare in backend))
 	- Lista de chestionare pe care sa o completeze va fi ordonata dupa prioritatea chestionarelor.
 	- Userul va putea cauta un chestionar dupa cuvintele cheie din titlu.
 	- Userul va putea cauta un post dupa cuvintele cheie din titlu.
 	- Poate vedea cate la cate chestionare a raspuns cate posturi are disponibile si cate posturi exista in total.
 	- Poate vedea cate recomandari are in acest moment.
 	- Selectare tip user. (Per questions/Per posts/Per year full/sms notifications)
-	- La stergerea userului se sterg toate datele personale din profil si se apeleaza o functie de clean-up care va sterge si resursele stocate despre user.
+	- La stergerea userului se sterg toate datele personale din profil si se apeleaza o functie de clean-up care
+	va sterge si resursele stocate despre user.
 	- Vizualizare notificari din aplicatie. (cele trimise de admin)
 	
 Admin:

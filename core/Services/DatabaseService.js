@@ -1,10 +1,10 @@
 const { Client } = require('pg');
 
 const client = new Client({
-    user: 'socialmediauser',
-    host: 'socialmediadb.c5572xthb6u2.eu-west-1.rds.amazonaws.com',
-    database: 'SocialMediaMasterDB',
-    password: 'socialmediapass',
+    user: 'postgres',
+    host: 'localhost',
+    database: 'postgres',
+    password: '1234',
     port: 5432
 });
 
