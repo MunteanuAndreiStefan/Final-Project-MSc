@@ -152,3 +152,6 @@ Profesor:
 	- Chat cu parintii 30 zile istoric.
 Posibil front template:
 https://www.creative-tim.com/product/paper-dashboard-2-pro
+
+Design to use:
+https://demos.creative-tim.com/argon-dashboard-react/?_ga=2.108805250.1893851314.1597919280-334722819.1595748079#/admin/icons

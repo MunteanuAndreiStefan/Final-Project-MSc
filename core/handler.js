@@ -1,5 +1,5 @@
-const PostController = require('./Controllers/PostController')
-const DatabaseCreatorService = require('./Services/DatabaseCreatorService')
+const PostController = require('./Controllers/QuestionnaireController')
+const DatabaseCreatorService = require('./Services/Database/DatabaseCreatorService')
 
 exports.hello = async (event) => {
   DatabaseCreatorService.createSchemaIfMissing((err, data) => {
