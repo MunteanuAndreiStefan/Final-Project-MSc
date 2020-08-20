@@ -104,6 +104,10 @@ let SCHEMATAS = {
 
 let QUERIES = {
     QUESTIONNAIRE: {
+        GET_ALL: () => {
+            let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.QUESTIONNAIRE.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.QUESTIONNAIRE.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
@@ -119,6 +123,10 @@ let QUERIES = {
         }
     },
     QUESTION: {
+        GET_ALL: () => {
+            let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.QUESTION.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.QUESTION.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
@@ -134,6 +142,10 @@ let QUERIES = {
         }
     },
     LINKAGE: {
+        GET_ALL: () => {
+            let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.LINKAGE.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.LINKAGE.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
@@ -149,6 +161,10 @@ let QUERIES = {
         }
     },
     ANSWER: {
+        GET_ALL: () => {
+            let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.ANSWER.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.ANSWER.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
@@ -165,6 +181,10 @@ let QUERIES = {
         }
     },
     USER_ANSWER: {
+        GET_ALL: () => {
+            let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.USER_ANSWER.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.USER_ANSWER.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
@@ -181,6 +201,10 @@ let QUERIES = {
         }
     },
     POST: {
+        GET_ALL: () => {
+            let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.POST.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.POST.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
@@ -197,6 +221,10 @@ let QUERIES = {
         }
     },
     RESOURCE: {
+        GET_ALL: () => {
+            let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
@@ -213,6 +241,10 @@ let QUERIES = {
         }
     },
     COMMENT: {
+        GET_ALL: () => {
+            let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.COMMENT.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.COMMENT.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
@@ -229,6 +261,10 @@ let QUERIES = {
         }
     },
     REACTION: {
+        GET_ALL: () => {
+            let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.REACTION.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.REACTION.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
@@ -245,6 +281,10 @@ let QUERIES = {
         }
     },
     TAG: {
+        GET_ALL: () => {
+            let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.TAG.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.TAG.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
@@ -260,6 +300,10 @@ let QUERIES = {
         }
     },
     SUBSCRIPTION: {
+        GET_ALL: () => {
+            let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.SUBSCRIPTION.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.SUBSCRIPTION.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
@@ -276,6 +320,10 @@ let QUERIES = {
         }
     },
     USER: {
+        GET_ALL: () => {
+            let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
@@ -294,6 +342,10 @@ let QUERIES = {
         }
     },
     QUESTIONNAIRE_TAG: {
+        GET_ALL: () => {
+            let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.QUESTIONNAIRE_TAG.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.QUESTIONNAIRE_TAG.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
@@ -310,6 +362,10 @@ let QUERIES = {
         }
     },
     QUESTION_TAG: {
+        GET_ALL: () => {
+            let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.QUESTION_TAG.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.QUESTION_TAG.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
@@ -326,6 +382,10 @@ let QUERIES = {
         }
     },
     LINKAGE_TAG: {
+        GET_ALL: () => {
+            let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.LINKAGE_TAG.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.LINKAGE_TAG.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
@@ -342,6 +402,10 @@ let QUERIES = {
         }
     },
     POST_TAG: {
+        GET_ALL: () => {
+            let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.POST_TAG.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMATAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMATAS.SOCIAL_MEDIA_DB.TABLES.POST_TAG.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
