@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-
+import SmLeftPanel from './components/sm-left-panel/SmLeftPanel'
 import { Nav, Navbar, NavItem } from 'react-bootstrap';
 import Routes from './Routes';
 import { Auth } from 'aws-amplify';
 
 import './App.css';
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import SmPostFeed from "./components/sm-post-feed/SmPostFeed";
+import Constants from "./Constants";
 
 class App extends Component {
 	constructor(props) {
@@ -48,22 +53,37 @@ class App extends Component {
 			userHasAuthenticated: this.userHasAuthenticated
 		};
 		return (
-			<div className="App container">
-				<Navbar fluid collapseOnSelect>
-					<Navbar.Header>
-						<Navbar.Brand>
-							<Link to="/">Test application</Link>
-						</Navbar.Brand>
-						<Navbar.Toggle />
-					</Navbar.Header>
-					<Navbar.Collapse>
-						<Nav pullRight>
-							<NavItem onClick={() => Auth.federatedSignIn()}>Open Hosted UI</NavItem>
-							<NavItem onClick={this.handleLogout}>Logout</NavItem>
-						</Nav>
-					</Navbar.Collapse>
-				</Navbar>
+			<div className={"AppContainer"}>
+				<div className={"sm-navbar"}>
+					<Navbar className={"AppNavbar"} fluid collapseOnSelect>
+						<Navbar.Header>
+							<Navbar.Brand>
+								<Link to="/">Social Media Demo App</Link>
+							</Navbar.Brand>
+							<Navbar.Toggle />
+						</Navbar.Header>
+						<Navbar.Collapse>
+							<Nav pullRight>
+								<NavItem onClick={() => Auth.federatedSignIn()}>Open Hosted UI</NavItem>
+								<NavItem onClick={this.handleLogout}>Logout</NavItem>
+							</Nav>
+						</Navbar.Collapse>
+					</Navbar>
+				</div>
+				<div className={"sm-content"}>
+					<div className={"sm-sidebar"}>
+						<SmLeftPanel></SmLeftPanel>
+					</div>
+					<div className={"sm-dashboard"}>
+						<SmPostFeed
+							posts={Constants.MOCK_DATA.posts}
+							users={Constants.MOCK_DATA.users}
+						></SmPostFeed>
+					</div>
+				</div>
+
 				<Routes childProps={childProps} />
+
 			</div>
 		);
 	}

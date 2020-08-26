@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const DatabaseCreatorService = require('../../core/Services/DatabaseCreatorService')
+const DatabaseCreatorService = require('../../core/Services/Database/DatabaseCreatorService')
 
 const QuestionnaireController = require('../../core/Controllers/QuestionnaireController')
 

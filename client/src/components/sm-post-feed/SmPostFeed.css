@@ -1,0 +1,7 @@
+.sm-post-feed {
+
+}
+
+.sm-post-feed > * {
+    margin-bottom: 25px;
+}

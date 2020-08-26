@@ -13,7 +13,6 @@ Mappings:
       Value: 'socialmediadb'
 
 Resources:
-
   SocialMediaMasterDB:
     Type: AWS::RDS::DBInstance
     Properties:
@@ -25,13 +24,6 @@ Resources:
       MasterUsername: !FindInMap [ Database, Username, Value ]
       MasterUserPassword: !FindInMap [ Database, Password, Value ]
     DeletionPolicy: Snapshot
-
-#  ExecutorInvoker:
-#    Type: AWS::CloudFormation::CustomResource
-#    DependsOn: DatabaseCreationExecutor
-#    Version: "1.0"
-#    Properties:
-#      ServiceToken: !GetAtt DatabaseCreationExecutor.Arn
 
   SocialMediaAPI:
     Type: AWS::Serverless::Api

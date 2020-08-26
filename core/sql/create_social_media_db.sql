@@ -221,7 +221,7 @@ INSERT INTO social_media_db."user"
 (subscription_id, "type", email, username, first_name, last_name, address, city, country, zip_code, theme, "timestamp") 
 VALUES (2, 'USER', 'user@domain.com', 'john.doe', 'John', 'Doe', 'Str. Principala', 'Iasi', 'Romania', '787878', 'dark', CURRENT_TIMESTAMP);
 
-INSERT INTO social_media_db.questionnaire (priority, name) VALUES (5, 'Politics');
+INSERT INTO social_media_db.questionnaire (priority, name) VALUES (5, 'Politics') RETURNING id;
 INSERT INTO social_media_db.questionnaire (priority, name) VALUES (8, 'Sports');
 INSERT INTO social_media_db.questionnaire (priority, name) VALUES (2, 'Religion');
 INSERT INTO social_media_db.questionnaire (priority, name) VALUES (9, 'Education');

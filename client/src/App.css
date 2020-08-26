@@ -1,7 +1,41 @@
-.App {
-	margin-top: 15px;
+.AppContainer {
+
 }
 
-.App .navbar-brand {
+.AppNavbar {
+	height: 60px;
+	box-shadow: 17px 15px 26px 0 rgba(5,5,5,0.22);
+}
+
+.AppContainer .navbar-brand {
 	font-weight: bold;
+}
+
+.AppContainer nav {
+	margin-bottom: 0;
+}
+
+.sm-navbar {
+	height: 10%;
+	min-height: 50px;
+}
+
+.sm-content {
+	height: 90%;
+	display: flex;
+}
+
+.sm-sidebar {
+	width: 15%;
+	height: 89vh;
+	background-color: #1769aa;
+}
+
+.sm-dashboard {
+	width: 85%;
+	padding: 25px;
+}
+
+.sm-sidebar, .sm-dashboard {
+	padding-top: 15px;
 }

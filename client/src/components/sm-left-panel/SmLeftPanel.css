@@ -1,0 +1,22 @@
+.sm-left-panel {
+    z-index: 1;
+    left: 0;
+    overflow-x: hidden;
+    height: 100%;
+}
+
+.sm-left-panel a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 20px;
+    color: white;
+    display: block;
+}
+
+.sm-left-panel a:hover {
+    color: #33eaff;
+}
+
+.sm-left-panel > * {
+    margin: 10px 0 10px 0;
+}
