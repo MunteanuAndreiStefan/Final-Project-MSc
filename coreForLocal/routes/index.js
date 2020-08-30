@@ -1,26 +1,33 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-const DatabaseCreatorService = require('../../core/Services/Database/DatabaseCreatorService')
+const bundle = require('../../core/dist/dist/bundle');
+const QuestionnaireController = bundle.Controllers.QuestionnaireController
 
-const QuestionnaireController = require('../../core/Controllers/QuestionnaireController')
+router.get('/questionnaires/id/:id', function (req, res) {
+    QuestionnaireController.getById({queryStringParameters: {id: req.params.id}})
+        .then(message => respond(res, message))
+        .catch(err => {
+            console.error(err)
+            if (err.status) {
+                res.status(err.status).end(err.error);
+            } else {
+                errors(res, err)
+            }
 
-router.get('/questionnaires/id/:id', function(req, res, next) {
-  QuestionnaireController.getById(req)
-      .then(message => respond(res, message))
-      .catch(err => errors(res, err))
+        })
 });
 
-router.post('/questionnaires', function(req, res, next) {
-  QuestionnaireController.add(req)
-      .then(message => respond(res, message))
-      .catch(err => errors(res, err))
+router.post('/questionnaires', function (req, res) {
+    QuestionnaireController.add(req)
+        .then(message => respond(res, message))
+        .catch(err => errors(res, err))
 });
 
-router.delete('/questionnaires/id/:id', function(req, res, next) {
-  QuestionnaireController.remove(req)
-      .then(message => respond(res, message))
-      .catch(err => errors(res, err))
+router.delete('/questionnaires/id/:id', function (req, res) {
+    QuestionnaireController.remove(req)
+        .then(message => respond(res, message))
+        .catch(err => errors(res, err))
 });
 
 let respond = (res, message) => {

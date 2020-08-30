@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './SmPost.css';
 import {makeStyles} from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -8,6 +9,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
+import FaceIcon from '@material-ui/icons/Face';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -16,130 +18,324 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import SmComment from "../sm-comment/SmComment";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import TextField from "@material-ui/core/TextField";
+import {ChatBubble, FavoriteBorder} from "@material-ui/icons";
+import SmReactionDialog from "../sm-reaction-dialog/SmReactionDialog";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
 
 
 class SmPost extends Component {
     constructor(props) {
         super(props);
+        this.__handleComment.bind(this)
+        this.__getReactionString.bind(this)
+        this.__getReactionButtonByBehaviour.bind(this)
+        this.__getReactionButtonByBehaviour.bind(this)
+        this.__handleOpenPostMenu.bind(this);
+        this.__handleClosePostMenu.bind(this);
+        this.__handlePostDelete.bind(this);
+        this.setAnchorElement.bind(this);
+        this.mapComplementaryDataWithUserInfo.bind(this)
+        this.getEnhancedUser.bind(this)
+
+        let post = props.post;
+        let users = props.users;
+        let userReacted = props.post.reactions.findIndex(reaction => reaction.user_internal_id === props.current_user_id)
+        let reactionButtonType = this.__getReactionButtonByBehaviour(userReacted !== -1);
+        let post_user = this.getEnhancedUser(users.find(user => user.user_internal_id === post.user_internal_id));
+
+        let comments = post.comments.map(comment => this.mapComplementaryDataWithUserInfo(comment, users));
+        let reactions = post.reactions.map(reaction => this.mapComplementaryDataWithUserInfo(reaction, users));
 
         this.state = {
-            post: props.post,
+            post_user: post_user,
+            post: {
+                ...props.post,
+                avatar: post_user.avatar,
+                userName: post_user.full_name,
+                date: post.timestamp,
+                comments: comments,
+                reactions: reactions
+            },
             users: props.users,
-            expanded: false
+            current_user_id: props.current_user_id,
+            reactionButton: {
+                type: reactionButtonType,
+                value: false,
+                label: this.__getReactionString(reactions, props.current_user_id)
+            },
+            commentBox: {
+                label: 'Write your thoughts',
+                value: ''
+            },
+            reactionDialogOpen: false,
+            anchorElement: null
         };
-
-
-        this.handleExpandClick.bind(this)
     }
 
+    __getReactionButtonByBehaviour(reacted) {
+        return reacted ? <FavoriteIcon color="action"/> : <FavoriteBorder/>;
+    }
 
-    handleExpandClick = () => {
+    __handleOpenPostMenu = (event) => {
+        this.setAnchorElement(event.currentTarget);
+    }
+
+    __handleClosePostMenu = (event) => {
+        this.setAnchorElement(null);
+    }
+
+    __handlePostDelete = (event) => {
+        this.__handleClosePostMenu(event);
+        this.props.handleDelete(event, this.state.post.id);
+    }
+
+    setAnchorElement(element) {
         this.setState({
-            'expanded': !this.state.expanded
+            anchorElement: element
         })
-    };
+    }
+
+    __handleComment = (event) => {
+        this.setState({
+            commentBox: {
+                ...this.state.commentBox,
+                value: event.target.value
+            }
+        })
+    }
+
+    __handleViewReactions = (event) => {
+        this.setState({
+            reactionDialogOpen: true
+         })
+    }
+
+    __handleReactionDialogClose = (event) => {
+        this.setState({
+            reactionDialogOpen: false
+        })
+    }
+
+    __handleReaction = (event) => {
+        let currentState = this.state.reactionButton.value;
+
+        if (!currentState) {
+            let reactionObj = {
+                user_internal_id: this.state.current_user_id,
+                reaction: 'LIKE',
+                timestamp: new Date().toISOString().replace('T', ' ').slice(0, -5)
+            }
+            this.props.post.reactions.push(reactionObj);
+        } else {
+            let reactionIndex = this.props.post.reactions.findIndex(reaction => reaction.user_internal_id === this.state.current_user_id)
+            this.props.post.reactions = [
+                ...this.props.post.reactions.slice(0, reactionIndex),
+                ...this.props.post.reactions.slice(reactionIndex + 1),
+            ]
+        }
+        let nextReactions = this.props.post.reactions.map(reaction => this.mapComplementaryDataWithUserInfo(reaction, this.state.users));
+
+        let nextState = !currentState;
+        this.setState({
+            post: {
+                ...this.state.post,
+                reactions: nextReactions
+            },
+            reactionButton: {
+                type: this.__getReactionButtonByBehaviour(nextState),
+                value: nextState,
+                label: this.__getReactionString(nextReactions, this.props.current_user_id)
+            },
+        })
+    }
+
+    __handleAddComment = (event) => {
+        let commentObj = {
+            user_internal_id: this.state.current_user_id,
+            text: this.state.commentBox.value,
+            timestamp: new Date().toISOString().replace('T', ' ').slice(0, -5)
+        }
+        //this.props.post.comments.push(commentObj);
+        let stateComment = this.mapComplementaryDataWithUserInfo(commentObj, this.state.users)
+        let updatedComments = this.state.post.comments;
+        updatedComments.push(stateComment);
+        this.setState({
+            commentBox: {
+                ...this.state.commentBox,
+                value: ''
+            },
+            post: {
+                ... this.state.post,
+                comments: updatedComments
+            }
+        })
+    }
+
+    __handleDeleteComment = (event, currentComment) => {
+        let commentIndex = this.props.post.comments.findIndex(comment => comment.id === currentComment.id);
+        if (commentIndex === -1) {
+            return;
+        }
+        // this.props.post.comments = [
+        //     ...this.props.post.comments.slice(0, commentIndex),
+        //     ...this.props.post.comments.slice(commentIndex + 1),
+        // ]
+        this.setState({
+            post: {
+                ... this.state.post,
+                comments: [
+                    ...this.state.post.comments.slice(0, commentIndex),
+                    ...this.state.post.comments.slice(commentIndex + 1),
+                ]
+            }
+        })
+    }
+
+    getEnhancedUser(user)  {
+        return {
+            ... user,
+            avatar: user.first_name.slice(0, 1) + user.last_name.slice(0, 1),
+            full_name: user.first_name + ' ' + user.last_name
+        };
+    }
+
+    mapComplementaryDataWithUserInfo(complementaryData, users) {
+        return {
+            ... complementaryData,
+            user: this.getEnhancedUser(users.find(user => user.user_internal_id === complementaryData.user_internal_id))
+        }
+    }
+
+    __getReactionString(reactions, current_user_id) {
+        let len = reactions.length;
+        if (len < 0) {
+            return null;
+        }
+
+        let currentUserInReactions = (reactions, current_user_id) => {
+            let currentUserInReactions = reactions.find(reaction => reaction.user_internal_id === current_user_id)
+            return currentUserInReactions !== undefined && currentUserInReactions !== null;
+        }
+
+        switch (len) {
+            case 0: {
+                return null;
+            }
+            case 1: {
+                if (currentUserInReactions(reactions, current_user_id)) {
+                    return "You reacted"
+                }
+                return reactions[0].user.full_name + " reacted";
+            }
+            case 2: {
+                if (currentUserInReactions(reactions, current_user_id)) {
+                    return "You and 1 other reacted"
+                }
+                console.log(reactions, 'mizerie')
+                return `${reactions[0].user.full_name} and 1 other reacted`
+            }
+            default: {
+                if (currentUserInReactions(reactions, current_user_id)) {
+                    return `You and ${len - 1} others reacted`
+                }
+                return `${reactions[0].user.full_name} and ${len - 1} others reacted`
+            }
+        }
+    }
 
     render() {
+        let viewData = this.state;
+        let cardMedia = null;
+        let cardContent = null;
+        let cardComments = [];
+        let cardReactions = [];
 
-        const classes = makeStyles(theme => ({
-            root: {
-                maxWidth: 345,
-            },
-            media: {
-                height: 0,
-                paddingTop: '56.25%', // 16:9
-            },
-            expand: {
-                transform: 'rotate(0deg)',
-                marginLeft: 'auto',
-                transition: theme.transitions.create('transform', {
-                    duration: theme.transitions.duration.shortest,
-                }),
-            },
-            expandOpen: {
-                transform: 'rotate(180deg)',
-            },
-            avatar: {
-                backgroundColor: red[500],
-            },
-        }));
+        if (viewData.post.image) {
+            cardMedia = <CardMedia
+                className={"card-media"}
+                image={viewData.post.image}
+            />
+        }
+        if (viewData.post.text) {
+            cardContent = <CardContent>
+                <Typography variant="h6" color="textSecondary" component="p">
+                    {viewData.post.text}
+                </Typography>
+            </CardContent>
+        }
+
+        cardComments = viewData.post.comments.map(comment => <SmComment handleDelete={this.__handleDeleteComment} comment={comment}></SmComment>)
 
         return (
             <div>
-                <Card className={classes.root}>
-                    <CardHeader
-                        avatar={
-                            <Avatar aria-label="recipe" className={classes.avatar}>
-                                R
-                            </Avatar>
-                        }
-                        action={
-                            <IconButton aria-label="settings">
-                                <MoreVertIcon/>
-                            </IconButton>
-                        }
-                        title="Shrimp and Chorizo Paella"
-                        subheader="September 14, 2016"
-                    />
-                    <CardMedia
-                        className={classes.media}
-                        image="/static/images/cards/paella.jpg"
-                        title="Paella dish"
-                    />
-                    <CardContent>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                            {JSON.stringify(this.props.post)}
-                        </Typography>
-                    </CardContent>
-                    <CardActions disableSpacing>
-                        <IconButton aria-label="add to favorites">
-                            <FavoriteIcon/>
-                        </IconButton>
-                        <IconButton aria-label="share">
-                            <ShareIcon/>
-                        </IconButton>
-                        <IconButton
-                            className={
-                                clsx(classes.expand, {
-                                    [classes.expandOpen]: this.state.expanded,
-                                })
+                <SmReactionDialog reactions={this.state.post.reactions}
+                    open={this.state.reactionDialogOpen} onClose={this.__handleReactionDialogClose}></SmReactionDialog>
+                <Card className={"card-root"}>
+                    <div className={"sm-post-panel"}>
+                        <CardHeader
+                            avatar={
+                                <Avatar aria-label="recipe" className={"card-avatar"}>
+                                    {viewData.post.avatar}
+                                </Avatar>
                             }
-                            onClick={this.handleExpandClick}
-                            aria-expanded={this.state.expanded}
-                            aria-label="show more"
-                        >
-                            <ExpandMoreIcon/>
-                        </IconButton>
-                    </CardActions>
-                    <Collapse
-                        in={this.state.expanded}
-                        timeout="auto" unmountOnExit>
-                        <CardContent>
-                            <Typography paragraph>Method:</Typography>
-                            <Typography paragraph>
-                                Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10
-                                minutes.
-                            </Typography>
-                            <Typography paragraph>
-                                Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high
-                                heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly
-                                browned, 6 to 8 minutes. Transfer shrimp to a large plate and set aside, leaving chicken
-                                and chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes, onion, salt and
-                                pepper, and cook, stirring often until thickened and fragrant, about 10 minutes. Add
-                                saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-                            </Typography>
-                            <Typography paragraph>
-                                Add rice and stir very gently to distribute. Top with artichokes and peppers, and cook
-                                without stirring, until most of the liquid is absorbed, 15 to 18 minutes. Reduce heat to
-                                medium-low, add reserved shrimp and mussels, tucking them down into the rice, and cook
-                                again without stirring, until mussels have opened and rice is just tender, 5 to 7
-                                minutes more. (Discard any mussels that don’t open.)
-                            </Typography>
-                            <Typography>
-                                Set aside off of the heat to let rest for 10 minutes, and then serve.
-                            </Typography>
-                        </CardContent>
-                    </Collapse>
+                            action={
+                                <IconButton aria-label="settings">
+                                    <MoreVertIcon onClick={this.__handleOpenPostMenu}/>
+                                </IconButton>
+                            }
+                            title={viewData.post.userName}
+                            subheader={viewData.post.date}
+                            titleTypographyProps={{variant: "h5"}}
+                            subheaderTypographyProps={{variant: "h6"}}
+                        />
+                        <Menu
+                            id="comment-menu"
+                            anchorEl={this.state.anchorElement}
+                            keepMounted
+                            open={Boolean(this.state.anchorElement)}
+                            onClose={this.__handleClosePostMenu}>
+                            <MenuItem onClick={this.__handlePostDelete}>Delete</MenuItem>
+                        </Menu>
+                        {cardMedia}
+                        {cardContent}
+                    </div>
+                    <div className={"sm-post-interaction-panel"}>
+                        <Collapse
+                            in={true}
+                            timeout="auto" unmountOnExit>
+                            <CardActions className={"sm-post-interaction-panel-actions"} disableSpacing>
+                                <IconButton onClick={this.__handleReaction} aria-label="add to favorites">
+                                    {this.state.reactionButton.type}
+                                </IconButton>
+                                <Button onClick={this.__handleViewReactions}
+                                    color="primary" startIcon={<FaceIcon />}>{this.state.reactionButton.label}</Button>
+                            </CardActions>
+                            <CardContent>
+                                <div className={"post-comments"}>
+                                    {cardComments}
+                                </div>
+                                <div className={"post-comment-input"}>
+                                    <TextField
+                                        id="outlined-multiline-flexible"
+                                        className={"post-comment-input-field"}
+                                        label={this.state.commentBox.label}
+                                        multiline
+                                        rowsMax={3}
+                                        value={this.state.commentBox.value}
+                                        onChange={this.__handleComment}
+                                        variant="outlined"
+                                    />
+                                    <Button onClick={this.__handleAddComment}
+                                        color="primary" startIcon={<ChatBubble />}>{"Comment"}</Button>
+                                </div>
+                            </CardContent>
+                        </Collapse>
+                    </div>
                 </Card>
             </div>
         );

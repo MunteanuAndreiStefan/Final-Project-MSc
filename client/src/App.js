@@ -78,6 +78,7 @@ class App extends Component {
 						<SmPostFeed
 							posts={Constants.MOCK_DATA.posts}
 							users={Constants.MOCK_DATA.users}
+							current_user_id={Constants.MOCK_DATA.current_user_id}
 						></SmPostFeed>
 					</div>
 				</div>

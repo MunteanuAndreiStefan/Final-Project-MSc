@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "./built",
+    "allowJs": true,
+    "target": "es2018",
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true
+  },
+  "include": ["./Controllers/**/*", "./Repository/**/*", "./Services/**/*", "./Utils/**/*"]
+}
