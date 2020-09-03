@@ -31,16 +31,6 @@ import Menu from "@material-ui/core/Menu";
 class SmPost extends Component {
     constructor(props) {
         super(props);
-        this.__handleComment.bind(this)
-        this.__getReactionString.bind(this)
-        this.__getReactionButtonByBehaviour.bind(this)
-        this.__getReactionButtonByBehaviour.bind(this)
-        this.__handleOpenPostMenu.bind(this);
-        this.__handleClosePostMenu.bind(this);
-        this.__handlePostDelete.bind(this);
-        this.setAnchorElement.bind(this);
-        this.mapComplementaryDataWithUserInfo.bind(this)
-        this.getEnhancedUser.bind(this)
 
         let post = props.post;
         let users = props.users;

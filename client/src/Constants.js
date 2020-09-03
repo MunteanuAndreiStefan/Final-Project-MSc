@@ -167,6 +167,147 @@ let MOCK_DATA = {
                 }
             ]
         }
+    ],
+    questionnaires: [
+        {
+            id: 1,
+            title: "Trump blabla",
+            description: "Let's see if you like politics",
+            questions: [
+                {
+                    id: 1,
+                    title: 'How much do you like Republicans?',
+                    type: 'SCALE',
+                    multiple: false,
+                    possibleAnswers: [
+                        {
+                            id: 1,
+                            scale_value: 1
+                        },
+                        {
+                            id: 2,
+                            scale_value: 2
+                        },
+                        {
+                            id: 3,
+                            scale_value: 3
+                        }
+                    ]
+                },
+                {
+                    id: 2,
+                    title: 'Witch was the best president?',
+                    type: 'TEXT',
+                    multiple: true,
+                    possibleAnswers: [
+                        {
+                            id: 4,
+                            text: "Donald Trump"
+                        },
+                        {
+                            id: 5,
+                            text: "Barack Obama"
+                        },
+                        {
+                            id: 6,
+                            text: "George Bush"
+                        }
+                    ]
+                },
+                {
+                    id: 3,
+                    title: 'Pick an image',
+                    type: 'IMAGE',
+                    possibleAnswers: [
+                        {
+                            id: 7,
+                            image_url: 'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg'
+                        },
+                        {
+                            id: 8,
+                            image_url: 'https://images.theconversation.com/files/350865/original/file-20200803-24-50u91u.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=1200&h=1200.0&fit=crop'
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            id: 2,
+            title: "Biden blabla",
+            description: "Let's see if you like politics",
+            questions: [
+                {
+                    id: 4,
+                    title: 'How much do you like Republicans?',
+                    type: 'SCALE',
+                    multiple: true,
+                    possibleAnswers: [
+                        {
+                            id: 1,
+                            scale_value: 1
+                        },
+                        {
+                            id: 2,
+                            scale_value: 2
+                        },
+                        {
+                            id: 3,
+                            scale_value: 3
+                        }
+                    ]
+                },
+                {
+                    id: 5,
+                    title: 'Witch was the best president?',
+                    type: 'TEXT',
+                    possibleAnswers: [
+                        {
+                            id: 4,
+                            text: "Donald Trump"
+                        },
+                        {
+                            id: 5,
+                            text: "Barack Obama"
+                        },
+                        {
+                            id: 6,
+                            text: "George Bush"
+                        }
+                    ]
+                },
+                {
+                    id: 6,
+                    title: 'Pick an image',
+                    type: 'IMAGE',
+                    possibleAnswers: [
+                        {
+                            id: 7,
+                            image_url: 'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg'
+                        },
+                        {
+                            id: 8,
+                            image_url: 'https://images.theconversation.com/files/350865/original/file-20200803-24-50u91u.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=1200&h=1200.0&fit=crop'
+                        },
+                        {
+                            id: 9,
+                            image_url: 'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg'
+                        },
+                        {
+                            id: 10,
+                            image_url: 'https://images.theconversation.com/files/350865/original/file-20200803-24-50u91u.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=1200&h=1200.0&fit=crop'
+                        },
+                        {
+                            id: 11,
+                            image_url: 'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg'
+                        },
+                        {
+                            id: 12,
+                            image_url: 'https://images.theconversation.com/files/350865/original/file-20200803-24-50u91u.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=1200&h=1200.0&fit=crop'
+                        }
+                    ]
+                }
+            ]
+        }
     ]
 }
 

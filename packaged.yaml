@@ -60,7 +60,7 @@ Resources:
     Properties:
       Handler: handler.hello
       Runtime: nodejs10.x
-      CodeUri: s3://cf-templates-1j38krxlf5m0l-eu-west-1/f382d75f8d82b6b71f5f6d8a110cea6c
+      CodeUri: s3://cf-templates-1j38krxlf5m0l-eu-west-1/911272cb4584145d391e9985a0c8d79d
       Environment:
         Variables:
           DB_HOST:

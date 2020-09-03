@@ -3,8 +3,8 @@ CREATE SCHEMA social_media_db;
 
 --- TYPES
 
-DROP TYPE IF EXISTS answer_type_enum;
-CREATE TYPE answer_type_enum AS ENUM ('SCALE', 'TEXT', 'IMAGE');
+DROP TYPE IF EXISTS question_type_enum;
+CREATE TYPE question_type_enum AS ENUM ('SCALE', 'TEXT', 'IMAGE');
 
 DROP TYPE IF EXISTS user_type_enum;
 CREATE TYPE user_type_enum AS ENUM ('USER', 'ADMIN');
@@ -61,6 +61,8 @@ DROP TABLE IF EXISTS social_media_db.question;
 CREATE TABLE social_media_db.question (
   id                        serial NOT NULL,
   questionnaire_id      	  int8 NOT NULL,
+  question_type question_type_enum NOT NULL,
+  multiple_answers         BOOLEAN DEFAULT false,
   title      	      varchar(255) NOT NULL,
   description      	  varchar(255),
   CONSTRAINT question_id_pk PRIMARY KEY (id),
@@ -81,10 +83,8 @@ DROP TABLE IF EXISTS social_media_db.answer;
 CREATE TABLE social_media_db.answer (
   id                        serial NOT NULL,
   question_id      	          int8 NOT NULL,
-  answer_type     answer_type_enum NOT NULL,
   priority      	          int4 NOT NULL,
-  scale_min      	          int4,
-  scale_max      	          int4,
+  scale_value      	          int4,
   text      	      varchar(255),
   image_url      	  varchar(255),
   CONSTRAINT answer_id_pk PRIMARY KEY (id),
@@ -227,17 +227,17 @@ INSERT INTO social_media_db.questionnaire (priority, name) VALUES (2, 'Religion'
 INSERT INTO social_media_db.questionnaire (priority, name) VALUES (9, 'Education');
 INSERT INTO social_media_db.questionnaire (priority, name) VALUES (1, 'IT');
 
-INSERT INTO social_media_db.question (questionnaire_id, title) VALUES (1, 'Do you know mister Trump?');
-INSERT INTO social_media_db.question (questionnaire_id, title) VALUES (1, 'What do you know about Obama?');
-INSERT INTO social_media_db.question (questionnaire_id, title) VALUES (1, 'How much do you like President Putin?');
+INSERT INTO social_media_db.question (questionnaire_id, question_type, title) VALUES (1, 'TEXT', 'Do you know mister Trump?');
+INSERT INTO social_media_db.question (questionnaire_id, question_type, title) VALUES (1, 'SCALE', 'What do you know about Obama?');
+INSERT INTO social_media_db.question (questionnaire_id, question_type, title) VALUES (1, 'IMAGE', 'How much do you like President Putin?');
 
 INSERT INTO social_media_db.linkage (first_question_id, second_question_id) VALUES (1, 2);
 INSERT INTO social_media_db.linkage (first_question_id, second_question_id) VALUES (1, 3);
 
-INSERT INTO social_media_db.answer (question_id, answer_type, priority, text) VALUES (1, 'TEXT', 6, 'Yes');
-INSERT INTO social_media_db.answer (question_id, answer_type, priority, text) VALUES (1, 'TEXT', 4, 'No');
-INSERT INTO social_media_db.answer (question_id, answer_type, priority, scale_min, scale_max) VALUES (3, 'SCALE', 5, 1, 10);
-INSERT INTO social_media_db.answer (question_id, answer_type, priority, scale_min, scale_max, text, image_url) VALUES (3, 'SCALE', 5, 1, 10, NULL, null);
+INSERT INTO social_media_db.answer (question_id, priority, text) VALUES (1, 6, 'Yes');
+INSERT INTO social_media_db.answer (question_id, priority, text) VALUES (1, 4, 'No');
+INSERT INTO social_media_db.answer (question_id, priority, scale_value) VALUES (3, 5, 10);
+INSERT INTO social_media_db.answer (question_id, priority, scale_value, text, image_url) VALUES (3, 1, 10, NULL, null);
 
 INSERT INTO social_media_db.user_answer (user_internal_id, question_id, answer_id, "timestamp") VALUES (1, 1, 2, CURRENT_TIMESTAMP);
 
@@ -293,6 +293,3 @@ INSERT INTO social_media_db.post_tag (tag_id, post_id, interest) VALUES (3, 1, 5
 INSERT INTO social_media_db.post_tag (tag_id, post_id, interest) VALUES (4, 1, 10);
 INSERT INTO social_media_db.post_tag (tag_id, post_id, interest) VALUES (6, 1, 15);
 INSERT INTO social_media_db.post_tag (tag_id, post_id, interest) VALUES (3, 2, 15);
-
-
-

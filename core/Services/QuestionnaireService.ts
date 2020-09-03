@@ -12,7 +12,7 @@ export class QuestionnaireError extends Error {
     }
 }
 
-export async function getById(id: string) {
+export async function getById(id: number) {
     const response = await QuestionnaireRepository.getById(id);
     let rowCount = response.rowCount;
 
@@ -40,7 +40,7 @@ export async function add(priority: number, name: string) {
     return response.rows[0]
 }
 
-export async function remove(id: string) {
+export async function remove(id: number) {
     const response = await QuestionnaireRepository.remove(id);
 
     if (response.rowCount === 0) {

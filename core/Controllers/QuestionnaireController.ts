@@ -2,7 +2,7 @@ import * as QuestionnaireService from '../Services/QuestionnaireService';
 import {APIGatewayProxyEvent} from "aws-lambda";
 
 export async function getById(request: APIGatewayProxyEvent) {
-    return QuestionnaireService.getById(request.queryStringParameters!.id);
+    return QuestionnaireService.getById(parseInt(request.queryStringParameters!.id));
 }
 
 export async function getAll() {
@@ -15,5 +15,5 @@ export async function add(request: { body: any; }) {
 }
 
 export async function remove(request: APIGatewayProxyEvent) {
-    return QuestionnaireService.remove(request.queryStringParameters!.id);
+    return QuestionnaireService.remove(parseInt(request.queryStringParameters!.id));
 }

@@ -1,0 +1,16 @@
+.sm-question {
+    margin-bottom: 5px;
+}
+
+.sm-question-answers-container-row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.sm-question-answers-container-column {
+    display: block;
+}
+
+.sm-question .MuiCardContent-root {
+    padding: 0 25px;
+}

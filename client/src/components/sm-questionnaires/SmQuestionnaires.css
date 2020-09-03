@@ -1,0 +1,51 @@
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #BBB;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+.sm-questionnaires {
+    margin-top: 30px;
+}
+
+.sm-questionnaires .sm-questionnaires-panel {
+    display: flex;
+}
+
+.sm-questionnaires .sm-questionnaires-left-panel {
+    width: 30%;
+    overflow-y: scroll;
+    height: 500px;
+    padding: 10px;
+}
+
+.sm-questionnaires .sm-questionnaires-right-panel {
+    width: 70%;
+    margin: 0 15px;
+}
+
+.sm-questionnaires .sm-questionnaires-right-panel .card-root {
+    max-width: 100%;
+}
+
+.sm-row {
+    display: flow-root !important;
+}
+
+.sm-left-align {
+    float: left;
+}
+
+.sm-right-align {
+    float: right;
+}

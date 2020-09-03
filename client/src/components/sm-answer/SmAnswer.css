@@ -1,0 +1,18 @@
+.sm-answer-image {
+    width: 200px;
+    height: 200px;
+}
+
+.sm-answer-image-container {
+    margin: 5px;
+}
+
+.sm-answer-scale-container{
+    display: grid;
+    margin: 10px;
+}
+
+.sm-answer-scale-container .MuiCheckbox-root,
+.sm-answer-scale-container .MuiRadio-root{
+    padding: 10px 0;
+}

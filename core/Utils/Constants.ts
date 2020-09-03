@@ -11,7 +11,7 @@ const SCHEMAS = {
             QUESTION: {
                 NAME: 'question',
                 COLUMNS: [
-                    'questionnaire_id', 'title'
+                    'questionnaire_id', 'question_type', 'multiple_answers', 'title', 'description'
                 ]
             },
             LINKAGE: {
@@ -23,7 +23,7 @@ const SCHEMAS = {
             ANSWER: {
                 NAME: 'answer',
                 COLUMNS: [
-                    'question_id', 'answer_type', 'priority', 'scale_min', 'scale_max', 'text', 'image_url'
+                    'question_id', 'priority', 'scale_value', 'text', 'image_url'
                 ]
             },
             USER_ANSWER: {
@@ -109,7 +109,7 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTIONNAIRE.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
-        GET_BY_ID: (id: string): string  => {
+        GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTIONNAIRE.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
@@ -118,26 +118,26 @@ export const QUERIES = {
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTIONNAIRE.COLUMNS.join(', ')
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${priority}, '${name}') RETURNING id;`;
         },
-        DELETE: (id: string): string  => {
+        DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTIONNAIRE.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         }
     },
     QUESTION: {
-        GET_ALL: (): string  => {
+        GET_ALL: (): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTION.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
-        GET_BY_ID: (id: string): string  => {
+        GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTION.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
-        ADD: (questionnaire_id: string, title: string) => {
+        ADD: (questionnaire_id: number, question_type: string, multiple_answers: boolean, title: string, description: string) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTION.NAME;
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTION.COLUMNS.join(', ')
-            return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${questionnaire_id}, '${title}') RETURNING id;`;
+            return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${questionnaire_id}, '${question_type}', ${multiple_answers}, '${title}', '${description}') RETURNING id;`;
         },
-        DELETE: (id: string): string => {
+        DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTION.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         }
@@ -147,16 +147,16 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.LINKAGE.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
-        GET_BY_ID: (id: string): string => {
+        GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.LINKAGE.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
-        ADD: (first_question_id: string, second_question_id: string): string => {
+        ADD: (first_question_id: number, second_question_id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.LINKAGE.NAME;
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.LINKAGE.COLUMNS.join(', ')
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${first_question_id}, ${second_question_id}) RETURNING id;`;
         },
-        DELETE: (id: string): string => {
+        DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.LINKAGE.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         }
@@ -166,17 +166,17 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.ANSWER.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
-        GET_BY_ID: (id: string): string => {
+        GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.ANSWER.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
-        ADD: (question_id: string, answer_type: string, priority: string, scale_min: number, scale_max: number, text: string, image_url: string) => {
+        ADD: (question_id: number, priority: number, scale_value: number, text: string, image_url: string) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.ANSWER.NAME;
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.ANSWER.COLUMNS.join(', ')
-            let values = question_id + ', \'' + answer_type + '\', ' + priority + ', ' + scale_min + ', ' + scale_max + ', \'' + text + '\', \'' + image_url + '\'';
+            let values = question_id + ', ' + priority + ', ' + scale_value + ', \'' + text + '\', \'' + image_url + '\'';
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
-        DELETE: (id: string): string => {
+        DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.ANSWER.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         }
@@ -186,17 +186,17 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER_ANSWER.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
-        GET_BY_ID: (id: string): string => {
+        GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER_ANSWER.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
-        ADD: (user_internal_id: string, question_id: string, answer_id: string): string => {
+        ADD: (user_internal_id: number, question_id: number, answer_id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER_ANSWER.NAME;
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER_ANSWER.COLUMNS.join(', ')
             let values = user_internal_id + ', ' + question_id + ', ' + answer_id + ', CURRENT_TIMESTAMP';
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
-        DELETE: (id: string): string => {
+        DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER_ANSWER.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         }
@@ -206,17 +206,17 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
-        GET_BY_ID: (id: string): string => {
+        GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
-        ADD: (text: string, priority: string): string => {
+        ADD: (text: string, priority: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST.NAME;
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST.COLUMNS.join(', ')
             let values = '\'' + text + '\', ' + priority + ', CURRENT_TIMESTAMP';
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
-        DELETE: (id: string): string => {
+        DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         }
@@ -226,17 +226,17 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
-        GET_BY_ID: (id: string): string => {
+        GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
-        ADD: (post_id: string, url: string, type: string): string => {
+        ADD: (post_id: number, url: string, type: string): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.NAME;
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ')
             let values = post_id + ', \'' + url + '\', \'' + type + '\', CURRENT_TIMESTAMP';
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
-        DELETE: (id: string): string => {
+        DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         }
@@ -246,17 +246,17 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.COMMENT.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
-        GET_BY_ID: (id: string): string => {
+        GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.COMMENT.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
-        ADD: (user_internal_id: string, post_id: string, text: string): string => {
+        ADD: (user_internal_id: number, post_id: number, text: string): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.COMMENT.NAME;
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ')
             let values = user_internal_id + ', ' + post_id + ', \'' + text + '\', CURRENT_TIMESTAMP';
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
-        DELETE: (id: string): string => {
+        DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.COMMENT.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         }
@@ -266,17 +266,17 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.REACTION.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
-        GET_BY_ID: (id: string): string => {
+        GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.REACTION.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
-        ADD: (user_internal_id: string, post_id: string, reaction: string): string => {
+        ADD: (user_internal_id: number, post_id: number, reaction: string): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.REACTION.NAME;
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ')
             let values = user_internal_id + ', ' + post_id + ', \'' + reaction + '\', CURRENT_TIMESTAMP';
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
-        DELETE: (id: string): string => {
+        DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.REACTION.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         }
@@ -286,7 +286,7 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.TAG.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
-        GET_BY_ID: (id: string): string => {
+        GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.TAG.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
@@ -295,7 +295,7 @@ export const QUERIES = {
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ')
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES ('${name}') RETURNING id;`;
         },
-        DELETE: (id: string): string => {
+        DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.TAG.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         }
@@ -305,7 +305,7 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.SUBSCRIPTION.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
-        GET_BY_ID: (id: string): string => {
+        GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.SUBSCRIPTION.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
@@ -315,7 +315,7 @@ export const QUERIES = {
             let values = '\'' + name + '\', \'' + description + '\', ' + post_limit + ', ' + price;
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
-        DELETE: (id: string): string => {
+        DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.TAG.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         }
@@ -325,11 +325,11 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
-        GET_BY_ID: (id: string): string => {
+        GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
-        ADD: (subscription_id: string, type: string, email: string, username: string,
+        ADD: (subscription_id: number, type: string, email: string, username: string,
               first_name: string, last_name: string, address: string, city: string,
               country: string, zip_code: string, theme: string): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
@@ -339,7 +339,7 @@ export const QUERIES = {
                 + country + '\', \'' + zip_code + '\', \'' + theme + '\', CURRENT_TIMESTAMP'
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
-        DELETE: (id: string): string => {
+        DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         }
@@ -349,17 +349,17 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTIONNAIRE_TAG.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
-        GET_BY_ID: (id: string): string => {
+        GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTIONNAIRE_TAG.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
-        ADD: (tag_id: string, questionnaire_id: string, interest: string): string => {
+        ADD: (tag_id: number, questionnaire_id: number, interest: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTIONNAIRE_TAG.NAME;
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ')
             let values = tag_id + ', ' + questionnaire_id + ', ' + interest;
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
-        DELETE: (id: string): string => {
+        DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTIONNAIRE_TAG.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         }
@@ -369,17 +369,17 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTION_TAG.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
-        GET_BY_ID: (id: string): string => {
+        GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTION_TAG.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
-        ADD: (tag_id: string, question_id: string, interest: string): string => {
+        ADD: (tag_id: number, question_id: number, interest: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTION_TAG.NAME;
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ')
             let values = tag_id + ', ' + question_id + ', ' + interest;
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
-        DELETE: (id: string): string => {
+        DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTION_TAG.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         }
@@ -389,17 +389,17 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.LINKAGE_TAG.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
-        GET_BY_ID: (id: string): string => {
+        GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.LINKAGE_TAG.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
-        ADD: (tag_id: string, linkage_id: string, interest: string): string => {
+        ADD: (tag_id: number, linkage_id: number, interest: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.LINKAGE_TAG.NAME;
-            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ')
+            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.LINKAGE_TAG.COLUMNS.join(', ')
             let values = tag_id + ', ' + linkage_id + ', ' + interest;
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
-        DELETE: (id: string): string => {
+        DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.LINKAGE_TAG.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         }
@@ -409,17 +409,17 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST_TAG.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
-        GET_BY_ID: (id: string): string => {
+        GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST_TAG.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
-        ADD: (tag_id: string, post_id: string, interest: string): string => {
+        ADD: (tag_id: number, post_id: number, interest: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST_TAG.NAME;
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ')
             let values = tag_id + ', ' + post_id + ', ' + interest;
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
-        DELETE: (id: string): string => {
+        DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST_TAG.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         }
