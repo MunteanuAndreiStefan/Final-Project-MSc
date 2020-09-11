@@ -1,5 +1,12 @@
-const DatabaseCreateService = require('../Services/Database/DatabaseCreatorService')
+const core = require('../dist/dist/bundle');
+const DatabaseCreateService = core.Services.DatabaseCreatorService
 
-DatabaseCreateService.createSchemaIfMissingAsync()
-    .then(() => console.log('It worked'))
-    .catch(console.error);
+DatabaseCreateService.createSchemaIfMissing()
+    .then(() => {
+        console.log('It worked');
+        process.exit(0);
+    })
+    .catch(err => {
+        console.error(err);
+        process.exit(1);
+    });

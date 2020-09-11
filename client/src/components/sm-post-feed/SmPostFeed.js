@@ -9,7 +9,7 @@ class SmPostFeed extends Component {
         this.state = {
             posts : props.posts,
             users : props.users,
-            current_user_id: props.current_user_id
+            currentUser: props.currentUser
         };
     }
 
@@ -18,9 +18,8 @@ class SmPostFeed extends Component {
     }
 
     render() {
-
-        let postList = this.state.posts.map(post => <SmPost key={post.id} post={post}
-                                                            current_user_id={this.state.current_user_id}
+        let postList = this.props.posts.map(post => <SmPost key={post.id} post={post}
+                                                            currentUser={this.state.currentUser}
                                                             handleDelete={this.__handleDeletePost}
                                                             users={this.state.users}></SmPost>);
 

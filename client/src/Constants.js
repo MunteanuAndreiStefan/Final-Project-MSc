@@ -1,5 +1,62 @@
 let MOCK_DATA = {
-    current_user_id: 1,
+    subscriptions: [
+        {
+            id: 1,
+            name: 'Free tier',
+            description: 'This contains limited features.',
+            feature_list: [
+                '10 Posts',
+                '5 Questionnaires'
+            ],
+            price: 0
+        },
+        {
+            id: 2,
+            name: 'Silver tier',
+            description: 'This contains more features.',
+            feature_list: [
+                '50 Posts',
+                '25 Questionnaires',
+                'Reaction and Comment capabilities'
+            ],
+            price: 9.99
+        },
+        {
+            id: 3,
+            name: 'Gold tier',
+            description: 'This contains a lot of features.',
+            feature_list: [
+                '100 Posts',
+                '50 Questionnaires',
+                'Reaction and Comment capabilities',
+                'Bussines hours Support'
+            ],
+            price: 17.99
+        },
+        {
+            id: 4,
+            name: 'Platinum tier',
+            description: 'This contains all the features.',
+            feature_list: [
+                'Unlimited Posts',
+                'Unlimited Questionnaires',
+                'Like and Comment capabilities',
+                '24/7 Support'
+            ],
+            price: 29.99
+        }
+    ],
+    current_user: {
+        id: 1,
+        first_name: 'Marin',
+        last_name: 'Morar',
+        email: 'marin.morar@hey.com',
+        address: 'Str. Padurii',
+        city: 'Iasi',
+        country: 'Romania',
+        zip_code: '717171',
+        subscription_id: 1,
+    },
     users: [
         {
             user_internal_id: 1,
@@ -161,7 +218,7 @@ let MOCK_DATA = {
             ],
             reactions: [
                 {
-                    user_internal_id: 1,
+                    user_internal_id: 2,
                     reaction: 'LIKE',
                     timestamp: '2020-08-10 23:35:32'
                 }
@@ -311,6 +368,15 @@ let MOCK_DATA = {
     ]
 }
 
+let API = {
+    HOST_AND_PORT: 'http://localhost:3001',
+    PATHS: {
+        POST: {
+            GET_ALL_BY_USER: '/posts'
+        }
+    }
+}
+
 export default {
-    MOCK_DATA
+    MOCK_DATA, API
 };

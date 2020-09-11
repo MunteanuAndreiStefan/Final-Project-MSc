@@ -17,5 +17,12 @@ client.connect(function(err: Error) {
 });
 
 export function executeQuery(query: string): Promise<QueryResult> {
-    return client.query(query);
+    return new Promise<QueryResult>(((resolve, reject) => {
+        client.query(query)
+            .then(resolve)
+            .catch((error) => {
+                console.error(error);
+                reject(error);
+            })
+    }));
 }

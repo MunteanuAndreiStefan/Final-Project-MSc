@@ -35,7 +35,7 @@ const SCHEMAS = {
             POST: {
                 NAME: 'post',
                 COLUMNS: [
-                    'text', 'priority', 'timestamp'
+                    'user_internal_id', 'text', 'priority', 'timestamp'
                 ]
             },
             RESOURCE: {
@@ -210,15 +210,23 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
-        ADD: (text: string, priority: number): string => {
+        ADD: (user_internal_id: number, text: string, priority: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST.NAME;
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST.COLUMNS.join(', ')
-            let values = '\'' + text + '\', ' + priority + ', CURRENT_TIMESTAMP';
+            let values = user_internal_id + ', \'' + text + '\', ' + priority + ', CURRENT_TIMESTAMP';
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
         DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
+        },
+        GET_ALL_BY_SUBSCRIPTION_AND_ORDERED: (email: string): string => {
+            return `SELECT p.id, p.user_internal_id, p."text", p.priority, p."timestamp" FROM social_media_db.post p
+                    ORDER BY priority DESC, "timestamp" DESC 
+                    LIMIT (
+                        SELECT s.post_limit FROM social_media_db."user" u 
+                        JOIN social_media_db."subscription" s ON u.subscription_id = s.id WHERE u.email = '${email}' LIMIT 1
+                    )`;
         }
     },
     RESOURCE: {
@@ -229,6 +237,10 @@ export const QUERIES = {
         GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
+        },
+        GET_BY_POST_ID: (id: number): string => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName} WHERE post_id = ${id};`;
         },
         ADD: (post_id: number, url: string, type: string): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.NAME;
@@ -250,6 +262,10 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.COMMENT.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
+        GET_BY_POST_ID: (post_id: number): string => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.COMMENT.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName} WHERE post_id = ${post_id};`;
+        },
         ADD: (user_internal_id: number, post_id: number, text: string): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.COMMENT.NAME;
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ')
@@ -269,6 +285,10 @@ export const QUERIES = {
         GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.REACTION.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
+        },
+        GET_BY_POST_ID: (post_id: number): string => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.REACTION.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName} WHERE post_id = ${post_id};`;
         },
         ADD: (user_internal_id: number, post_id: number, reaction: string): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.REACTION.NAME;

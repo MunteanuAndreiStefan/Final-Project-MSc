@@ -1,0 +1,33 @@
+.sm-profile {
+    margin: 3% 20% 0 3%;
+}
+
+.sm-profile > * {
+    margin-bottom: 15px;
+}
+
+.sm-profile .MuiFormControl-root {
+    width: 90%;
+}
+
+.sm-profile-subscriptions {
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.sm-profile-subscription-selected {
+    background-color: beige !important;
+}
+
+.sm-profile-subscription-footer {
+    margin-bottom: 20px;
+}
+
+.float_left {
+    float: left;
+}
+
+.float_right {
+    float: right;
+}

@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import './SmPost.css';
+import {enhanceUser} from '../../services/UserService.js'
+
 import {makeStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import clsx from 'clsx';
@@ -31,17 +33,19 @@ import Menu from "@material-ui/core/Menu";
 class SmPost extends Component {
     constructor(props) {
         super(props);
-
+        let currentUser = props.currentUser;
+        let current_user_id = currentUser ? currentUser.id : null;
         let post = props.post;
         let users = props.users;
-        let userReacted = props.post.reactions.findIndex(reaction => reaction.user_internal_id === props.current_user_id)
+        let userReacted = post.reactions.findIndex(reaction => reaction.user_internal_id === props.current_user_id)
         let reactionButtonType = this.__getReactionButtonByBehaviour(userReacted !== -1);
-        let post_user = this.getEnhancedUser(users.find(user => user.user_internal_id === post.user_internal_id));
+        let post_user = enhanceUser(users.find(user => user.user_internal_id === post.user_internal_id));
 
         let comments = post.comments.map(comment => this.mapComplementaryDataWithUserInfo(comment, users));
         let reactions = post.reactions.map(reaction => this.mapComplementaryDataWithUserInfo(reaction, users));
 
         this.state = {
+            currentUser: currentUser,
             post_user: post_user,
             post: {
                 ...props.post,
@@ -52,11 +56,11 @@ class SmPost extends Component {
                 reactions: reactions
             },
             users: props.users,
-            current_user_id: props.current_user_id,
+            current_user_id: current_user_id,
             reactionButton: {
                 type: reactionButtonType,
                 value: false,
-                label: this.__getReactionString(reactions, props.current_user_id)
+                label: this.__getReactionString(reactions, current_user_id)
             },
             commentBox: {
                 label: 'Write your thoughts',
@@ -102,7 +106,7 @@ class SmPost extends Component {
     __handleViewReactions = (event) => {
         this.setState({
             reactionDialogOpen: true
-         })
+        })
     }
 
     __handleReactionDialogClose = (event) => {
@@ -160,7 +164,7 @@ class SmPost extends Component {
                 value: ''
             },
             post: {
-                ... this.state.post,
+                ...this.state.post,
                 comments: updatedComments
             }
         })
@@ -171,13 +175,9 @@ class SmPost extends Component {
         if (commentIndex === -1) {
             return;
         }
-        // this.props.post.comments = [
-        //     ...this.props.post.comments.slice(0, commentIndex),
-        //     ...this.props.post.comments.slice(commentIndex + 1),
-        // ]
         this.setState({
             post: {
-                ... this.state.post,
+                ...this.state.post,
                 comments: [
                     ...this.state.post.comments.slice(0, commentIndex),
                     ...this.state.post.comments.slice(commentIndex + 1),
@@ -186,18 +186,10 @@ class SmPost extends Component {
         })
     }
 
-    getEnhancedUser(user)  {
-        return {
-            ... user,
-            avatar: user.first_name.slice(0, 1) + user.last_name.slice(0, 1),
-            full_name: user.first_name + ' ' + user.last_name
-        };
-    }
-
     mapComplementaryDataWithUserInfo(complementaryData, users) {
         return {
-            ... complementaryData,
-            user: this.getEnhancedUser(users.find(user => user.user_internal_id === complementaryData.user_internal_id))
+            ...complementaryData,
+            user: enhanceUser(users.find(user => user.user_internal_id === complementaryData.user_internal_id))
         }
     }
 
@@ -226,7 +218,6 @@ class SmPost extends Component {
                 if (currentUserInReactions(reactions, current_user_id)) {
                     return "You and 1 other reacted"
                 }
-                console.log(reactions, 'mizerie')
                 return `${reactions[0].user.full_name} and 1 other reacted`
             }
             default: {
@@ -259,12 +250,23 @@ class SmPost extends Component {
             </CardContent>
         }
 
-        cardComments = viewData.post.comments.map(comment => <SmComment handleDelete={this.__handleDeleteComment} comment={comment}></SmComment>)
+        cardComments = viewData.post.comments.map(comment => <SmComment handleDelete={this.__handleDeleteComment}
+                                                                        postUserId={this.state.post.user_internal_id}
+                                                                        currentUser={this.state.currentUser}
+                                                                        comment={comment}></SmComment>)
+
+
+        console.log('postOptionButton', this.state.currentUser, this.state.current_user_id, viewData.post.user_internal_id)
+
+        let postOptionButton = this.state.current_user_id === viewData.post.user_internal_id ? <IconButton aria-label="settings">
+            <MoreVertIcon onClick={this.__handleOpenPostMenu}/>
+        </IconButton> : null;
 
         return (
             <div>
                 <SmReactionDialog reactions={this.state.post.reactions}
-                    open={this.state.reactionDialogOpen} onClose={this.__handleReactionDialogClose}></SmReactionDialog>
+                                  open={this.state.reactionDialogOpen}
+                                  onClose={this.__handleReactionDialogClose}></SmReactionDialog>
                 <Card className={"card-root"}>
                     <div className={"sm-post-panel"}>
                         <CardHeader
@@ -273,11 +275,7 @@ class SmPost extends Component {
                                     {viewData.post.avatar}
                                 </Avatar>
                             }
-                            action={
-                                <IconButton aria-label="settings">
-                                    <MoreVertIcon onClick={this.__handleOpenPostMenu}/>
-                                </IconButton>
-                            }
+                            action={postOptionButton}
                             title={viewData.post.userName}
                             subheader={viewData.post.date}
                             titleTypographyProps={{variant: "h5"}}
@@ -303,7 +301,8 @@ class SmPost extends Component {
                                     {this.state.reactionButton.type}
                                 </IconButton>
                                 <Button onClick={this.__handleViewReactions}
-                                    color="primary" startIcon={<FaceIcon />}>{this.state.reactionButton.label}</Button>
+                                        color="primary"
+                                        startIcon={<FaceIcon/>}>{this.state.reactionButton.label}</Button>
                             </CardActions>
                             <CardContent>
                                 <div className={"post-comments"}>
@@ -321,7 +320,7 @@ class SmPost extends Component {
                                         variant="outlined"
                                     />
                                     <Button onClick={this.__handleAddComment}
-                                        color="primary" startIcon={<ChatBubble />}>{"Comment"}</Button>
+                                            color="primary" startIcon={<ChatBubble/>}>{"Comment"}</Button>
                                 </div>
                             </CardContent>
                         </Collapse>

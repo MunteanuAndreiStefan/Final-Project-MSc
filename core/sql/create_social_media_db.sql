@@ -24,6 +24,9 @@ CREATE TABLE social_media_db.subscription (
   name      	      varchar(255) NOT NULL,
   description      	  varchar(255) NOT NULL,
   post_limit      	          int4 NOT NULL,
+  questionnaire_limit      	  int4 NOT NULL,
+  comments_active          BOOLEAN DEFAULT false
+  reactions_active         BOOLEAN DEFAULT false
   price      	              int4 NOT NULL,
   CONSTRAINT subscription_id_pk PRIMARY KEY (id)
 );
@@ -107,9 +110,11 @@ CREATE TABLE social_media_db.user_answer (
 DROP TABLE IF EXISTS social_media_db.post;
 CREATE TABLE social_media_db.post (
   id                        serial NOT NULL,
+  user_internal_id      	  int8 NOT NULL,
   "text"      	      varchar(255) NOT NULL,
   priority      	          int8 NOT NULL,
   "timestamp"    	        timestamp NOT NULL,
+  CONSTRAINT post_to_user_fk FOREIGN KEY (user_internal_id) REFERENCES social_media_db."user" (internal_id),
   CONSTRAINT post_id_pk PRIMARY KEY (id)
 );
 
@@ -241,9 +246,9 @@ INSERT INTO social_media_db.answer (question_id, priority, scale_value, text, im
 
 INSERT INTO social_media_db.user_answer (user_internal_id, question_id, answer_id, "timestamp") VALUES (1, 1, 2, CURRENT_TIMESTAMP);
 
-INSERT INTO social_media_db.post ("text", priority, "timestamp") VALUES ('Hello world', 7, CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.post ("text", priority, "timestamp") VALUES ('Covid19 does not exist', 5, CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.post ("text", priority, "timestamp") VALUES ('Trump is the best president', 4, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.post (user_internal_id, "text", priority, "timestamp") VALUES (1, 'Hello world', 7, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.post (user_internal_id, "text", priority, "timestamp") VALUES (2, 'Covid19 does not exist', 5, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.post (user_internal_id, "text", priority, "timestamp") VALUES (1, 'Trump is the best president', 4, CURRENT_TIMESTAMP);
 
 INSERT INTO social_media_db.resource (post_id, url, "type", "timestamp") VALUES (1, 'https://static.toiimg.com/thumb/msid-67586673,width-800,height-600,resizemode-75,imgsize-3918697,pt-32,y_pad-40/67586673.jpg', 'IMAGE', CURRENT_TIMESTAMP);
 INSERT INTO social_media_db.resource (post_id, url, "type", "timestamp") VALUES (2, 'https://static.toiimg.com/thumb/msid-67586673,width-800,height-600,resizemode-75,imgsize-3918697,pt-32,y_pad-40/67586673.jpg', 'IMAGE', CURRENT_TIMESTAMP);

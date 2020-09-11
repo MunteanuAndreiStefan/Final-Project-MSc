@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const bundle = require('../../core/dist/dist/bundle');
+const bundle = require('../../dist/dist/bundle');
 const QuestionnaireController = bundle.Controllers.QuestionnaireController
 
 router.get('/questionnaires/id/:id', function (req, res) {

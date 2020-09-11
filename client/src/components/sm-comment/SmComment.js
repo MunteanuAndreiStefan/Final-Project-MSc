@@ -19,6 +19,8 @@ class SmComment extends Component {
         super(props);
 
         this.state = {
+            currentUser: this.props.currentUser,
+            postUserId: this.props.postUserId,
             comment: this.props.comment,
             anchorElement: null
         };
@@ -52,6 +54,13 @@ class SmComment extends Component {
     }
 
     render() {
+
+        let currentUserId = this.state.currentUser.id;
+        let commentOptionButton = currentUserId === this.state.comment.user_internal_id || currentUserId === this.state.postUserId
+            ? <IconButton aria-label="settings">
+            <MoreVertIcon onClick={this.__handleOpenCommentMenu}/>
+        </IconButton> : null;
+
         return (
             <div>
                 <Card className={"comment-root"}>
@@ -61,11 +70,7 @@ class SmComment extends Component {
                                 {this.props.comment.user.avatar}
                             </Avatar>
                         }
-                        action={
-                            <IconButton aria-label="settings">
-                                <MoreVertIcon onClick={this.__handleOpenCommentMenu}/>
-                            </IconButton>
-                        }
+                        action={commentOptionButton}
                         title={this.props.comment.user.full_name}
                         subheader={this.props.comment.text}
                         titleTypographyProps={{variant: "h6"}}

@@ -6,6 +6,10 @@ export async function getById(id: number): Promise<QueryResult> {
     return DatabaseService.executeQuery(Constants.QUERIES.REACTION.GET_BY_ID(id))
 }
 
+export async function getAllByPostId(post_id: number): Promise<QueryResult> {
+    return DatabaseService.executeQuery(Constants.QUERIES.REACTION.GET_BY_POST_ID(post_id))
+}
+
 export async function add(user_internal_id: number, post_id: number, reaction: string): Promise<QueryResult> {
     return DatabaseService.executeQuery(Constants.QUERIES.REACTION.ADD(user_internal_id, post_id, reaction));
 }
