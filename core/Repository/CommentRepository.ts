@@ -10,7 +10,7 @@ export async function getAllByPostId(post_id: number): Promise<QueryResult> {
     return DatabaseService.executeQuery(Constants.QUERIES.COMMENT.GET_BY_POST_ID(post_id))
 }
 
-export async function add(user_internal_id: number, post_id: number, text: string): Promise<QueryResult> {
+export async function add(user_internal_id: number, post_id: number, text: string): Promise<any> {
     return DatabaseService.executeQuery(Constants.QUERIES.COMMENT.ADD(user_internal_id, post_id, text));
 }
 

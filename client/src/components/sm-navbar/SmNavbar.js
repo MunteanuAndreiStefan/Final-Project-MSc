@@ -26,7 +26,6 @@ class SmNavbar extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentUser: props.currentUser,
             anchorEl: null,
             mobileMoreAnchorEl: null,
             isMenuOpen: Boolean(null),
@@ -112,7 +111,7 @@ class SmNavbar extends Component {
 
         let rightNavbarSide = null;
 
-        if (this.state.currentUser === undefined || this.state.currentUser === null) {
+        if (this.props.currentUser === undefined || this.props.currentUser === null) {
             rightNavbarSide = <div>
                 <Button onClick={this.props.logIn}
                     variant="contained" color="primary">
@@ -124,8 +123,8 @@ class SmNavbar extends Component {
                 <Chip
                     className={"userChip"}
                     style={{marginLeft: "10px"}}
-                    avatar={<Avatar>{this.state.currentUser.avatar}</Avatar>}
-                    label={this.state.currentUser.full_name}
+                    avatar={<Avatar>{this.props.currentUser.avatar}</Avatar>}
+                    label={this.props.currentUser.full_name}
                     edge="end"
                     aria-label="account of current user"
                     aria-controls={menuId}
@@ -137,8 +136,6 @@ class SmNavbar extends Component {
                 />
             </div>
         }
-
-
 
         return (
             <div style={{flexGrow: 1}}>

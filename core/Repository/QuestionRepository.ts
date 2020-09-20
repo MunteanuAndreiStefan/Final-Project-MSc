@@ -6,6 +6,10 @@ export async function getById(id: number): Promise<QueryResult> {
     return DatabaseService.executeQuery(Constants.QUERIES.QUESTION.GET_BY_ID(id))
 }
 
+export async function getAllByQuestionnaireId(questionnaireId: number): Promise<QueryResult> {
+    return DatabaseService.executeQuery(Constants.QUERIES.QUESTION.GET_BY_QUESTIONNAIRE_ID(questionnaireId))
+}
+
 export async function add(questionnaire_id: number, question_type: string, multiple_answers: boolean, title: string, description: string): Promise<QueryResult> {
     return DatabaseService.executeQuery(Constants.QUERIES.QUESTION.ADD(questionnaire_id, question_type, multiple_answers, title, description));
 }

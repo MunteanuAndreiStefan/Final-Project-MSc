@@ -33,12 +33,10 @@ class SmComment extends Component {
 
 
     __handleOpenCommentMenu = (event) => {
-        console.log('__handleOpenCommentMenu', event);
         this.setAnchorElement(event.currentTarget);
     }
 
     __handleCloseCommentMenu = (event) => {
-        console.log('__handleCloseCommentMenu', event);
         this.setAnchorElement(null);
     }
 
@@ -55,8 +53,8 @@ class SmComment extends Component {
 
     render() {
 
-        let currentUserId = this.state.currentUser.id;
-        let commentOptionButton = currentUserId === this.state.comment.user_internal_id || currentUserId === this.state.postUserId
+        let currentUserId = this.state.currentUser.user_internal_id;
+        let commentOptionButton = currentUserId === this.state.comment.user_internal_id || currentUserId == this.state.postUserId
             ? <IconButton aria-label="settings">
             <MoreVertIcon onClick={this.__handleOpenCommentMenu}/>
         </IconButton> : null;

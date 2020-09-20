@@ -36,14 +36,10 @@ import {enhanceUser} from "./services/UserService";
 import * as CommunicationService from "./services/CommunicationService";
 
 function Feed(props) {
-    let currentUser = props.state.current_user;
-    let currentUserId = currentUser ? currentUser.id : null;
-
     return <SmPostFeed
         currentUser={props.state.currentUser}
         posts={props.state.posts}
         users={props.state.users}
-        current_user_id={currentUserId}
     ></SmPostFeed>;
 }
 
@@ -70,12 +66,27 @@ class App extends Component {
         this.state = {
             isAuthenticated: false,
             isAuthenticating: true,
-            currentUser: enhanceUser(Constants.MOCK_DATA.current_user),
+            currentUser: {},
             posts: [],
-            users: Constants.MOCK_DATA.users,
-            subscriptions: Constants.MOCK_DATA.subscriptions,
+            users: [],
+            subscriptions: [],
             questionnaires: Constants.MOCK_DATA.questionnaires
         };
+
+        CommunicationService.getCurrentUser()
+            .then((res) => {
+                this.setState({
+                    currentUser: enhanceUser(res)
+                })
+                console.log('currentUser', res)
+            })
+            .catch(console.error)
+
+        CommunicationService.getSubscriptions()
+            .then((res) => this.setState({
+                subscriptions: res
+            }))
+            .catch(console.error)
     }
 
     async componentDidMount() {
@@ -113,8 +124,21 @@ class App extends Component {
         CommunicationService.getPosts()
             .then((res) => {
                 this.setState({
-                    posts: res.body
+                    posts: res.posts,
+                    users: res.users
                 })
+                console.log(res)
+            })
+            .catch(console.error)
+    }
+
+    _questionnaireClick = (event) => {
+        CommunicationService.getQuestionnaires()
+            .then((res) => {
+                this.setState({
+                    questionnaires: res
+                })
+                console.log(res)
             })
             .catch(console.error)
     }
@@ -127,7 +151,7 @@ class App extends Component {
 
         let links = [];
         links.push(<Link onClick={this._postFeedClick} to="/feed">Feed</Link>)
-        links.push(<Link to="/questionnaires">Questionnaires</Link>)
+        links.push(<Link onClick={this._questionnaireClick} to="/questionnaires">Questionnaires</Link>)
         links.push(<Link to="/about">About</Link>)
 
         let routes = [];

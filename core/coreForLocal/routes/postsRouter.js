@@ -1,30 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const cors = require('cors');
+const utils = require('../utils');
 
 const bundle = require('../../dist/dist/bundle');
 const MainLambda = bundle.Lambdas.MainLambda
 
-router.use(cors());
+router.get('/', utils.createRouteWithLambda(MainLambda.getPosts));
 
-router.get('/', function (req, res) {
-    MainLambda.getPosts(req.apiGateway.event)
-        .then(message => respond(res, message))
-        .catch(err => errors(res, err));
-});
+router.put('/id/:postId/react', utils.createRouteWithLambda(MainLambda.reactionAddHandle));
+router.delete('/id/:postId/react/:reactionId', utils.createRouteWithLambda(MainLambda.reactionDeleteHandle));
 
-let respond = (res, message) => {
-    if (message === undefined || message === null) {
-        res.status(404).send({error: "Resource not  found."});
-    } else if (message.status !== undefined) {
-        res.status(message.status).send(message);
-    } else {
-        res.status(200).send(message);
-    }
-}
-
-let errors = (res, errors) => {
-    res.status(500).send(errors);
-}
+router.put('/id/:postId/comment', utils.createRouteWithLambda(MainLambda.commentAddHandle));
+router.delete('/id/:postId/comment/:commentId', utils.createRouteWithLambda(MainLambda.commentDeleteHandle));
 
 module.exports = router;

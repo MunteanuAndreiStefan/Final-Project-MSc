@@ -16,6 +16,7 @@ import TextField from "@material-ui/core/TextField";
 import {ChatBubble} from "@material-ui/icons";
 import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
+import * as CommunicationService from "../../services/CommunicationService";
 
 class SmQuestionnaire extends Component {
     constructor(props) {
@@ -38,7 +39,12 @@ class SmQuestionnaire extends Component {
         if(values.filter(x => x.length === 0).length > 0) {
             alert('Complete the quiz.')
         } else {
-            alert(JSON.stringify(this.state.questionToAnswerMap));
+            CommunicationService.answer(this.state.questionnaire.id, this.state.questionToAnswerMap)
+                .then((res) => {
+
+                    console.log('answer', res)
+                })
+                .catch(console.error)
         }
     }
 
@@ -47,11 +53,11 @@ class SmQuestionnaire extends Component {
     }
 
     render() {
-        let questionList = this.state.questionnaire.questions.map((question, index) =>
+        let questionList = this.props.questionnaire.questions.map((question, index) =>
             <SmQuestion changeAnswers={this.__changeAnswersOf}
                 key={index} question={question}></SmQuestion>);
 
-        let questionnaire = this.state.questionnaire;
+        let questionnaire = this.props.questionnaire;
         return (
             <div>
                 <Card>

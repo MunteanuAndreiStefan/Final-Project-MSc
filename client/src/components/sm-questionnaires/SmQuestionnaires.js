@@ -17,19 +17,15 @@ class SmQuestionnaires extends Component {
         super(props);
 
         this.state = {
-            questionnaires: props.questionnaires,
             selectedQuestionnaireIndex: -1,
             accordionControlExpand: false
         };
     }
 
     __handleQuestionnaireOnClick = (event, index) => {
-        console.log('__handleQuestionnaireOnClick', event, index)
         this.setState({
             selectedQuestionnaireIndex: index
         })
-        console.log('__handleQuestionnaireOnClick', this.state.selectedQuestionnaireIndex)
-
     }
 
     __handleAccordionChange = (panel) => (event, isExpanded) => {
@@ -40,7 +36,7 @@ class SmQuestionnaires extends Component {
 
     render() {
 
-        let questionnaireList = this.state.questionnaires.map((questionnaire, index) => {
+        let questionnaireList = this.props.questionnaires.map((questionnaire, index) => {
             let panelName = 'panel' + questionnaire.id;
             return <Accordion expanded={this.state.accordionControlExpand === panelName} onChange={this.__handleAccordionChange(panelName)}>
                 <AccordionSummary
@@ -67,7 +63,7 @@ class SmQuestionnaires extends Component {
 
         let selectedIndex = this.state.selectedQuestionnaireIndex;
         let currentQuestionnaireComponent = selectedIndex < 0 ? null :
-            <SmQuestionnaire key={selectedIndex} questionnaire={this.state.questionnaires[selectedIndex]}></SmQuestionnaire>;
+            <SmQuestionnaire key={selectedIndex} questionnaire={this.props.questionnaires[selectedIndex]}></SmQuestionnaire>;
 
         return (
             <div className={"sm-questionnaires"}>

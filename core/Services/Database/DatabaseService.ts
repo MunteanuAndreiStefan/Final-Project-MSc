@@ -17,12 +17,13 @@ client.connect(function(err: Error) {
 });
 
 export function executeQuery(query: string): Promise<QueryResult> {
-    return new Promise<QueryResult>(((resolve, reject) => {
+    return new Promise<any>(((resolve, reject) => {
         client.query(query)
             .then(resolve)
             .catch((error) => {
                 console.error(error);
-                reject(error);
+                resolve(error);
+                //reject(error);
             })
     }));
 }

@@ -65,13 +65,13 @@ const SCHEMAS = {
             SUBSCRIPTION: {
                 NAME: 'subscription',
                 COLUMNS: [
-                    'name', 'description', 'post_limit', 'price'
+                    'name', 'description', 'post_limit', 'questionnaire_limit', 'comments_active', 'reactions_active', 'support', 'price'
                 ]
             },
             USER: {
                 NAME: 'user',
                 COLUMNS: [
-                    'subscription_id', 'type', 'email', 'username', 'first_name', 'last_name', 'address', 'city', 'country', 'zip_code', 'theme', 'timestamp'
+                    'user_internal_id', 'subscription_id', 'type', 'email', 'username', 'first_name', 'last_name', 'address', 'city', 'country', 'zip_code', 'theme', 'timestamp'
                 ]
             },
             QUESTIONNAIRE_TAG: {
@@ -121,7 +121,15 @@ export const QUERIES = {
         DELETE: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTIONNAIRE.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
-        }
+        },
+        GET_ALL_QUESTIONNAIRES_BY_USER_AND_ORDERED: (email: string): string => {
+            return `SELECT * FROM social_media_db.questionnaire q
+                    ORDER BY priority DESC
+                    LIMIT (
+                        SELECT s.questionnaire_limit FROM social_media_db."user" u 
+                        JOIN social_media_db."subscription" s ON u.subscription_id = s.id WHERE u.email = '${email}'
+                    )`;
+        },
     },
     QUESTION: {
         GET_ALL: (): string => {
@@ -131,6 +139,10 @@ export const QUERIES = {
         GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTION.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
+        },
+        GET_BY_QUESTIONNAIRE_ID: (questionnaireId: number): string => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTION.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName} WHERE questionnaire_id = ${questionnaireId};`;
         },
         ADD: (questionnaire_id: number, question_type: string, multiple_answers: boolean, title: string, description: string) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTION.NAME;
@@ -165,6 +177,10 @@ export const QUERIES = {
         GET_ALL: (): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.ANSWER.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
+        GET_ALL_BY_QUESTION_ID: (questionId: number): string => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.ANSWER.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName} WHERE question_id = ${questionId};`;
         },
         GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.ANSWER.NAME;
@@ -268,7 +284,7 @@ export const QUERIES = {
         },
         ADD: (user_internal_id: number, post_id: number, text: string): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.COMMENT.NAME;
-            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ')
+            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.COMMENT.COLUMNS.join(', ')
             let values = user_internal_id + ', ' + post_id + ', \'' + text + '\', CURRENT_TIMESTAMP';
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
@@ -292,7 +308,7 @@ export const QUERIES = {
         },
         ADD: (user_internal_id: number, post_id: number, reaction: string): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.REACTION.NAME;
-            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ')
+            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.REACTION.COLUMNS.join(', ')
             let values = user_internal_id + ', ' + post_id + ', \'' + reaction + '\', CURRENT_TIMESTAMP';
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
@@ -329,10 +345,12 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.SUBSCRIPTION.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
-        ADD: (name: string, description: string, post_limit: number, price: number) => {
+        ADD: (name: string, description: string, post_limit: number, questionnaire_limit: number, comments_active: boolean,
+              reactions_active: boolean, support: string, price: number) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.SUBSCRIPTION.NAME;
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ')
-            let values = '\'' + name + '\', \'' + description + '\', ' + post_limit + ', ' + price;
+            let values = '\'' + name + '\', \'' + description + '\', ' + post_limit + ', ' + questionnaire_limit + ', '
+                + comments_active + ', ' + reactions_active + ', \'' + support + '\', ' + price;
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
         DELETE: (id: number): string => {
@@ -345,9 +363,24 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
+        GET_SHALLOW_USERS_BY_IDS: (ids: number[]): string => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
+            return `SELECT user_internal_id, first_name, last_name FROM ${schemaAndDatabaseName} WHERE id IN (${ids.join(',')})`;
+        },
         GET_BY_ID: (id: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
-            return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
+            let selectedColumns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.COLUMNS.join(',')
+            return `SELECT ${selectedColumns} FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
+        },
+        CHANGE_SUBSCRIPTION: (subscription_id: number, user_email: string): string => {
+            return `UPDATE social_media_db."user" u
+                    SET subscription_id = (SELECT id FROM social_media_db."subscription" s WHERE id = ${subscription_id})
+                    WHERE u.email = '${user_email}';`;
+        },
+        GET_BY_EMAIL: (email: string): string => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
+            let selectedColumns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.COLUMNS.join(',')
+            return `SELECT ${selectedColumns} FROM ${schemaAndDatabaseName} WHERE email = '${email}';`;
         },
         ADD: (subscription_id: number, type: string, email: string, username: string,
               first_name: string, last_name: string, address: string, city: string,
@@ -454,6 +487,7 @@ export const MESSAGES = {
         LINKAGE: 'LINKAGE not found.',
         ANSWER: 'ANSWER not found.',
         USER_ANSWER: 'USER_ANSWER not found.',
+        USER: 'USER not found.',
         POST: 'POST not found.',
         RESOURCE: 'RESOURCE not found.',
         COMMENT: 'COMMENT not found.',
@@ -462,6 +496,10 @@ export const MESSAGES = {
         QUESTIONNAIRE_TAG: 'QUESTIONNAIRE_TAG not found.',
         QUESTION_TAG: 'QUESTION_TAG not found.',
         LINKAGE_TAG: 'LINKAGE_TAG not found.',
-        POST_TAG: 'POST_TAG not found.'
+        POST_TAG: 'POST_TAG not found.',
+        SUBSCRIPTION: 'SUBSCRIPTION not found.'
+    },
+    SUCCESS: {
+        SUBSCRIPTION_UPDATED: 'Subscription plan updated successfully.'
     }
 };

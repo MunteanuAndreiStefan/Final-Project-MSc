@@ -29,10 +29,14 @@ class SmQuestion extends Component {
     }
 
     __handleValueChange = (event) => {
-        let multiple = this.state.question.multiple;
-        let targetValue = event.target.value;
+        let multiple = this.state.question.multiple_answers;
+        let targetValue = Number(event.target.value);
         let selectedIds = multiple ? this.state.selectedAnswerIds : [];
-        selectedIds.push(Number(targetValue))
+        if (selectedIds.indexOf(targetValue) !== -1) {
+            selectedIds = selectedIds.filter((id) => id !== targetValue);
+        } else {
+            selectedIds.push(targetValue)
+        }
         this.setState({
             selectedAnswerIds: selectedIds
         })
@@ -46,12 +50,16 @@ class SmQuestion extends Component {
     };
 
     render() {
-        let question = this.state.question;
-        let answerList = this.state.question.possibleAnswers.map((answer, index) =>
-            <SmAnswer answer={answer} type={question.type} key={index}
+        let question = this.props.question;
+        let answerList = this.state.question.possibleAnswers.map((answer, index) => {
+            console.log(answer, question);
+            return <SmAnswer answer={answer} type={question.question_type} key={index}
                       selectedAnswerIds={this.state.selectedAnswerIds}
                       handleValueChange={this.__handleValueChange}
-                      multiple={question.multiple}></SmAnswer>);
+                      multiple={question.multiple_answers}
+            ></SmAnswer>
+        });
+
 
         let answersContainerClass = question.type === 'TEXT' ? "sm-question-answers-container-column" : "sm-question-answers-container-row"
 

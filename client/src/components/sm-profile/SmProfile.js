@@ -19,6 +19,8 @@ import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import FaceIcon from "@material-ui/icons/Face";
+import * as CommunicationService from "../../services/CommunicationService";
+import {enhanceUser} from "../../services/UserService";
 
 class SmProfile extends Component {
     constructor(props) {
@@ -45,16 +47,24 @@ class SmProfile extends Component {
     }
 
     __handleSubscriptionSelection = (event, subscriptionId) => {
-        let modifiedUser = this.state.currentUser;
-        modifiedUser.subscription_id = subscriptionId;
-        this.setState({
-            currentUser: modifiedUser
-        });
+        let modifiedUser = this.props.currentUser;
+
+        CommunicationService.changeSubscription(subscriptionId)
+            .then((res) => {
+                modifiedUser.subscription_id = subscriptionId;
+                this.setState({
+                    currentUser: modifiedUser
+                });
+                console.log('changeSubscription', res)
+            })
+            .catch(console.error)
+
+
     }
 
     getSubscriptionsDiv() {
-        return this.state.subscriptions.map(subscription => {
-            let subscriptionIsSelected = subscription.id === this.state.currentUser.subscription_id;
+        return this.props.subscriptions.map(subscription => {
+            let subscriptionIsSelected = subscription.id == this.props.currentUser.subscription_id;
             let className = subscriptionIsSelected ? "sm-profile-subscription-selected" : null;
             let selectButton = subscriptionIsSelected ? null :
                 <Button onClick={(event) => this.__handleSubscriptionSelection(event, subscription.id)} color="primary">Select</Button>;
@@ -68,13 +78,21 @@ class SmProfile extends Component {
                 />
                 <CardContent>
                     <div style={{display: "block", height: 60}}>
+                        <Typography variant="subtitle1" component="p">
+                            {subscription.post_limit === -1 ? 'Unlimited' : subscription.post_limit} Posts
+                        </Typography>
+                        <Typography variant="subtitle1" component="p">
+                            {subscription.questionnaire_limit === -1 ? 'Unlimited' : subscription.questionnaire_limit} Questionnaires
+                        </Typography>
                         {
-                            subscription.feature_list.map(feature => {
-                                return <Typography variant="subtitle1" component="p">
-                                    {feature}
-                                </Typography>
-                            })
+                            subscription.comments_active ? <Typography variant="subtitle1" component="p">Comment capability</Typography> : null
                         }
+                        {
+                            subscription.reactions_active ? <Typography variant="subtitle1" component="p">Reaction capability</Typography> : null
+                        }
+                        <Typography variant="subtitle1" component="p">
+                            {subscription.support} Support
+                        </Typography>
                     </div>
                 </CardContent>
                 <CardContent className={"sm-profile-subscription-footer"}>
@@ -95,21 +113,21 @@ class SmProfile extends Component {
             <div className={"sm-profile"}>
                 <Card>
                     <CardHeader titleTypographyProps={{variant: "h5"}}
-                        title={this.state.currentUser.full_name}
+                        title={this.props.currentUser.full_name}
                     />
                     <CardContent>
                         <Grid container spacing={3}>
                             <Grid item xs>
                                 <TextField label="First name" disabled={this.state.fieldsAreDisabled}
-                                           defaultValue={this.state.currentUser.first_name} />
+                                           defaultValue={this.props.currentUser.first_name} />
                             </Grid>
                             <Grid item xs>
                                 <TextField label="Last name" disabled={this.state.fieldsAreDisabled}
-                                           defaultValue={this.state.currentUser.last_name} />
+                                           defaultValue={this.props.currentUser.last_name} />
                             </Grid>
                             <Grid item xs>
                                 <TextField label="Email" disabled={this.state.fieldsAreDisabled}
-                                           defaultValue={this.state.currentUser.email} />
+                                           defaultValue={this.props.currentUser.email} />
                             </Grid>
                         </Grid>
                     </CardContent>
@@ -120,15 +138,15 @@ class SmProfile extends Component {
                         <Grid container spacing={3}>
                             <Grid item xs>
                                 <TextField label="Zip Code" disabled={this.state.fieldsAreDisabled}
-                                           defaultValue={this.state.currentUser.zip_code} />
+                                           defaultValue={this.props.currentUser.zip_code} />
                             </Grid>
                             <Grid item xs>
                                 <TextField label="City" disabled={this.state.fieldsAreDisabled}
-                                           defaultValue={this.state.currentUser.city} />
+                                           defaultValue={this.props.currentUser.city} />
                             </Grid>
                             <Grid item xs>
                                 <TextField label="Country" disabled={this.state.fieldsAreDisabled}
-                                           defaultValue={this.state.currentUser.country} />
+                                           defaultValue={this.props.currentUser.country} />
                             </Grid>
                         </Grid>
                     </CardContent>

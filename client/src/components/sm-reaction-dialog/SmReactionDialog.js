@@ -18,7 +18,6 @@ class SmReactionDialog extends Component {
         super(props);
 
         this.state = {};
-
         this.__handleClose.bind(this);
         this.__handleListItemClick.bind(this);
     }
@@ -32,7 +31,6 @@ class SmReactionDialog extends Component {
     };
 
     render() {
-
         return (
             <div className={"sm-reaction-dialog"}>
                 <Dialog onClose={this.__handleClose} aria-labelledby="simple-dialog-title" open={this.props.open}>

@@ -22,7 +22,7 @@ class SmAnswer extends Component {
         let checked = this.props.selectedAnswerIds.find(x => x == this.state.answer.id) !== undefined
         if (this.state.multiple) {
             return <Checkbox
-                checked={checked}
+                checked={this.props.checked}
                 onChange={this.props.handleValueChange}
                 value={this.state.answer.id}
                 inputProps={{ 'aria-label': 'primary checkbox' }}

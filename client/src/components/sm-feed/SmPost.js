@@ -28,22 +28,21 @@ import {ChatBubble, FavoriteBorder} from "@material-ui/icons";
 import SmReactionDialog from "../sm-reaction-dialog/SmReactionDialog";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
+import * as CommunicationService from "../../services/CommunicationService";
 
 
 class SmPost extends Component {
     constructor(props) {
         super(props);
         let currentUser = props.currentUser;
-        let current_user_id = currentUser ? currentUser.id : null;
+        let current_user_id = currentUser ? currentUser.user_internal_id : null;
         let post = props.post;
         let users = props.users;
-        let userReacted = post.reactions.findIndex(reaction => reaction.user_internal_id === props.current_user_id)
+        let userReacted = post.reactions.findIndex(reaction => reaction.user_internal_id == current_user_id)
         let reactionButtonType = this.__getReactionButtonByBehaviour(userReacted !== -1);
-        let post_user = enhanceUser(users.find(user => user.user_internal_id === post.user_internal_id));
-
+        let post_user = enhanceUser(users.find(user => user.user_internal_id == post.user_internal_id));
         let comments = post.comments.map(comment => this.mapComplementaryDataWithUserInfo(comment, users));
         let reactions = post.reactions.map(reaction => this.mapComplementaryDataWithUserInfo(reaction, users));
-
         this.state = {
             currentUser: currentUser,
             post_user: post_user,
@@ -58,8 +57,7 @@ class SmPost extends Component {
             users: props.users,
             current_user_id: current_user_id,
             reactionButton: {
-                type: reactionButtonType,
-                value: false,
+                ...reactionButtonType,
                 label: this.__getReactionString(reactions, current_user_id)
             },
             commentBox: {
@@ -72,7 +70,11 @@ class SmPost extends Component {
     }
 
     __getReactionButtonByBehaviour(reacted) {
-        return reacted ? <FavoriteIcon color="action"/> : <FavoriteBorder/>;
+        let type = reacted ? <FavoriteIcon color="action"/> : <FavoriteBorder/>;
+        return {
+            type: type,
+            value: reacted,
+        }
     }
 
     __handleOpenPostMenu = (event) => {
@@ -115,47 +117,67 @@ class SmPost extends Component {
         })
     }
 
-    __handleReaction = (event) => {
+    __handleReaction = async (event) => {
         let currentState = this.state.reactionButton.value;
 
         if (!currentState) {
-            let reactionObj = {
-                user_internal_id: this.state.current_user_id,
-                reaction: 'LIKE',
-                timestamp: new Date().toISOString().replace('T', ' ').slice(0, -5)
+            let res = await CommunicationService.reactToPost(this.props.post.id, 'LIKE')
+            console.log('reactToPost', this.props.post.id, res)
+            if (res.reactionId) {
+                let reactionObj = {
+                    id: res.reactionId,
+                    user_internal_id: this.props.currentUser.user_internal_id,
+                    reaction: 'LIKE',
+                    timestamp: new Date().toISOString().replace('T', ' ').slice(0, -5)
+                }
+                this.props.post.reactions.push(reactionObj);
+            } else {
+                console.log('ERROR WHILE REACTING')
             }
-            this.props.post.reactions.push(reactionObj);
         } else {
-            let reactionIndex = this.props.post.reactions.findIndex(reaction => reaction.user_internal_id === this.state.current_user_id)
-            this.props.post.reactions = [
-                ...this.props.post.reactions.slice(0, reactionIndex),
-                ...this.props.post.reactions.slice(reactionIndex + 1),
-            ]
+            let reactionIndex = this.props.post.reactions.findIndex(reaction => reaction.user_internal_id == this.props.currentUser.user_internal_id)
+            let reactionId = this.props.post.reactions[reactionIndex].id;
+            let res = await CommunicationService.unreactToPost(this.props.post.id, reactionId)
+            if (res.deletedReactionsCount > 0) {
+                console.log('unreactToPost', this.props.post.id, res)
+                this.props.post.reactions = [
+                    ...this.props.post.reactions.slice(0, reactionIndex),
+                    ...this.props.post.reactions.slice(reactionIndex + 1),
+                ]
+            } else {
+                console.log('ERROR WHILE DELETING REACTION', res)
+            }
         }
-        let nextReactions = this.props.post.reactions.map(reaction => this.mapComplementaryDataWithUserInfo(reaction, this.state.users));
+        let nextReactions = this.props.post.reactions.map(reaction => this.mapComplementaryDataWithUserInfo(reaction, this.props.users));
 
-        let nextState = !currentState;
+        let nextState = !currentState
         this.setState({
             post: {
                 ...this.state.post,
                 reactions: nextReactions
             },
             reactionButton: {
-                type: this.__getReactionButtonByBehaviour(nextState),
-                value: nextState,
-                label: this.__getReactionString(nextReactions, this.props.current_user_id)
+                ...this.__getReactionButtonByBehaviour(nextState),
+                label: this.__getReactionString(nextReactions, this.state.current_user_id)
             },
         })
     }
 
-    __handleAddComment = (event) => {
+    __handleAddComment = async (event) => {
+        let res = await CommunicationService.commentToPost(this.props.post.id, this.state.commentBox.value)
+        console.log('__handleAddComment', this.props.post.id, res)
+        if (!res.commentId) {
+            console.log('ERROR WHILE COMMENTING')
+            return;
+        }
+
         let commentObj = {
-            user_internal_id: this.state.current_user_id,
+            id: res.commentId,
+            user_internal_id: this.props.currentUser.user_internal_id,
             text: this.state.commentBox.value,
             timestamp: new Date().toISOString().replace('T', ' ').slice(0, -5)
         }
-        //this.props.post.comments.push(commentObj);
-        let stateComment = this.mapComplementaryDataWithUserInfo(commentObj, this.state.users)
+        let stateComment = this.mapComplementaryDataWithUserInfo(commentObj, this.props.users)
         let updatedComments = this.state.post.comments;
         updatedComments.push(stateComment);
         this.setState({
@@ -170,26 +192,34 @@ class SmPost extends Component {
         })
     }
 
-    __handleDeleteComment = (event, currentComment) => {
-        let commentIndex = this.props.post.comments.findIndex(comment => comment.id === currentComment.id);
+    __handleDeleteComment = async (event, currentComment) => {
+        let commentIndex = this.state.post.comments.findIndex(comment => comment.id == currentComment.id);
         if (commentIndex === -1) {
             return;
         }
-        this.setState({
-            post: {
-                ...this.state.post,
-                comments: [
-                    ...this.state.post.comments.slice(0, commentIndex),
-                    ...this.state.post.comments.slice(commentIndex + 1),
-                ]
-            }
-        })
+        let commentId = this.state.post.comments[commentIndex].id;
+        let res = await CommunicationService.deleteCommentFromPost(this.props.post.id, commentId)
+
+        if (res.deletedCommentsCount > 0) {
+            this.setState({
+                post: {
+                    ...this.state.post,
+                    comments: [
+                        ...this.state.post.comments.slice(0, commentIndex),
+                        ...this.state.post.comments.slice(commentIndex + 1),
+                    ]
+                }
+            })
+            return;
+        }
+        console.log('ERROR WHILE DELETING COMMENT')
     }
 
     mapComplementaryDataWithUserInfo(complementaryData, users) {
+        let foundUser = users.find(user => user.user_internal_id == complementaryData.user_internal_id);
         return {
             ...complementaryData,
-            user: enhanceUser(users.find(user => user.user_internal_id === complementaryData.user_internal_id))
+            user: enhanceUser(foundUser)
         }
     }
 
@@ -200,13 +230,13 @@ class SmPost extends Component {
         }
 
         let currentUserInReactions = (reactions, current_user_id) => {
-            let currentUserInReactions = reactions.find(reaction => reaction.user_internal_id === current_user_id)
+            let currentUserInReactions = reactions.find(reaction => reaction.user_internal_id == current_user_id)
             return currentUserInReactions !== undefined && currentUserInReactions !== null;
         }
 
         switch (len) {
             case 0: {
-                return null;
+                return "Nobody reacted yet";
             }
             case 1: {
                 if (currentUserInReactions(reactions, current_user_id)) {
@@ -230,41 +260,43 @@ class SmPost extends Component {
     }
 
     render() {
-        let viewData = this.state;
         let cardMedia = null;
         let cardContent = null;
         let cardComments = [];
         let cardReactions = [];
 
-        if (viewData.post.image) {
+        if (this.state.post.resources && this.state.post.resources.length > 0) {
+            let imageResources = this.state.post.resources.filter((res) => res.type === 'IMAGE')
+            let auxImg = imageResources.length > 0 ? imageResources[0].url : null
             cardMedia = <CardMedia
                 className={"card-media"}
-                image={viewData.post.image}
+                image={auxImg}
             />
         }
-        if (viewData.post.text) {
+        if (this.state.post.text) {
             cardContent = <CardContent>
                 <Typography variant="h6" color="textSecondary" component="p">
-                    {viewData.post.text}
+                    {this.state.post.text}
                 </Typography>
             </CardContent>
         }
 
-        cardComments = viewData.post.comments.map(comment => <SmComment handleDelete={this.__handleDeleteComment}
-                                                                        postUserId={this.state.post.user_internal_id}
-                                                                        currentUser={this.state.currentUser}
-                                                                        comment={comment}></SmComment>)
+        cardComments = this.state.post.comments.map(comment => <SmComment key={"sm-comment-" + comment.id}
+                                                                          handleDelete={this.__handleDeleteComment}
+                                                                          postUserId={this.state.post.user_internal_id}
+                                                                          currentUser={this.props.currentUser}
+                                                                          comment={comment}></SmComment>)
 
 
-        console.log('postOptionButton', this.state.currentUser, this.state.current_user_id, viewData.post.user_internal_id)
-
-        let postOptionButton = this.state.current_user_id === viewData.post.user_internal_id ? <IconButton aria-label="settings">
-            <MoreVertIcon onClick={this.__handleOpenPostMenu}/>
-        </IconButton> : null;
+        let postOptionButton = this.props.currentUser.user_internal_id === this.state.post.user_internal_id ?
+            <IconButton aria-label="settings">
+                <MoreVertIcon onClick={this.__handleOpenPostMenu}/>
+            </IconButton> : null;
 
         return (
             <div>
-                <SmReactionDialog reactions={this.state.post.reactions}
+                <SmReactionDialog key={"sm-reaction-dialog-" + this.state.post.id}
+                                  reactions={this.state.post.reactions}
                                   open={this.state.reactionDialogOpen}
                                   onClose={this.__handleReactionDialogClose}></SmReactionDialog>
                 <Card className={"card-root"}>
@@ -272,12 +304,12 @@ class SmPost extends Component {
                         <CardHeader
                             avatar={
                                 <Avatar aria-label="recipe" className={"card-avatar"}>
-                                    {viewData.post.avatar}
+                                    {this.state.post.avatar}
                                 </Avatar>
                             }
                             action={postOptionButton}
-                            title={viewData.post.userName}
-                            subheader={viewData.post.date}
+                            title={this.state.post.userName}
+                            subheader={this.state.post.date}
                             titleTypographyProps={{variant: "h5"}}
                             subheaderTypographyProps={{variant: "h6"}}
                         />
@@ -302,7 +334,8 @@ class SmPost extends Component {
                                 </IconButton>
                                 <Button onClick={this.__handleViewReactions}
                                         color="primary"
-                                        startIcon={<FaceIcon/>}>{this.state.reactionButton.label}</Button>
+                                        startIcon={<FaceIcon/>}>{this.state.reactionButton.label}
+                                </Button>
                             </CardActions>
                             <CardContent>
                                 <div className={"post-comments"}>

@@ -372,7 +372,22 @@ let API = {
     HOST_AND_PORT: 'http://localhost:3001',
     PATHS: {
         POST: {
-            GET_ALL_BY_USER: '/posts'
+            GET_ALL_BY_USER: '/posts',
+            REACT: (post_id) => `/posts/id/${post_id}/react`,
+            UNREACT: (post_id, reaction_id) => `/posts/id/${post_id}/react/${reaction_id}`,
+            COMMENT: (post_id) => `/posts/id/${post_id}/comment`,
+            UNCOMMENT: (post_id, comment_id) => `/posts/id/${post_id}/comment/${comment_id}`
+        },
+        USER: {
+            GET_CURRENT: '/users/current',
+            CHANGE_SUBSCRIPTION: (subscription_id) => `/users/change/subscription/${subscription_id}`
+        },
+        SUBSCRIPTION: {
+            GET_ALL_BY_USER: '/subscriptions'
+        },
+        QUESTIONNAIRES: {
+            GET_ALL_BY_USER: '/questionnaires',
+            ANSWER: '/questionnaires/id/:questionnaireId'
         }
     }
 }

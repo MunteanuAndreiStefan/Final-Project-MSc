@@ -128,6 +128,40 @@ async function remove(request) {
 
 /***/ }),
 
+/***/ "./Repository/AnswerRepository.ts":
+/*!****************************************!*\
+  !*** ./Repository/AnswerRepository.ts ***!
+  \****************************************/
+/*! exports provided: getById, getAllByQuestionId, add, remove */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getById", function() { return getById; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAllByQuestionId", function() { return getAllByQuestionId; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
+/* harmony import */ var _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Services/Database/DatabaseService */ "./Services/Database/DatabaseService.ts");
+/* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
+
+
+async function getById(id) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].ANSWER.GET_BY_ID(id));
+}
+async function getAllByQuestionId(questionId) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].ANSWER.GET_ALL_BY_QUESTION_ID(questionId));
+}
+async function add(question_id, priority, scale_value, text, image_url) {
+    const query = _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].ANSWER.ADD(question_id, priority, scale_value, text, image_url);
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](query);
+}
+async function remove(id) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].ANSWER.DELETE(id));
+}
+
+
+/***/ }),
+
 /***/ "./Repository/CommentRepository.ts":
 /*!*****************************************!*\
   !*** ./Repository/CommentRepository.ts ***!
@@ -165,7 +199,7 @@ async function remove(id) {
 /*!**************************************!*\
   !*** ./Repository/PostRepository.ts ***!
   \**************************************/
-/*! exports provided: getById, add, remove, getPostsBySubscriptionAndOrdered */
+/*! exports provided: getById, add, remove, getPostsBySubscriptionAndOrdered, getAll */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -174,6 +208,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPostsBySubscriptionAndOrdered", function() { return getPostsBySubscriptionAndOrdered; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAll", function() { return getAll; });
 /* harmony import */ var _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Services/Database/DatabaseService */ "./Services/Database/DatabaseService.ts");
 /* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
 
@@ -190,6 +225,42 @@ async function remove(id) {
 async function getPostsBySubscriptionAndOrdered(email) {
     return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].POST.GET_ALL_BY_SUBSCRIPTION_AND_ORDERED(email));
 }
+async function getAll() {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].POST.GET_ALL());
+}
+
+
+/***/ }),
+
+/***/ "./Repository/QuestionRepository.ts":
+/*!******************************************!*\
+  !*** ./Repository/QuestionRepository.ts ***!
+  \******************************************/
+/*! exports provided: getById, getAllByQuestionnaireId, add, remove */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getById", function() { return getById; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAllByQuestionnaireId", function() { return getAllByQuestionnaireId; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
+/* harmony import */ var _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Services/Database/DatabaseService */ "./Services/Database/DatabaseService.ts");
+/* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
+
+
+async function getById(id) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].QUESTION.GET_BY_ID(id));
+}
+async function getAllByQuestionnaireId(questionnaireId) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].QUESTION.GET_BY_QUESTIONNAIRE_ID(questionnaireId));
+}
+async function add(questionnaire_id, question_type, multiple_answers, title, description) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].QUESTION.ADD(questionnaire_id, question_type, multiple_answers, title, description));
+}
+async function remove(id) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].QUESTION.DELETE(id));
+}
 
 
 /***/ }),
@@ -198,13 +269,14 @@ async function getPostsBySubscriptionAndOrdered(email) {
 /*!***********************************************!*\
   !*** ./Repository/QuestionnaireRepository.ts ***!
   \***********************************************/
-/*! exports provided: getById, getAll, add, remove */
+/*! exports provided: getById, getAll, getComputedQuestionnaireList, add, remove */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getById", function() { return getById; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAll", function() { return getAll; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getComputedQuestionnaireList", function() { return getComputedQuestionnaireList; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
 /* harmony import */ var _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Services/Database/DatabaseService */ "./Services/Database/DatabaseService.ts");
@@ -216,6 +288,9 @@ async function getById(id) {
 }
 async function getAll() {
     return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].QUESTIONNAIRE.GET_ALL());
+}
+async function getComputedQuestionnaireList(email) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].QUESTIONNAIRE.GET_ALL_QUESTIONNAIRES_BY_USER_AND_ORDERED(email));
 }
 async function add(priority, name) {
     return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].QUESTIONNAIRE.ADD(priority, name));
@@ -288,6 +363,113 @@ async function add(post_id, url, type) {
 }
 async function remove(id) {
     return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].RESOURCE.DELETE(id));
+}
+
+
+/***/ }),
+
+/***/ "./Repository/SubscriptionRepository.ts":
+/*!**********************************************!*\
+  !*** ./Repository/SubscriptionRepository.ts ***!
+  \**********************************************/
+/*! exports provided: getAll, getById, add, remove */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAll", function() { return getAll; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getById", function() { return getById; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
+/* harmony import */ var _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Services/Database/DatabaseService */ "./Services/Database/DatabaseService.ts");
+/* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
+
+
+async function getAll() {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].SUBSCRIPTION.GET_ALL());
+}
+async function getById(id) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].SUBSCRIPTION.GET_BY_ID(id));
+}
+async function add(name, description, post_limit, questionnaire_limit, comments_active, reactions_active, support, price) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].SUBSCRIPTION.ADD(name, description, post_limit, questionnaire_limit, comments_active, reactions_active, support, price));
+}
+async function remove(id) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].SUBSCRIPTION.DELETE(id));
+}
+
+
+/***/ }),
+
+/***/ "./Repository/UserAnswerRepository.ts":
+/*!********************************************!*\
+  !*** ./Repository/UserAnswerRepository.ts ***!
+  \********************************************/
+/*! exports provided: getById, add, remove */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getById", function() { return getById; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
+/* harmony import */ var _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Services/Database/DatabaseService */ "./Services/Database/DatabaseService.ts");
+/* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
+
+
+async function getById(id) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].USER_ANSWER.GET_BY_ID(id));
+}
+async function add(user_internal_id, question_id, answer_id) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].USER_ANSWER.ADD(user_internal_id, question_id, answer_id));
+}
+async function remove(id) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].USER_ANSWER.DELETE(id));
+}
+
+
+/***/ }),
+
+/***/ "./Repository/UserRepository.ts":
+/*!**************************************!*\
+  !*** ./Repository/UserRepository.ts ***!
+  \**************************************/
+/*! exports provided: getById, getByEmail, changeSubscription, add, remove, getShallowUsersByIds, getAll */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getById", function() { return getById; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getByEmail", function() { return getByEmail; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeSubscription", function() { return changeSubscription; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getShallowUsersByIds", function() { return getShallowUsersByIds; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAll", function() { return getAll; });
+/* harmony import */ var _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Services/Database/DatabaseService */ "./Services/Database/DatabaseService.ts");
+/* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
+
+
+async function getById(id) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].USER.GET_BY_ID(id));
+}
+async function getByEmail(email) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].USER.GET_BY_EMAIL(email));
+}
+async function changeSubscription(subscription_id, user_email) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].USER.CHANGE_SUBSCRIPTION(subscription_id, user_email));
+}
+async function add(subscription_id, type, email, username, first_name, last_name, address, city, country, zip_code, theme) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].USER.ADD(subscription_id, type, email, username, first_name, last_name, address, city, country, zip_code, theme));
+}
+async function remove(id) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].USER.DELETE(id));
+}
+async function getShallowUsersByIds(ids) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].USER.GET_SHALLOW_USERS_BY_IDS(ids));
+}
+async function getAll() {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].USER.GET_ALL());
 }
 
 
@@ -368,7 +550,8 @@ function executeQuery(query) {
             .then(resolve)
             .catch((error) => {
             console.error(error);
-            reject(error);
+            resolve(error);
+            //reject(error);
         });
     }));
 }
@@ -380,7 +563,7 @@ function executeQuery(query) {
 /*!*********************************!*\
   !*** ./Services/PostService.ts ***!
   \*********************************/
-/*! exports provided: PostError, getById, getComputedPostList, add, remove */
+/*! exports provided: PostError, getById, getComputedPostList, reactionAddHandle, reactionDeleteHandle, commentAddHandle, commentDeleteHandle, add, remove */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -388,13 +571,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PostError", function() { return PostError; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getById", function() { return getById; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getComputedPostList", function() { return getComputedPostList; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reactionAddHandle", function() { return reactionAddHandle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reactionDeleteHandle", function() { return reactionDeleteHandle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "commentAddHandle", function() { return commentAddHandle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "commentDeleteHandle", function() { return commentDeleteHandle; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
 /* harmony import */ var _Repository_PostRepository__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Repository/PostRepository */ "./Repository/PostRepository.ts");
 /* harmony import */ var _Repository_ResourceRepository__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Repository/ResourceRepository */ "./Repository/ResourceRepository.ts");
 /* harmony import */ var _Repository_CommentRepository__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Repository/CommentRepository */ "./Repository/CommentRepository.ts");
 /* harmony import */ var _Repository_ReactionRepository__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Repository/ReactionRepository */ "./Repository/ReactionRepository.ts");
-/* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
+/* harmony import */ var _Repository_UserRepository__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Repository/UserRepository */ "./Repository/UserRepository.ts");
+/* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
+/* harmony import */ var _UserService__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./UserService */ "./Services/UserService.ts");
+
+
 
 
 
@@ -411,7 +602,7 @@ async function getById(id) {
     const response = await _Repository_PostRepository__WEBPACK_IMPORTED_MODULE_0__["getById"](id);
     let rowCount = response.rowCount;
     if (rowCount === 0) {
-        throw new PostError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_4__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_4__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
+        throw new PostError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_5__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_5__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
     }
     return response.rows[0];
 }
@@ -419,31 +610,87 @@ async function getComputedPostList(userEmail) {
     const posts = await _Repository_PostRepository__WEBPACK_IMPORTED_MODULE_0__["getPostsBySubscriptionAndOrdered"](userEmail);
     let rowCount = posts.rowCount;
     if (rowCount === 0) {
-        throw new PostError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_4__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_4__["MESSAGES"].NOT_FOUND.POST);
+        throw new PostError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_5__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_5__["MESSAGES"].NOT_FOUND.POST);
     }
     let response = [];
     for (const post of posts.rows) {
         let postId = post.id;
-        let resources = await _Repository_ResourceRepository__WEBPACK_IMPORTED_MODULE_1__["getAllByPostId"](postId);
-        let comments = await _Repository_CommentRepository__WEBPACK_IMPORTED_MODULE_2__["getAllByPostId"](postId);
-        let reactions = await _Repository_ReactionRepository__WEBPACK_IMPORTED_MODULE_3__["getAllByPostId"](postId);
+        let resources = (await _Repository_ResourceRepository__WEBPACK_IMPORTED_MODULE_1__["getAllByPostId"](postId)).rows;
+        let comments = (await _Repository_CommentRepository__WEBPACK_IMPORTED_MODULE_2__["getAllByPostId"](postId)).rows;
+        let reactions = (await _Repository_ReactionRepository__WEBPACK_IMPORTED_MODULE_3__["getAllByPostId"](postId)).rows;
         response.push({
             ...post,
-            resources: resources.rows,
-            comments: comments.rows,
-            reactions: reactions.rows
+            resources: resources,
+            comments: comments,
+            reactions: reactions
         });
     }
-    return response;
+    let userIds = getUniqueUserInternalIdsFromPosts(response);
+    let shallowUsers = (await _Repository_UserRepository__WEBPACK_IMPORTED_MODULE_4__["getShallowUsersByIds"](userIds)).rows
+        .map((user) => {
+        return {
+            ...user,
+            user_internal_id: user.user_internal_id.toString()
+        };
+    });
+    return {
+        posts: response,
+        users: shallowUsers
+    };
+}
+async function reactionAddHandle(postId, body, userEmail) {
+    let user_internal_id = await Object(_UserService__WEBPACK_IMPORTED_MODULE_6__["getUserInternalIdBy"])(userEmail);
+    const response = await _Repository_ReactionRepository__WEBPACK_IMPORTED_MODULE_3__["add"](user_internal_id, body.post_id, body.reaction);
+    if (response.code && response.code == 23505) {
+        const reactionsByPost = await _Repository_ReactionRepository__WEBPACK_IMPORTED_MODULE_3__["getAllByPostId"](body.post_id);
+        let reaction = reactionsByPost.rows.find((row) => row.user_internal_id == user_internal_id);
+        return {
+            reactionId: reaction.id
+        };
+    }
+    return {
+        reactionId: response.rows[0].id
+    };
+}
+async function reactionDeleteHandle(post_id, reactionId) {
+    const response = await _Repository_ReactionRepository__WEBPACK_IMPORTED_MODULE_3__["remove"](reactionId);
+    return {
+        deletedReactionsCount: response.rowCount
+    };
+}
+async function commentAddHandle(postId, body, userEmail) {
+    let user_internal_id = await Object(_UserService__WEBPACK_IMPORTED_MODULE_6__["getUserInternalIdBy"])(userEmail);
+    const response = await _Repository_CommentRepository__WEBPACK_IMPORTED_MODULE_2__["add"](user_internal_id, body.post_id, body.comment);
+    if (response.rowCount === 0) {
+        throw new PostError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_5__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_5__["MESSAGES"].NOT_FOUND.COMMENT);
+    }
+    return {
+        commentId: response.rows[0].id
+    };
+}
+async function commentDeleteHandle(post_id, commentId) {
+    const response = await _Repository_CommentRepository__WEBPACK_IMPORTED_MODULE_2__["remove"](commentId);
+    return {
+        deletedCommentsCount: response.rowCount
+    };
+}
+function getUniqueUserInternalIdsFromPosts(posts) {
+    let ids = [];
+    posts.forEach((post) => {
+        ids.push(post.user_internal_id);
+        post.comments.map((comment) => comment.user_internal_id).forEach((id) => ids.push(id));
+        post.reactions.map((reaction) => reaction.user_internal_id).forEach((id) => ids.push(id));
+    });
+    return Array.from(new Set(ids));
 }
 async function add(user_internal_id, text, priority) {
-    let response = await _Repository_PostRepository__WEBPACK_IMPORTED_MODULE_0__["add"](user_internal_id, text, name);
+    let response = await _Repository_PostRepository__WEBPACK_IMPORTED_MODULE_0__["add"](user_internal_id, text, priority);
     return response.rows[0];
 }
 async function remove(id) {
     const response = await _Repository_PostRepository__WEBPACK_IMPORTED_MODULE_0__["remove"](id);
     if (response.rowCount === 0) {
-        throw new PostError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_4__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_4__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
+        throw new PostError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_5__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_5__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
     }
     return response.rows;
 }
@@ -455,7 +702,7 @@ async function remove(id) {
 /*!******************************************!*\
   !*** ./Services/QuestionnaireService.ts ***!
   \******************************************/
-/*! exports provided: QuestionnaireError, getById, getAll, add, remove */
+/*! exports provided: QuestionnaireError, getById, getAll, getComputedQuestionnaireList, addUserAnswers, add, remove */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -463,10 +710,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "QuestionnaireError", function() { return QuestionnaireError; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getById", function() { return getById; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAll", function() { return getAll; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getComputedQuestionnaireList", function() { return getComputedQuestionnaireList; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addUserAnswers", function() { return addUserAnswers; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
-/* harmony import */ var _Repository_QuestionnaireRepository__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Repository/QuestionnaireRepository */ "./Repository/QuestionnaireRepository.ts");
-/* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
+/* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
+/* harmony import */ var _Repository_AnswerRepository__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Repository/AnswerRepository */ "./Repository/AnswerRepository.ts");
+/* harmony import */ var _Repository_QuestionRepository__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Repository/QuestionRepository */ "./Repository/QuestionRepository.ts");
+/* harmony import */ var _Repository_QuestionnaireRepository__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Repository/QuestionnaireRepository */ "./Repository/QuestionnaireRepository.ts");
+/* harmony import */ var _Repository_UserAnswerRepository__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Repository/UserAnswerRepository */ "./Repository/UserAnswerRepository.ts");
+/* harmony import */ var _UserService__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./UserService */ "./Services/UserService.ts");
+
+
+
+
 
 
 class QuestionnaireError extends Error {
@@ -477,29 +734,206 @@ class QuestionnaireError extends Error {
     }
 }
 async function getById(id) {
-    const response = await _Repository_QuestionnaireRepository__WEBPACK_IMPORTED_MODULE_0__["getById"](id);
+    const response = await _Repository_QuestionnaireRepository__WEBPACK_IMPORTED_MODULE_3__["getById"](id);
     let rowCount = response.rowCount;
     if (rowCount === 0) {
-        throw new QuestionnaireError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
+        throw new QuestionnaireError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_0__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_0__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
     }
     return response.rows[0];
 }
 async function getAll() {
-    const response = await _Repository_QuestionnaireRepository__WEBPACK_IMPORTED_MODULE_0__["getAll"]();
+    const response = await _Repository_QuestionnaireRepository__WEBPACK_IMPORTED_MODULE_3__["getAll"]();
     let rowCount = response.rowCount;
     if (rowCount === 0) {
-        throw new QuestionnaireError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
+        throw new QuestionnaireError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_0__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_0__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
     }
     return response.rows;
 }
+async function getComputedQuestionnaireList(email) {
+    const questionnaires = await _Repository_QuestionnaireRepository__WEBPACK_IMPORTED_MODULE_3__["getComputedQuestionnaireList"](email);
+    let rowCount = questionnaires.rowCount;
+    if (rowCount === 0) {
+        throw new QuestionnaireError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_0__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_0__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
+    }
+    let questionnairesResponse = [];
+    for (const questionnaire of questionnaires.rows) {
+        let questionnaireId = questionnaire.id;
+        let questions = await _Repository_QuestionRepository__WEBPACK_IMPORTED_MODULE_2__["getAllByQuestionnaireId"](questionnaireId);
+        let questionsResponse = [];
+        for (const question of questions.rows) {
+            let questionId = question.id;
+            let answers = (await _Repository_AnswerRepository__WEBPACK_IMPORTED_MODULE_1__["getAllByQuestionId"](questionId)).rows;
+            questionsResponse.push({
+                ...question,
+                possibleAnswers: answers
+            });
+        }
+        questionnairesResponse.push({
+            ...questionnaire,
+            questions: questionsResponse
+        });
+    }
+    return questionnairesResponse;
+}
+async function addUserAnswers(questionnaireId, body, email) {
+    let userAnswers = body.userAnswers;
+    let user_internal_id = await Object(_UserService__WEBPACK_IMPORTED_MODULE_5__["getUserInternalIdBy"])(email);
+    Object.keys(userAnswers).forEach((questionId) => {
+        userAnswers[questionId].forEach((answerId) => {
+            _Repository_UserAnswerRepository__WEBPACK_IMPORTED_MODULE_4__["add"](user_internal_id, Number(questionId), answerId);
+        });
+    });
+    return {
+        statusCode: 200,
+        body: "User answers registered successfully."
+    };
+}
 async function add(priority, name) {
-    let response = await _Repository_QuestionnaireRepository__WEBPACK_IMPORTED_MODULE_0__["add"](priority, name);
+    let response = await _Repository_QuestionnaireRepository__WEBPACK_IMPORTED_MODULE_3__["add"](priority, name);
     return response.rows[0];
 }
 async function remove(id) {
-    const response = await _Repository_QuestionnaireRepository__WEBPACK_IMPORTED_MODULE_0__["remove"](id);
+    const response = await _Repository_QuestionnaireRepository__WEBPACK_IMPORTED_MODULE_3__["remove"](id);
     if (response.rowCount === 0) {
-        throw new QuestionnaireError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
+        throw new QuestionnaireError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_0__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_0__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
+    }
+    return response.rows;
+}
+
+
+/***/ }),
+
+/***/ "./Services/SubscriptionService.ts":
+/*!*****************************************!*\
+  !*** ./Services/SubscriptionService.ts ***!
+  \*****************************************/
+/*! exports provided: SubscriptionError, getAll, getById, add, remove */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SubscriptionError", function() { return SubscriptionError; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAll", function() { return getAll; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getById", function() { return getById; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
+/* harmony import */ var _Repository_SubscriptionRepository__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Repository/SubscriptionRepository */ "./Repository/SubscriptionRepository.ts");
+/* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
+
+
+class SubscriptionError extends Error {
+    constructor(status, error) {
+        super(error);
+        this.status = status;
+        this.error = error;
+    }
+}
+async function getAll() {
+    const response = await _Repository_SubscriptionRepository__WEBPACK_IMPORTED_MODULE_0__["getAll"]();
+    let rowCount = response.rowCount;
+    if (rowCount === 0) {
+        throw new SubscriptionError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
+    }
+    return response.rows;
+}
+async function getById(id) {
+    const response = await _Repository_SubscriptionRepository__WEBPACK_IMPORTED_MODULE_0__["getById"](id);
+    let rowCount = response.rowCount;
+    if (rowCount === 0) {
+        throw new SubscriptionError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
+    }
+    return response.rows[0];
+}
+async function add(name, description, post_limit, questionnaire_limit, comments_active, reactions_active, support, price) {
+    const response = await _Repository_SubscriptionRepository__WEBPACK_IMPORTED_MODULE_0__["add"](name, description, post_limit, questionnaire_limit, comments_active, reactions_active, support, price);
+    let rowCount = response.rowCount;
+    if (rowCount === 0) {
+        throw new SubscriptionError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.USER);
+    }
+    return response.rows[0];
+}
+async function remove(id) {
+    const response = await _Repository_SubscriptionRepository__WEBPACK_IMPORTED_MODULE_0__["remove"](id);
+    if (response.rowCount === 0) {
+        throw new SubscriptionError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
+    }
+    return response.rows;
+}
+
+
+/***/ }),
+
+/***/ "./Services/UserService.ts":
+/*!*********************************!*\
+  !*** ./Services/UserService.ts ***!
+  \*********************************/
+/*! exports provided: UserError, getById, getUserInternalIdBy, getCurrentUser, changeSubscription, add, remove */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserError", function() { return UserError; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getById", function() { return getById; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUserInternalIdBy", function() { return getUserInternalIdBy; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCurrentUser", function() { return getCurrentUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeSubscription", function() { return changeSubscription; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
+/* harmony import */ var _Repository_UserRepository__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Repository/UserRepository */ "./Repository/UserRepository.ts");
+/* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
+
+
+class UserError extends Error {
+    constructor(status, error) {
+        super(error);
+        this.status = status;
+        this.error = error;
+    }
+}
+async function getById(id) {
+    const response = await _Repository_UserRepository__WEBPACK_IMPORTED_MODULE_0__["getById"](id);
+    let rowCount = response.rowCount;
+    if (rowCount === 0) {
+        throw new UserError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
+    }
+    return response.rows[0];
+}
+async function getUserInternalIdBy(email) {
+    const currentUserQueryResponse = await _Repository_UserRepository__WEBPACK_IMPORTED_MODULE_0__["getByEmail"](email);
+    let rowCount = currentUserQueryResponse.rowCount;
+    if (rowCount === 0) {
+        throw new UserError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.USER);
+    }
+    return currentUserQueryResponse.rows[0].user_internal_id;
+}
+async function getCurrentUser(email) {
+    const response = await _Repository_UserRepository__WEBPACK_IMPORTED_MODULE_0__["getByEmail"](email);
+    let rowCount = response.rowCount;
+    if (rowCount === 0) {
+        throw new UserError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
+    }
+    return response.rows[0];
+}
+async function changeSubscription(subscription_id, user_email) {
+    const response = await _Repository_UserRepository__WEBPACK_IMPORTED_MODULE_0__["changeSubscription"](subscription_id, user_email);
+    let rowCount = response.rowCount;
+    if (rowCount === undefined || rowCount === 0) {
+        throw new UserError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.SUBSCRIPTION);
+    }
+    return _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].SUCCESS.SUBSCRIPTION_UPDATED;
+}
+async function add(subscription_id, type, email, username, first_name, last_name, address, city, country, zip_code, theme) {
+    const response = await _Repository_UserRepository__WEBPACK_IMPORTED_MODULE_0__["add"](subscription_id, type, email, username, first_name, last_name, address, city, country, zip_code, theme);
+    let rowCount = response.rowCount;
+    if (rowCount === 0) {
+        throw new UserError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.USER);
+    }
+    return response.rows[0];
+}
+async function remove(id) {
+    const response = await _Repository_UserRepository__WEBPACK_IMPORTED_MODULE_0__["remove"](id);
+    if (response.rowCount === 0) {
+        throw new UserError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
     }
     return response.rows;
 }
@@ -585,13 +1019,13 @@ const SCHEMAS = {
             SUBSCRIPTION: {
                 NAME: 'subscription',
                 COLUMNS: [
-                    'name', 'description', 'post_limit', 'price'
+                    'name', 'description', 'post_limit', 'questionnaire_limit', 'comments_active', 'reactions_active', 'support', 'price'
                 ]
             },
             USER: {
                 NAME: 'user',
                 COLUMNS: [
-                    'subscription_id', 'type', 'email', 'username', 'first_name', 'last_name', 'address', 'city', 'country', 'zip_code', 'theme', 'timestamp'
+                    'user_internal_id', 'subscription_id', 'type', 'email', 'username', 'first_name', 'last_name', 'address', 'city', 'country', 'zip_code', 'theme', 'timestamp'
                 ]
             },
             QUESTIONNAIRE_TAG: {
@@ -639,7 +1073,15 @@ const QUERIES = {
         DELETE: (id) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTIONNAIRE.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
-        }
+        },
+        GET_ALL_QUESTIONNAIRES_BY_USER_AND_ORDERED: (email) => {
+            return `SELECT * FROM social_media_db.questionnaire q
+                    ORDER BY priority DESC
+                    LIMIT (
+                        SELECT s.questionnaire_limit FROM social_media_db."user" u 
+                        JOIN social_media_db."subscription" s ON u.subscription_id = s.id WHERE u.email = '${email}'
+                    )`;
+        },
     },
     QUESTION: {
         GET_ALL: () => {
@@ -649,6 +1091,10 @@ const QUERIES = {
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTION.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
+        },
+        GET_BY_QUESTIONNAIRE_ID: (questionnaireId) => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTION.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName} WHERE questionnaire_id = ${questionnaireId};`;
         },
         ADD: (questionnaire_id, question_type, multiple_answers, title, description) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTION.NAME;
@@ -683,6 +1129,10 @@ const QUERIES = {
         GET_ALL: () => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.ANSWER.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
+        GET_ALL_BY_QUESTION_ID: (questionId) => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.ANSWER.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName} WHERE question_id = ${questionId};`;
         },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.ANSWER.NAME;
@@ -786,7 +1236,7 @@ const QUERIES = {
         },
         ADD: (user_internal_id, post_id, text) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.COMMENT.NAME;
-            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ');
+            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.COMMENT.COLUMNS.join(', ');
             let values = user_internal_id + ', ' + post_id + ', \'' + text + '\', CURRENT_TIMESTAMP';
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
@@ -810,7 +1260,7 @@ const QUERIES = {
         },
         ADD: (user_internal_id, post_id, reaction) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.REACTION.NAME;
-            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ');
+            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.REACTION.COLUMNS.join(', ');
             let values = user_internal_id + ', ' + post_id + ', \'' + reaction + '\', CURRENT_TIMESTAMP';
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
@@ -847,10 +1297,11 @@ const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.SUBSCRIPTION.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
-        ADD: (name, description, post_limit, price) => {
+        ADD: (name, description, post_limit, questionnaire_limit, comments_active, reactions_active, support, price) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.SUBSCRIPTION.NAME;
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ');
-            let values = '\'' + name + '\', \'' + description + '\', ' + post_limit + ', ' + price;
+            let values = '\'' + name + '\', \'' + description + '\', ' + post_limit + ', ' + questionnaire_limit + ', '
+                + comments_active + ', ' + reactions_active + ', \'' + support + '\', ' + price;
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
         DELETE: (id) => {
@@ -863,9 +1314,24 @@ const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
+        GET_SHALLOW_USERS_BY_IDS: (ids) => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
+            return `SELECT user_internal_id, first_name, last_name FROM ${schemaAndDatabaseName} WHERE id IN (${ids.join(',')})`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
-            return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
+            let selectedColumns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.COLUMNS.join(',');
+            return `SELECT ${selectedColumns} FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
+        },
+        CHANGE_SUBSCRIPTION: (subscription_id, user_email) => {
+            return `UPDATE social_media_db."user" u
+                    SET subscription_id = (SELECT id FROM social_media_db."subscription" s WHERE id = ${subscription_id})
+                    WHERE u.email = '${user_email}';`;
+        },
+        GET_BY_EMAIL: (email) => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
+            let selectedColumns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.COLUMNS.join(',');
+            return `SELECT ${selectedColumns} FROM ${schemaAndDatabaseName} WHERE email = '${email}';`;
         },
         ADD: (subscription_id, type, email, username, first_name, last_name, address, city, country, zip_code, theme) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
@@ -969,6 +1435,7 @@ const MESSAGES = {
         LINKAGE: 'LINKAGE not found.',
         ANSWER: 'ANSWER not found.',
         USER_ANSWER: 'USER_ANSWER not found.',
+        USER: 'USER not found.',
         POST: 'POST not found.',
         RESOURCE: 'RESOURCE not found.',
         COMMENT: 'COMMENT not found.',
@@ -977,7 +1444,11 @@ const MESSAGES = {
         QUESTIONNAIRE_TAG: 'QUESTIONNAIRE_TAG not found.',
         QUESTION_TAG: 'QUESTION_TAG not found.',
         LINKAGE_TAG: 'LINKAGE_TAG not found.',
-        POST_TAG: 'POST_TAG not found.'
+        POST_TAG: 'POST_TAG not found.',
+        SUBSCRIPTION: 'SUBSCRIPTION not found.'
+    },
+    SUCCESS: {
+        SUBSCRIPTION_UPDATED: 'Subscription plan updated successfully.'
     }
 };
 
@@ -1000,6 +1471,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Services_Database_DatabaseCreatorService__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Services/Database/DatabaseCreatorService */ "./Services/Database/DatabaseCreatorService.ts");
 /* harmony import */ var _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Services/Database/DatabaseService */ "./Services/Database/DatabaseService.ts");
 /* harmony import */ var _lambdas_handler__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./lambdas/handler */ "./lambdas/handler.ts");
+/* harmony import */ var _lambdas_questionnaireLambda__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./lambdas/questionnaireLambda */ "./lambdas/questionnaireLambda.ts");
+
 
 
 
@@ -1012,7 +1485,8 @@ const Services = {
     DatabaseService: _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_2__
 };
 const Lambdas = {
-    MainLambda: _lambdas_handler__WEBPACK_IMPORTED_MODULE_3__
+    MainLambda: _lambdas_handler__WEBPACK_IMPORTED_MODULE_3__,
+    QuestionnaireLambda: _lambdas_questionnaireLambda__WEBPACK_IMPORTED_MODULE_4__
 };
 
 
@@ -1022,47 +1496,172 @@ const Lambdas = {
 /*!****************************!*\
   !*** ./lambdas/handler.ts ***!
   \****************************/
-/*! exports provided: hello, getPosts */
+/*! exports provided: hello, getPosts, reactionAddHandle, reactionDeleteHandle, commentAddHandle, commentDeleteHandle, getQuestionnaires, addUserAnswers, getSubscriptions, getCurrentUser, changeSubscription */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hello", function() { return hello; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPosts", function() { return getPosts; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reactionAddHandle", function() { return reactionAddHandle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reactionDeleteHandle", function() { return reactionDeleteHandle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "commentAddHandle", function() { return commentAddHandle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "commentDeleteHandle", function() { return commentDeleteHandle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getQuestionnaires", function() { return getQuestionnaires; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addUserAnswers", function() { return addUserAnswers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSubscriptions", function() { return getSubscriptions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCurrentUser", function() { return getCurrentUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeSubscription", function() { return changeSubscription; });
 /* harmony import */ var _Controllers_QuestionnaireController__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Controllers/QuestionnaireController */ "./Controllers/QuestionnaireController.ts");
 /* harmony import */ var _Services_Database_DatabaseCreatorService__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Services/Database/DatabaseCreatorService */ "./Services/Database/DatabaseCreatorService.ts");
 /* harmony import */ var _Services_PostService__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Services/PostService */ "./Services/PostService.ts");
+/* harmony import */ var _Services_UserService__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Services/UserService */ "./Services/UserService.ts");
+/* harmony import */ var _Services_SubscriptionService__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Services/SubscriptionService */ "./Services/SubscriptionService.ts");
+/* harmony import */ var _Services_QuestionnaireService__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Services/QuestionnaireService */ "./Services/QuestionnaireService.ts");
+/* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
+
+
+
+
+
 
 
 
 let dbCreationChecked = false;
+let global_email_To_Be_Removed = 'marin.andrei@domain.com';
 async function databaseCheckLogic() {
     if (!dbCreationChecked) {
-        let response = await _Services_Database_DatabaseCreatorService__WEBPACK_IMPORTED_MODULE_1__["createSchemaIfMissing"]();
+        await _Services_Database_DatabaseCreatorService__WEBPACK_IMPORTED_MODULE_1__["createSchemaIfMissing"]();
         dbCreationChecked = true;
     }
 }
 async function hello(event) {
+    console.log("hello handler");
     await databaseCheckLogic();
     console.log(event);
     console.log(_Controllers_QuestionnaireController__WEBPACK_IMPORTED_MODULE_0__);
     return {
         statusCode: 200,
-        headers: {
-            'Access-Control-Allow-Origin': '*'
-        },
         body: JSON.stringify({ message: 'data' })
     };
 }
 async function getPosts(event) {
+    let posts = await _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["getComputedPostList"](global_email_To_Be_Removed);
+    return {
+        statusCode: 200,
+        body: JSON.stringify(posts)
+    };
+}
+async function reactionAddHandle(event, params, body) {
+    let post_id = params.postId;
+    if (post_id != body.post_id) {
+        throw new _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["PostError"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.POST);
+    }
+    let response = await _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["reactionAddHandle"](post_id, body, global_email_To_Be_Removed);
+    return {
+        statusCode: 200,
+        body: JSON.stringify(response)
+    };
+}
+async function reactionDeleteHandle(event, params) {
+    let post_id = params.postId;
+    let reaction_id = params.reactionId;
+    let response = await _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["reactionDeleteHandle"](post_id, reaction_id);
+    return {
+        statusCode: 200,
+        body: JSON.stringify(response)
+    };
+}
+async function commentAddHandle(event, params, body) {
+    let post_id = params.postId;
+    if (post_id != body.post_id) {
+        throw new _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["PostError"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.POST);
+    }
+    let response = await _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["commentAddHandle"](post_id, body, global_email_To_Be_Removed);
+    return {
+        statusCode: 200,
+        body: JSON.stringify(response)
+    };
+}
+async function commentDeleteHandle(event, params) {
+    let post_id = params.postId;
+    let comment_id = params.commentId;
+    let response = await _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["commentDeleteHandle"](post_id, comment_id);
+    return {
+        statusCode: 200,
+        body: JSON.stringify(response)
+    };
+}
+async function getQuestionnaires(event) {
+    let questionnaires = await _Services_QuestionnaireService__WEBPACK_IMPORTED_MODULE_5__["getComputedQuestionnaireList"](global_email_To_Be_Removed);
+    return {
+        statusCode: 200,
+        body: JSON.stringify(questionnaires)
+    };
+}
+async function addUserAnswers(event, params, body) {
+    let response = await _Services_QuestionnaireService__WEBPACK_IMPORTED_MODULE_5__["addUserAnswers"](params.questionnaireId, body, global_email_To_Be_Removed);
+    return {
+        statusCode: 200,
+        body: JSON.stringify(response)
+    };
+}
+async function getSubscriptions(event) {
+    let subscriptions = await _Services_SubscriptionService__WEBPACK_IMPORTED_MODULE_4__["getAll"]();
+    return {
+        statusCode: 200,
+        body: JSON.stringify(subscriptions)
+    };
+}
+async function getCurrentUser(event) {
+    let user = await _Services_UserService__WEBPACK_IMPORTED_MODULE_3__["getCurrentUser"](global_email_To_Be_Removed);
+    return {
+        statusCode: 200,
+        body: JSON.stringify(user)
+    };
+}
+async function changeSubscription(event, params) {
+    let subscription_id = params.subscriptionId;
+    let user = await _Services_UserService__WEBPACK_IMPORTED_MODULE_3__["changeSubscription"](subscription_id, global_email_To_Be_Removed);
+    return {
+        statusCode: 200,
+        body: JSON.stringify(user)
+    };
+}
+
+
+/***/ }),
+
+/***/ "./lambdas/questionnaireLambda.ts":
+/*!****************************************!*\
+  !*** ./lambdas/questionnaireLambda.ts ***!
+  \****************************************/
+/*! exports provided: getAll */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAll", function() { return getAll; });
+/* harmony import */ var _Controllers_QuestionnaireController__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Controllers/QuestionnaireController */ "./Controllers/QuestionnaireController.ts");
+/* harmony import */ var _Services_Database_DatabaseCreatorService__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Services/Database/DatabaseCreatorService */ "./Services/Database/DatabaseCreatorService.ts");
+
+
+let dbCreationChecked = false;
+async function databaseCheckLogic() {
+    if (!dbCreationChecked) {
+        await _Services_Database_DatabaseCreatorService__WEBPACK_IMPORTED_MODULE_1__["createSchemaIfMissing"]();
+        dbCreationChecked = true;
+    }
+}
+async function getAll(event) {
     await databaseCheckLogic();
-    let posts = await _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["getComputedPostList"]('user@domain.com');
+    let questionnaires = await _Controllers_QuestionnaireController__WEBPACK_IMPORTED_MODULE_0__["getAll"]();
     return {
         statusCode: 200,
         headers: {
             'Access-Control-Allow-Origin': '*'
         },
-        body: posts
+        body: questionnaires
     };
 }
 
