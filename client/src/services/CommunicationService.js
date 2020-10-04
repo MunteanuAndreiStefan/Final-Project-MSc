@@ -10,9 +10,10 @@ async function doRequest(method = 'GET', url = "/", data = {}) {
             'Content-Type': 'application/json',
             'x-apigateway-event' : '{"test" : "Test"}',
             'x-apigateway-context' : '{"test" : "Test"}',
+            'Authorization': Constants.AUTHORIZATION
         },
         redirect: 'follow',
-        referrerPolicy: 'no-referrer'
+        referrerPolicy: 'no-referrer',
     };
 
     if (method !== 'GET') {
@@ -45,16 +46,37 @@ export async function getQuestionnaires() {
     return doGet(apiURL)
 }
 
+export async function deleteQuestionnaire(questionnaireId) {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.QUESTIONNAIRES.DELETE(questionnaireId);
+    return doDelete(apiURL)
+}
+
 export async function answer(questionnaireId, userAnswers) {
-    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.QUESTIONNAIRES.ANSWER;
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.QUESTIONNAIRES.ANSWER(questionnaireId);
+    let userAnswersForPost = Object.keys(userAnswers).map((answerKey) => {
+        return {
+            questionId: answerKey,
+            answers: userAnswers[answerKey]
+        }
+    });
     return doPost(apiURL, {
         "questionnaireId": questionnaireId,
-        "userAnswers": userAnswers
+        "userAnswers": userAnswersForPost
     })
 }
 
 export async function getPosts() {
     let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.POST.GET_ALL_BY_USER;
+    return doGet(apiURL)
+}
+
+export async function getPostsByCategoryId(categoryId) {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.POST.GET_ALL_BY_CATEGORY_ID(categoryId);
+    return doGet(apiURL)
+}
+
+export async function getCategories() {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.POST.GET_ALL_CATEGORIES;
     return doGet(apiURL)
 }
 
@@ -67,9 +89,20 @@ export async function getCurrentUser() {
     let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.USER.GET_CURRENT;
     return doGet(apiURL)
 }
+
+export async function getUserContactInfo(userId) {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.USER.GET_USER_CONTACT_INFO(userId);
+    return doGet(apiURL)
+}
+
 export async function changeSubscription(subscription_id) {
     let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.USER.CHANGE_SUBSCRIPTION(subscription_id);
     return doPut(apiURL)
+}
+
+export async function changeUserDetails(current_user) {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.USER.CHANGE_DETAILS;
+    return doPut(apiURL, current_user)
 }
 
 export async function reactToPost(post_id, reaction) {
@@ -84,7 +117,6 @@ export async function unreactToPost(post_id, reaction_id) {
     let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.POST.UNREACT(post_id, reaction_id);
     return doDelete(apiURL)
 }
-
 
 export async function commentToPost(post_id, comment) {
     let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.POST.COMMENT(post_id);

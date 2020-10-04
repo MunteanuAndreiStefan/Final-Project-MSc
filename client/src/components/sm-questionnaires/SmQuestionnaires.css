@@ -42,10 +42,22 @@
     display: flow-root !important;
 }
 
+.sm-line {
+    display: flex !important;
+}
+
 .sm-left-align {
     float: left;
 }
 
 .sm-right-align {
     float: right;
+}
+
+.sm-questionnaire-statistics {
+    margin: 25px 0 0 10px;
+}
+
+.sm-posts-statistics {
+    margin: 25px 0 0 10px;
 }

@@ -1,4 +1,5 @@
 import * as PostRepository from '../Repository/PostRepository';
+import * as CategoryRepository from '../Repository/CategoryRepository';
 import * as ResourceRepository from '../Repository/ResourceRepository';
 import * as CommentRepository from '../Repository/CommentRepository';
 import * as ReactionRepository from '../Repository/ReactionRepository';
@@ -30,6 +31,19 @@ export async function getById(id: number) {
     return response.rows[0]
 }
 
+export async function getAllByCategoryId(userEmail: string, categoryId: number) {
+    const posts = await PostRepository.getPostsBySubscriptionAndOrdered(userEmail);
+    let rowCount = posts.rowCount;
+
+    if (rowCount === 0) {
+        throw new PostError(Constants.MESSAGES.NOT_FOUND.status, Constants.MESSAGES.NOT_FOUND.POST);
+    }
+
+    let validPosts = posts.rows.filter((post: any) => post.post_category_id == categoryId);
+
+    return computePostDetails(validPosts);
+}
+
 export async function getComputedPostList(userEmail: string) {
     const posts = await PostRepository.getPostsBySubscriptionAndOrdered(userEmail);
     let rowCount = posts.rowCount;
@@ -38,12 +52,25 @@ export async function getComputedPostList(userEmail: string) {
         throw new PostError(Constants.MESSAGES.NOT_FOUND.status, Constants.MESSAGES.NOT_FOUND.POST);
     }
 
+    return computePostDetails(posts.rows);
+}
+
+async function computePostDetails(posts: any) {
     let response: Post[] = [];
-    for (const post of posts.rows) {
+    let postLength = posts.length;
+    if (postLength === 0) {
+        return {
+            posts: [],
+            totalPostCount: 0,
+            users: []
+        };
+    }
+    for (const post of posts) {
         let postId = post.id;
         let resources : PostResource[] = (await ResourceRepository.getAllByPostId(postId)).rows;
         let comments : PostComment[] = (await CommentRepository.getAllByPostId(postId)).rows;
         let reactions : PostReaction[] = (await ReactionRepository.getAllByPostId(postId)).rows;
+        comments = comments.filter((comment) => comment.visible)
         response.push({
             ...post,
             resources: resources,
@@ -61,9 +88,22 @@ export async function getComputedPostList(userEmail: string) {
             }
         });
 
+    const postCountResponse = await PostRepository.count();
+    if (postCountResponse.rowCount > 0) {
+        postLength = postCountResponse.rows[0].count;
+    }
     return {
         posts: response,
+        totalPostCount: postLength,
         users: shallowUsers
+    };
+}
+
+export async function getCategories(userEmail: string) {
+    const categories = await CategoryRepository.getAll();
+    let rowCount = categories.rowCount;
+    return {
+        categories: categories.rows
     };
 }
 

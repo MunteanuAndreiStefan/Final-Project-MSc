@@ -22,3 +22,11 @@ export async function getAll(): Promise<QueryResult> {
     return DatabaseService.executeQuery(Constants.QUERIES.POST.GET_ALL())
 }
 
+export async function getAllByCategoryId(category_id: number): Promise<QueryResult> {
+    return DatabaseService.executeQuery(Constants.QUERIES.POST.GET_ALL_BY_CATEGORY_ID(category_id))
+}
+
+export async function count(): Promise<QueryResult> {
+    return DatabaseService.executeQuery(Constants.QUERIES.POST.COUNT())
+}
+

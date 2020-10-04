@@ -29,13 +29,14 @@ class SmQuestionnaire extends Component {
 
         this.state = {
             questionnaire: props.questionnaire,
-            questionToAnswerMap: questionToAnswerMap
+            questionToAnswerMap: questionToAnswerMap,
+            anchorElement: null
         };
     }
 
     __handleQuestionnaireReport = (event) => {
         let values = Object.values(this.state.questionToAnswerMap);
-        console.log(values);
+        console.log('__handleQuestionnaireReport', JSON.stringify(this.state.questionToAnswerMap));
         if(values.filter(x => x.length === 0).length > 0) {
             alert('Complete the quiz.')
         } else {
@@ -52,19 +53,59 @@ class SmQuestionnaire extends Component {
         this.state.questionToAnswerMap[id] = answerIds;
     }
 
+    __handleOpenOptionsMenu = (event) => {
+        this.setAnchorElement(event.currentTarget);
+    }
+
+    __handleCloseOptionsMenu = (event) => {
+        this.setAnchorElement(null);
+    }
+
+    setAnchorElement(element) {
+        this.setState({
+            anchorElement: element
+        })
+    }
+
+    __handleOptionDelete = (event) => {
+        this.__handleCloseOptionsMenu(event);
+        let questionnaireId = this.state.questionnaire.id;
+        CommunicationService.deleteQuestionnaire(questionnaireId)
+            .then((res) => {
+                if (res.statusCode === 200) {
+                    this.props.handleDelete(questionnaireId);
+                }
+            })
+            .catch(console.error)
+    }
+
     render() {
         let questionList = this.props.questionnaire.questions.map((question, index) =>
             <SmQuestion changeAnswers={this.__changeAnswersOf}
                 key={index} question={question}></SmQuestion>);
 
         let questionnaire = this.props.questionnaire;
+        let questionnaireOptionButton = this.props.isAdmin
+            ? <IconButton aria-label="settings">
+                <MoreVertIcon onClick={this.__handleOpenOptionsMenu}/>
+            </IconButton> : null;
         return (
             <div>
                 <Card>
+                    <CardHeader
+                        action={questionnaireOptionButton}
+                        title={questionnaire.title}
+                        titleTypographyProps={{variant: "h2"}}
+                    />
+                    <Menu
+                        id="comment-menu"
+                        anchorEl={this.state.anchorElement}
+                        keepMounted
+                        open={Boolean(this.state.anchorElement)}
+                        onClose={this.__handleCloseOptionsMenu}>
+                        <MenuItem onClick={this.__handleOptionDelete}>Delete</MenuItem>
+                    </Menu>
                     <CardContent>
-                        <Typography variant="h2" gutterBottom>
-                            {questionnaire.title}
-                        </Typography>
                         <Typography variant="h5">
                             {questionnaire.description}
                         </Typography>

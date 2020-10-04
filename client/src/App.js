@@ -34,10 +34,15 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import SmProfile from "./components/sm-profile/SmProfile";
 import {enhanceUser} from "./services/UserService";
 import * as CommunicationService from "./services/CommunicationService";
+import Home from "./containers/Home";
+import SmAuthScreen from "./components/sm-auth-screen/SmAuthScreen";
+import SmAdminPanel from "./components/sm-admin-panel/SmAdminPanel";
+import SmExperience from "./components/sm-experience/SmExperience";
 
 function Feed(props) {
     return <SmPostFeed
         currentUser={props.state.currentUser}
+        totalPostCount={props.state.totalPostCount}
         posts={props.state.posts}
         users={props.state.users}
     ></SmPostFeed>;
@@ -45,8 +50,19 @@ function Feed(props) {
 
 function Questionnaires(props) {
     return <SmQuestionnaires
+        isAdmin={props.state.currentUser.type === 'ADMIN'}
         questionnaires={props.state.questionnaires}
+        answeredQuestionnaireNumber={props.state.answeredQuestionnaireNumber}
+        handleQuestionnaireDelete={props.__handleQuestionnaireDelete}
     ></SmQuestionnaires>;
+}
+
+function Experiences(props) {
+    return <SmExperience
+        categories={props.state.categories}
+        currentUser={props.state.currentUser}
+        totalPostCount={props.state.totalPostCount}
+    ></SmExperience>;
 }
 
 function About() {
@@ -56,7 +72,13 @@ function About() {
 function Profile(props) {
     return <SmProfile currentUser={props.state.currentUser}
                       subscriptions={props.state.subscriptions}
+                      userWasNotInit={false}
+                      changeUser={props.changeUser}
     ></SmProfile>;
+}
+
+function AdminPanel(props) {
+    return <SmAdminPanel></SmAdminPanel>;
 }
 
 class App extends Component {
@@ -65,53 +87,65 @@ class App extends Component {
 
         this.state = {
             isAuthenticated: false,
-            isAuthenticating: true,
+            userWasNotInit: false,
             currentUser: {},
             posts: [],
             users: [],
+            categories: [],
             subscriptions: [],
-            questionnaires: Constants.MOCK_DATA.questionnaires
+            questionnaires: []
         };
+    }
 
-        CommunicationService.getCurrentUser()
-            .then((res) => {
-                this.setState({
-                    currentUser: enhanceUser(res)
-                })
-                console.log('currentUser', res)
-            })
-            .catch(console.error)
-
-        CommunicationService.getSubscriptions()
-            .then((res) => this.setState({
-                subscriptions: res
-            }))
-            .catch(console.error)
+    async isAuth() {
+        const result = await Auth.currentAuthenticatedUser().then(user => {
+            console.log(user);
+            return true;
+        }).catch(e => {
+            console.log(e);
+            return false;
+        });
+        return result;
     }
 
     async componentDidMount() {
-        try {
-            if (await Auth.currentSession()) {
-                this.userHasAuthenticated(true);
-            }
-        } catch (e) {
-            if (e !== 'No current user') {
-                alert(e);
-            }
+        const auth = await this.isAuth();
+        if (!auth) {
+            return;
+        } else {
+            Constants.AUTHORIZATION = `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`
+            this.userHasAuthenticated(true);
+            CommunicationService.getCurrentUser()
+                .then((res) => {
+                    if (res.status == 404) {
+                        this.setState({
+                            userWasNotInit: true,
+                            currentUser: {
+                                first_name: null,
+                                last_name: null,
+                                zip_code: null,
+                                city: null,
+                                country: null
+                            }
+                        });
+                    } else {
+                        this.setState({
+                            currentUser: enhanceUser(res)
+                        })
+                        CommunicationService.getSubscriptions()
+                            .then((res) => this.setState({
+                                subscriptions: res
+                            }))
+                            .catch(console.error)
+                    }
+                })
+                .catch(console.error)
         }
-        this.userHasAuthenticated(false);
     }
 
     userHasAuthenticated = authenticated => {
-        this.setState({
-            isAuthenticated: authenticated,
-        });
-        this.forceUpdate()
+        this.setState({ isAuthenticated: authenticated });
     };
-
-    handleLogin = () => {
-        Auth.federatedSignIn();
-    }
 
     handleLogout = async event => {
         await Auth.signOut();
@@ -120,14 +154,28 @@ class App extends Component {
         this.props.history.push('/login');
     };
 
+    handleLogin = () => {
+        Auth.federatedSignIn();
+    }
+
     _postFeedClick = (event) => {
         CommunicationService.getPosts()
             .then((res) => {
                 this.setState({
+                    totalPostCount: res.totalPostCount,
                     posts: res.posts,
                     users: res.users
                 })
-                console.log(res)
+            })
+            .catch(console.error)
+    }
+
+    _experienceFeedClick = (event) => {
+        CommunicationService.getCategories()
+            .then((res) => {
+                this.setState({
+                    categories: res.categories
+                })
             })
             .catch(console.error)
     }
@@ -136,62 +184,122 @@ class App extends Component {
         CommunicationService.getQuestionnaires()
             .then((res) => {
                 this.setState({
-                    questionnaires: res
+                    answeredQuestionnaireNumber: res.answeredQuestionnaireNumber,
+                    questionnaires: res.questionnaires
                 })
-                console.log(res)
             })
             .catch(console.error)
     }
 
+    _adminClick = (event) => {
+        console.log('Admin click')
+    }
+
+    changeUser = (user) => {
+        this.setState({
+            currentUser: {
+                ...this.state.currentUser,
+                ...user
+            }
+        });
+    }
+
+    initUser = (user) => {
+        this.setState({
+            currentUser: enhanceUser(user),
+            userWasNotInit: false
+        });
+    }
+
+    __handleQuestionnaireDelete = (questionnaireId) => {
+        let questionnaires = this.state.questionnaires.filter(questionnaire => questionnaire.id != questionnaireId);
+        this.setState({
+            questionnaires: questionnaires
+        });
+        console.log('__handleQuestionnaireDelete', questionnaireId);
+    };
+
+    getContent() {
+        if (!this.state.isAuthenticated) {
+            return <SmAuthScreen></SmAuthScreen>;
+        } else if (this.state.userWasNotInit) {
+            return <SmProfile currentUser={this.state.currentUser}
+                              subscriptions={[]}
+                              userWasNotInit={this.state.userWasNotInit}
+                              changeUser={this.changeUser}
+                              initUser={this.initUser}
+            ></SmProfile>;
+        } else {
+            const childProps = {
+                isAuthenticated: this.state.isAuthenticated,
+                userHasAuthenticated: this.userHasAuthenticated
+            };
+
+            let links = [];
+            links.push(<Link onClick={this._postFeedClick} to="/feed">Feed</Link>)
+            links.push(<Link onClick={this._questionnaireClick} to="/questionnaires">Questionnaires</Link>)
+            links.push(<Link onClick={this._experienceFeedClick} to="/experiences">Experiences</Link>)
+            links.push(<Link to="/about">About</Link>)
+
+            let routes = [];
+            routes.push(<Route path="/feed">
+                <Feed state={this.state}/>
+            </Route>);
+            routes.push(<Route path="/questionnaires">
+                <Questionnaires state={this.state} __handleQuestionnaireDelete={this.__handleQuestionnaireDelete} />
+            </Route>);
+            routes.push(<Route path="/experiences">
+                <Experiences state={this.state} />
+            </Route>);
+            routes.push(<Route path="/about">
+                <About/>
+            </Route>);
+            routes.push(<Route path="/profile">
+                <Profile state={this.state} changeUser={this.changeUser}/>
+            </Route>);
+
+            if (this.state.currentUser.type === 'ADMIN') {
+                links.push(<Link onClick={this._adminClick} to="/admin">Admin Panel</Link>)
+                routes.push(<Route path="/admin">
+                    <AdminPanel state={this.state} changeUser={this.changeUser}/>
+                </Route>);
+            }
+
+            return [
+                <div className={"sm-sidebar"}>
+                    <div className={"sm-left-panel"}>
+                        {links}
+                    </div>
+                </div>,
+                <div className={"sm-dashboard"}>
+                    <Switch>
+                        {routes}
+                    </Switch>
+                </div>
+            ]
+        }
+    }
+
+
     render() {
-        const childProps = {
-            isAuthenticated: this.state.isAuthenticated,
-            userHasAuthenticated: this.userHasAuthenticated
-        };
-
-        let links = [];
-        links.push(<Link onClick={this._postFeedClick} to="/feed">Feed</Link>)
-        links.push(<Link onClick={this._questionnaireClick} to="/questionnaires">Questionnaires</Link>)
-        links.push(<Link to="/about">About</Link>)
-
-        let routes = [];
-        routes.push(<Route path="/feed">
-            <Feed state={this.state}/>
-        </Route>);
-        routes.push(<Route path="/questionnaires">
-            <Questionnaires state={this.state}/>
-        </Route>);
-        routes.push(<Route path="/about">
-            <About/>
-        </Route>);
-        routes.push(<Route path="/profile">
-            <Profile state={this.state}/>
-        </Route>);
-
         return (
             <div className={"AppContainer"}>
-                <Router>
-                    <div>
-                        <div className={"sm-navbar"}>
-                            <SmNavbar logOut={this.handleLogout} logIn={this.handleLogin}
-                                      currentUser={this.state.currentUser}
-                            ></SmNavbar>
-                        </div>
-                        <div className={"sm-content"}>
-                            <div className={"sm-sidebar"}>
-                                <div className={"sm-left-panel"}>
-                                    {links}
-                                </div>
+                    <Router>
+                        <div>
+                            <div className={"sm-navbar"}>
+                                <SmNavbar logOut={this.handleLogout}
+                                          logIn={this.handleLogin}
+                                          currentUser={this.state.currentUser}
+                                          authenticated={this.state.isAuthenticated}
+                                          userWasNotInit={this.state.userWasNotInit}
+                                ></SmNavbar>
                             </div>
-                            <div className={"sm-dashboard"}>
-                                <Switch>
-                                    {routes}
-                                </Switch>
+                            <div className={"sm-content"}>
+                                {this.getContent()}
                             </div>
                         </div>
-                    </div>
-                </Router>
-            </div>
+                    </Router>
+                </div>
         );
     }
 }

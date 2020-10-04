@@ -21,3 +21,7 @@
 .userChip {
     font-size: 15px !important;
 }
+
+.sm-nav-bar .MuiToolbar-regular {
+    box-shadow: 0 15px 11px -11px rgba(0,0,0,0.75);
+}

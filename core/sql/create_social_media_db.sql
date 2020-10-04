@@ -50,6 +50,7 @@ CREATE TABLE social_media_db."user" (
   theme      	      varchar(255) NOT NULL,
   "timestamp"    	        timestamp NOT NULL,
   CONSTRAINT user_id_pk PRIMARY KEY (user_internal_id),
+  CONSTRAINT user_email_unique UNIQUE(email),
   CONSTRAINT user_to_subscription_fk FOREIGN KEY (subscription_id) REFERENCES social_media_db.subscription (id)
 );
 
@@ -109,14 +110,23 @@ CREATE TABLE social_media_db.user_answer (
   CONSTRAINT user_answer_to_answer_fk FOREIGN KEY (answer_id) REFERENCES social_media_db.answer (id)
 );
 
+DROP TABLE IF EXISTS social_media_db.post_category;
+CREATE TABLE social_media_db.post_category (
+  id                        serial NOT NULL,
+  "text"      	      varchar(255) NOT NULL,
+  CONSTRAINT post_category_id_pk PRIMARY KEY (id)
+);
+
 DROP TABLE IF EXISTS social_media_db.post;
 CREATE TABLE social_media_db.post (
   id                        serial NOT NULL,
   user_internal_id      	  int8 NOT NULL,
+  post_category_id      	  int8 NOT NULL,
   "text"      	      varchar(255) NOT NULL,
   priority      	          int8 NOT NULL,
   "timestamp"    	        timestamp NOT NULL,
   CONSTRAINT post_to_user_fk FOREIGN KEY (user_internal_id) REFERENCES social_media_db."user" (user_internal_id),
+  CONSTRAINT post_category_to_user_fk FOREIGN KEY (post_category_id) REFERENCES social_media_db.post_category (id),
   CONSTRAINT post_id_pk PRIMARY KEY (id)
 );
 
@@ -137,6 +147,7 @@ CREATE TABLE social_media_db.comment (
   user_internal_id      	  int8 NOT NULL,
   post_id      	              int8 NOT NULL,
   text      	      varchar(255) NOT NULL,
+  visible                  BOOLEAN DEFAULT false,
   "timestamp"    	        timestamp NOT NULL,
   CONSTRAINT comment_id_pk PRIMARY KEY (id),
   CONSTRAINT comment_to_user_fk FOREIGN KEY (user_internal_id) REFERENCES social_media_db."user" (user_internal_id),
@@ -313,15 +324,19 @@ INSERT INTO social_media_db.linkage (first_question_id, second_question_id) VALU
 
 INSERT INTO social_media_db.user_answer (user_internal_id, question_id, answer_id, "timestamp") VALUES (1, 1, 2, CURRENT_TIMESTAMP);
 
+INSERT INTO social_media_db.post_category ("text") VALUES ('Politics');
+INSERT INTO social_media_db.post_category ("text") VALUES ('Something else');
+INSERT INTO social_media_db.post_category ("text") VALUES ('Sports');
 
-INSERT INTO social_media_db.post (user_internal_id, "text", priority, "timestamp") VALUES (1, 'Administration and GOP officials defend Trumps Covid response despite recordings showing he deliberately minimized virus', 7, CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.post (user_internal_id, "text", priority, "timestamp") VALUES (2, 'United CEO sees low air travel until a widely available vaccine', 5, CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.post (user_internal_id, "text", priority, "timestamp") VALUES (3, 'Biden ahead in Minnesota and Arizona, CBS polls indicate', 4, CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.post (user_internal_id, "text", priority, "timestamp") VALUES (4, 'Pompeo to resume Madison Dinners despite controversy', 5, CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.post (user_internal_id, "text", priority, "timestamp") VALUES (1, 'Some State Department officials have complained about the dinners, saying they have little to do with diplomacy and will unduly burden the staff amid a pandemic.', 7, CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.post (user_internal_id, "text", priority, "timestamp") VALUES (2, 'Trump team says history will vindicate him on coronavirus', 5, CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.post (user_internal_id, "text", priority, "timestamp") VALUES (3, 'Top advisers blame everyone but the president for the nation’s plight during the pandemic.', 4, CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.post (user_internal_id, "text", priority, "timestamp") VALUES (4, 'The pandemic has left airlines hard-hit amid safety concerns and as other countries bar American travelers from entry.', 5, CURRENT_TIMESTAMP);
+
+INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", priority, "timestamp") VALUES (1, 1, 'Administration and GOP officials defend Trumps Covid response despite recordings showing he deliberately minimized virus', 7, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", priority, "timestamp") VALUES (2, 2, 'United CEO sees low air travel until a widely available vaccine', 5, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", priority, "timestamp") VALUES (3, 1, 'Biden ahead in Minnesota and Arizona, CBS polls indicate', 4, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", priority, "timestamp") VALUES (4, 3, 'Pompeo to resume Madison Dinners despite controversy', 5, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", priority, "timestamp") VALUES (1, 3, 'Some State Department officials have complained about the dinners, saying they have little to do with diplomacy and will unduly burden the staff amid a pandemic.', 7, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", priority, "timestamp") VALUES (2, 1, 'Trump team says history will vindicate him on coronavirus', 5, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", priority, "timestamp") VALUES (3, 2, 'Top advisers blame everyone but the president for the nation’s plight during the pandemic.', 4, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", priority, "timestamp") VALUES (4, 1, 'The pandemic has left airlines hard-hit amid safety concerns and as other countries bar American travelers from entry.', 5, CURRENT_TIMESTAMP);
 
 INSERT INTO social_media_db.resource (post_id, url, "type", "timestamp") VALUES (1, 'https://static.toiimg.com/thumb/msid-67586673,width-800,height-600,resizemode-75,imgsize-3918697,pt-32,y_pad-40/67586673.jpg', 'IMAGE', CURRENT_TIMESTAMP);
 INSERT INTO social_media_db.resource (post_id, url, "type", "timestamp") VALUES (5, 'https://emerging-europe.com/wp-content/uploads/2020/04/bigstock-121724798-990x556.jpg', 'IMAGE', CURRENT_TIMESTAMP);
@@ -330,22 +345,22 @@ INSERT INTO social_media_db.resource (post_id, url, "type", "timestamp") VALUES 
 INSERT INTO social_media_db.resource (post_id, url, "type", "timestamp") VALUES (4, 'https://www.oceanfm.ie/wp-content/uploads/2020/04/EUhGDpvXYAAt-i6-1.jpg', 'IMAGE', CURRENT_TIMESTAMP);
 INSERT INTO social_media_db.resource (post_id, url, "type", "timestamp") VALUES (6, 'https://vignette.wikia.nocookie.net/future/images/3/38/Cruz.jpg/revision/latest?cb=20170710144551', 'IMAGE', CURRENT_TIMESTAMP);
 
-INSERT INTO social_media_db.comment (user_internal_id, post_id, text, "timestamp") VALUES (1, 2, 'Politics comment.', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.comment (user_internal_id, post_id, text, "timestamp") VALUES (1, 2, 'Trump is gay', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.comment (user_internal_id, post_id, text, "timestamp") VALUES (1, 2, 'Obama is a lengend', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.comment (user_internal_id, post_id, text, "timestamp") VALUES (1, 2, 'How are you?', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.comment (user_internal_id, post_id, text, "timestamp") VALUES (1, 3, 'Vand golf 4', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.comment (user_internal_id, post_id, text, "timestamp") VALUES (1, 3, 'Stie cineva cum pot da comentarii aici?', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.comment (user_internal_id, post_id, text, "timestamp") VALUES (1, 6, 'How are you?', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.comment (user_internal_id, post_id, text, "timestamp") VALUES (1, 6, 'The world will be a better place without me', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.comment (user_internal_id, post_id, text, "timestamp") VALUES (2, 2, 'Black lives mather', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.comment (user_internal_id, post_id, text, "timestamp") VALUES (2, 2, 'Where is the library?', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.comment (user_internal_id, post_id, text, "timestamp") VALUES (2, 4, 'Please like my video', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.comment (user_internal_id, post_id, text, "timestamp") VALUES (2, 3, 'Im a influencer', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.comment (user_internal_id, post_id, text, "timestamp") VALUES (2, 5, 'Programming is hard', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.comment (user_internal_id, post_id, text, "timestamp") VALUES (3, 6, 'Putin is the best president ever', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.comment (user_internal_id, post_id, text, "timestamp") VALUES (3, 6, 'This sistem is actually working?', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.comment (user_internal_id, post_id, text, "timestamp") VALUES (3, 7, 'Work hard. Play hard', CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (1, 2, 'Politics comment.', TRUE, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (1, 2, 'Trump is gay', TRUE, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (1, 2, 'Obama is a lengend', TRUE, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (1, 2, 'How are you?', TRUE, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (1, 3, 'Vand golf 4', FALSE, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (1, 3, 'Stie cineva cum pot da comentarii aici?', TRUE, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (1, 6, 'How are you?', TRUE, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (1, 6, 'The world will be a better place without me', TRUE, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (2, 2, 'Black lives mather', TRUE, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (2, 2, 'Where is the library?', FALSE, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (2, 4, 'Please like my video', TRUE, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (2, 3, 'Im a influencer', FALSE, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (2, 5, 'Programming is hard', TRUE, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (3, 6, 'Putin is the best president ever', FALSE, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (3, 6, 'This sistem is actually working?', TRUE, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (3, 7, 'Work hard. Play hard', TRUE, CURRENT_TIMESTAMP);
 
 INSERT INTO social_media_db.reaction (user_internal_id, post_id, reaction, "timestamp") VALUES (1, 1, 'LIKE', CURRENT_TIMESTAMP);
 INSERT INTO social_media_db.reaction (user_internal_id, post_id, reaction, "timestamp") VALUES (1, 4, 'LIKE', CURRENT_TIMESTAMP);

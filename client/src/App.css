@@ -39,3 +39,14 @@
 .sm-sidebar, .sm-dashboard {
 	padding-top: 15px;
 }
+
+#search-field {
+	margin-bottom: 20px;
+}
+#search-field .MuiFormControl-root{
+	width: 250px;
+}
+
+.sm-row {
+	display: flex;
+}

@@ -110,11 +110,17 @@ class SmNavbar extends Component {
         );
 
         let rightNavbarSide = null;
-
-        if (this.props.currentUser === undefined || this.props.currentUser === null) {
+        if (this.props.userWasNotInit) {
+            rightNavbarSide = <div>
+                <Button onClick={this.props.logOut}
+                        variant="contained" color="primary">
+                    Log out
+                </Button>
+            </div>
+        } else if (!this.props.authenticated) {
             rightNavbarSide = <div>
                 <Button onClick={this.props.logIn}
-                    variant="contained" color="primary">
+                        variant="contained" color="primary">
                     Log in
                 </Button>
             </div>
@@ -137,8 +143,10 @@ class SmNavbar extends Component {
             </div>
         }
 
+
+
         return (
-            <div style={{flexGrow: 1}}>
+            <div className="sm-nav-bar" style={{flexGrow: 1}}>
                 <AppBar color="inherit" position="static">
                     <Toolbar className={"sm-navbar-toolbar"}>
 

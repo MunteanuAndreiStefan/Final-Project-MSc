@@ -10,3 +10,17 @@
 .sm-post-feed > * {
     margin-bottom: 25px;
 }
+
+.sm-post-contact-info-button {
+    margin: 10px 0;
+    text-transform: capitalize;
+}
+
+.sm-post-contact-info-button .MuiCardHeader-root {
+    padding: 3px;
+}
+
+.sm-post-contact-info-button .MuiTypography-displayBlock {
+    display: flex;
+    text-transform: capitalize;
+}

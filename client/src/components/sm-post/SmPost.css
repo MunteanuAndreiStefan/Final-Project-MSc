@@ -1,0 +1,83 @@
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #BBB;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+.card-root {
+    max-width: 80%;
+    font-size: 30px;
+    display: flex;
+}
+
+.card-media {
+    height: 0;
+    padding-top: 56.25%;
+}
+
+.card-expandOpen {
+    transform: rotate(180deg);
+}
+
+.card-avatar {
+    background-color: green;
+}
+
+.sm-post-panel{
+    width: 50%;
+}
+
+.sm-post-interaction-panel {
+    width: 50%;
+}
+
+.sm-post-interaction-panel-actions {
+    margin-left: 10px;
+}
+
+.sm-post-interaction-panel-actions .MuiSvgIcon-root {
+    font-size: 2rem;
+}
+
+.sm-post-panel .MuiSvgIcon-root{
+    font-size: 2rem;
+}
+
+.post-comments {
+    overflow-y: scroll;
+    height: 300px;
+    margin-bottom: 10px;
+}
+
+.post-comments .MuiCardHeader-root{
+    padding: 6px;
+}
+
+.post-comments > * {
+    margin: 5px 5px 5px 7px;
+}
+
+.post-comment-input-field .MuiInputLabel-outlined {
+    transform: translate(14px, 18px) scale(1);
+}
+
+.post-comment-input-field .MuiInputLabel-outlined.MuiInputLabel-shrink {
+    transform: translate(14px, -2px) scale(0.75);
+}
+
+.post-comment-input-field .MuiOutlinedInput-multiline {
+    width: 300px;
+    height: 30px;
+    margin: 5px 10px 0 0;
+}
+

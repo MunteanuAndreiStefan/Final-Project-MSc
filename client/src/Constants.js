@@ -368,11 +368,15 @@ let MOCK_DATA = {
     ]
 }
 
-let API = {
+let AUTHORIZATION = '';
+
+const API = {
     HOST_AND_PORT: 'http://localhost:3001',
     PATHS: {
         POST: {
             GET_ALL_BY_USER: '/posts',
+            GET_ALL_CATEGORIES: '/posts/categories',
+            GET_ALL_BY_CATEGORY_ID: (category_id) => `/posts/categoryId/${category_id}`,
             REACT: (post_id) => `/posts/id/${post_id}/react`,
             UNREACT: (post_id, reaction_id) => `/posts/id/${post_id}/react/${reaction_id}`,
             COMMENT: (post_id) => `/posts/id/${post_id}/comment`,
@@ -380,18 +384,21 @@ let API = {
         },
         USER: {
             GET_CURRENT: '/users/current',
-            CHANGE_SUBSCRIPTION: (subscription_id) => `/users/change/subscription/${subscription_id}`
+            GET_USER_CONTACT_INFO: (user_id) =>  `/users/contactInfo/${user_id}`,
+            CHANGE_SUBSCRIPTION: (subscription_id) => `/users/change/subscription/${subscription_id}`,
+            CHANGE_DETAILS: `/users/change/details`
         },
         SUBSCRIPTION: {
             GET_ALL_BY_USER: '/subscriptions'
         },
         QUESTIONNAIRES: {
             GET_ALL_BY_USER: '/questionnaires',
-            ANSWER: '/questionnaires/id/:questionnaireId'
+            ANSWER: (questionnaireId) => `/questionnaires/id/${questionnaireId}`,
+            DELETE: (questionnaireId) => `/questionnaires/id/${questionnaireId}`
         }
     }
 }
 
 export default {
-    MOCK_DATA, API
+    MOCK_DATA, API, AUTHORIZATION
 };

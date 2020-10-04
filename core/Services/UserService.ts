@@ -43,10 +43,44 @@ export async function getCurrentUser(email: string) {
     let rowCount = response.rowCount;
 
     if (rowCount === 0) {
-        throw new UserError(Constants.MESSAGES.NOT_FOUND.status, Constants.MESSAGES.NOT_FOUND.QUESTIONNAIRE);
+        throw new UserError(Constants.MESSAGES.NOT_FOUND.status, Constants.MESSAGES.NOT_FOUND.USER);
     }
 
     return response.rows[0]
+}
+
+async function doAddUserDetails(email: string, body: any) {
+    const response = await UserRepository.add(1, 'USER', email, email, body.first_name,
+                        body.last_name, 'address', body.city, body.country, body.zip_code, 'LIGHT');
+    let rowCount = response.rowCount;
+
+    if (rowCount === 0) {
+        throw new UserError(Constants.MESSAGES.NOT_FOUND.status, Constants.MESSAGES.NOT_FOUND.USER);
+    }
+
+    return getCurrentUser(email);
+}
+
+async function doEditUserDetails(email: string, body: any) {
+    console.log('doEditUserDetails', email, body);
+    const response = await UserRepository.editDetails(email, body.email, body.first_name, body.last_name, body.city, body.country, body.zip_code);
+    let rowCount = response.rowCount;
+
+    console.log('doEditUserDetails', rowCount);
+
+    if (rowCount === 0) {
+        throw new UserError(Constants.MESSAGES.NOT_FOUND.status, Constants.MESSAGES.NOT_FOUND.USER);
+    }
+
+    return getCurrentUser(body.email);
+}
+
+export async function changeUserDetails(email: string, body: any) {
+    console.log('changeUserDetails', email, body);
+    if (body.email === undefined || body.email === null) {
+        return await doAddUserDetails(email, body);
+    }
+    return await doEditUserDetails(email, body);
 }
 
 export async function changeSubscription(subscription_id: number, user_email: string) {

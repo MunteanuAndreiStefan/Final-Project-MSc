@@ -1,0 +1,19 @@
+.sm-comment-post-contact-info-button {
+    margin: 10px 0;
+    text-transform: capitalize;
+    width: 100%;
+}
+
+.sm-comment-post-contact-info-button .MuiCardHeader-root {
+    padding: 6px 10px;
+}
+
+.sm-comment-post-contact-info-button .MuiTypography-displayBlock {
+    display: flex;
+    text-transform: capitalize;
+}
+
+.sm-comment-post-contact-info-button button,
+.sm-comment-post-contact-info-button .MuiCard-root{
+    width: 100%;
+}

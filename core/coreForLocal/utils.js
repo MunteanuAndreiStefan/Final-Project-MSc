@@ -1,5 +1,6 @@
+global.atob = require("atob");
+
 function respond(res, message) {
-    console.log('Message', JSON.stringify(message));
     if (message === undefined || message === null) {
         res.status(404).json({error: "Resource not  found."});
     } else  {
@@ -15,12 +16,24 @@ function errors(res, errors) {
     res.status(500).send(errors);
 }
 
+const parseJwt = (token) => {
+    try {
+        return JSON.parse(atob(token.split('.')[1]));
+    } catch (e) {
+        console.log(e)
+        return null;
+    }
+};
+
 module.exports = {
     respond: respond,
     errors: errors,
     createRouteWithLambda: function (lambda) {
         return function (req, res) {
-            lambda(req.apiGateway.event, req.params, req.body)
+            let params = req.params;
+            params.authorization = parseJwt(req.headers.authorization);
+
+            lambda(req.apiGateway.event, params, JSON.parse(JSON.stringify(req.body)))
                 .then(message => respond(res, message))
                 .catch(err => errors(res, err));
         }

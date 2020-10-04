@@ -12,6 +12,7 @@ export type PostComment = {
     user_internal_id: number;
     post_id: number;
     text: string;
+    visible: boolean;
     timestamp: string;
 };
 

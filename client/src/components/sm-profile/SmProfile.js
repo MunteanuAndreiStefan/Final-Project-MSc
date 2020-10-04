@@ -25,15 +25,27 @@ import {enhanceUser} from "../../services/UserService";
 class SmProfile extends Component {
     constructor(props) {
         super(props);
+
+        let userWasNotInit = props.userWasNotInit;
+
         this.state = {
-            currentUser: props.currentUser,
             subscriptions: props.subscriptions,
-            fieldsAreDisabled: true,
-            actionButtonName: 'Edit'
+            fieldsAreDisabled: !userWasNotInit,
+            actionButtonName: userWasNotInit ? 'Save' : 'Edit'
         };
     }
 
     __handleContentChange = (event) => {
+        let currentUser = this.props.currentUser;
+    debugger;
+        let keys = Object.keys(currentUser);
+        for (let i = 0; i < keys.length; i++) {
+            let value = currentUser[keys[i]];
+            if (value === undefined || value === null || value.length < 3) {
+                console.log('Field ' + keys[i] + ' does not match contraints.');
+                return;
+            }
+        }
         let fieldsAreDisabled = this.state.fieldsAreDisabled;
         let buttonAction = fieldsAreDisabled ? 'Save' : 'Edit';
         this.setState({
@@ -41,25 +53,21 @@ class SmProfile extends Component {
             actionButtonName: buttonAction
         })
 
-        if (buttonAction === 'Edit') {
-            console.log('Send to server');
-        }
+        CommunicationService.changeUserDetails(currentUser)
+            .then((res) => {
+                this.props.initUser(res);
+            })
+            .catch(console.error)
     }
 
     __handleSubscriptionSelection = (event, subscriptionId) => {
         let modifiedUser = this.props.currentUser;
-
         CommunicationService.changeSubscription(subscriptionId)
             .then((res) => {
                 modifiedUser.subscription_id = subscriptionId;
-                this.setState({
-                    currentUser: modifiedUser
-                });
-                console.log('changeSubscription', res)
+                this.props.changeUser(modifiedUser);
             })
             .catch(console.error)
-
-
     }
 
     getSubscriptionsDiv() {
@@ -107,10 +115,20 @@ class SmProfile extends Component {
         });
     }
 
+    handleFieldChange = (event) => {
+        let currentUser = this.props.currentUser;
+        currentUser[event.target.id] = event.target.value;
+        this.props.changeUser(currentUser);
+    }
+
     render() {
         let subscriptions = this.getSubscriptionsDiv();
+        let headerInfo = this.props.userWasNotInit ? <Typography variant="h4" component="h2" className={"sm-profile-header-info"}>
+            Before we continue, please complete the following details
+        </Typography> : null;
         return (
-            <div className={"sm-profile"}>
+            <div className={this.props.userWasNotInit ? "sm-profile-init" : "sm-profile"}>
+                {headerInfo}
                 <Card>
                     <CardHeader titleTypographyProps={{variant: "h5"}}
                         title={this.props.currentUser.full_name}
@@ -118,17 +136,34 @@ class SmProfile extends Component {
                     <CardContent>
                         <Grid container spacing={3}>
                             <Grid item xs>
-                                <TextField label="First name" disabled={this.state.fieldsAreDisabled}
-                                           defaultValue={this.props.currentUser.first_name} />
+                                <TextField id="first_name"
+                                           label="First name"
+                                           disabled={this.state.fieldsAreDisabled}
+                                           value={this.props.currentUser.first_name}
+                                           onChange={this.handleFieldChange}
+                                           required
+                                />
                             </Grid>
                             <Grid item xs>
-                                <TextField label="Last name" disabled={this.state.fieldsAreDisabled}
-                                           defaultValue={this.props.currentUser.last_name} />
+                                <TextField id="last_name"
+                                           label="Last name"
+                                           disabled={this.state.fieldsAreDisabled}
+                                           value={this.props.currentUser.last_name}
+                                           onChange={this.handleFieldChange}
+                                           required={true}
+                                />
                             </Grid>
-                            <Grid item xs>
-                                <TextField label="Email" disabled={this.state.fieldsAreDisabled}
-                                           defaultValue={this.props.currentUser.email} />
-                            </Grid>
+                            {
+                                this.props.userWasNotInit ? null : <Grid item xs>
+                                    <TextField id="email"
+                                               label="Email"
+                                               disabled={this.state.fieldsAreDisabled}
+                                               value={this.props.currentUser.email}
+                                               onChange={this.handleFieldChange}
+                                               required={true}
+                                    />
+                                </Grid>
+                            }
                         </Grid>
                     </CardContent>
                 </Card>
@@ -137,16 +172,31 @@ class SmProfile extends Component {
                     <CardContent>
                         <Grid container spacing={3}>
                             <Grid item xs>
-                                <TextField label="Zip Code" disabled={this.state.fieldsAreDisabled}
-                                           defaultValue={this.props.currentUser.zip_code} />
+                                <TextField id="zip_code"
+                                           label="Zip Code"
+                                           disabled={this.state.fieldsAreDisabled}
+                                           value={this.props.currentUser.zip_code}
+                                           onChange={this.handleFieldChange}
+                                           required={true}
+                                />
                             </Grid>
                             <Grid item xs>
-                                <TextField label="City" disabled={this.state.fieldsAreDisabled}
-                                           defaultValue={this.props.currentUser.city} />
+                                <TextField id="city"
+                                           label="City"
+                                           disabled={this.state.fieldsAreDisabled}
+                                           value={this.props.currentUser.city}
+                                           onChange={this.handleFieldChange}
+                                           required={true}
+                                />
                             </Grid>
                             <Grid item xs>
-                                <TextField label="Country" disabled={this.state.fieldsAreDisabled}
-                                           defaultValue={this.props.currentUser.country} />
+                                <TextField id="country"
+                                           label="Country"
+                                           disabled={this.state.fieldsAreDisabled}
+                                           value={this.props.currentUser.country}
+                                           onChange={this.handleFieldChange}
+                                           required={true}
+                                />
                             </Grid>
                         </Grid>
                     </CardContent>

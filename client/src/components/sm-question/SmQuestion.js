@@ -60,7 +60,6 @@ class SmQuestion extends Component {
             ></SmAnswer>
         });
 
-
         let answersContainerClass = question.type === 'TEXT' ? "sm-question-answers-container-column" : "sm-question-answers-container-row"
 
         return (

@@ -14,6 +14,10 @@ export async function getComputedQuestionnaireList(email: string): Promise<Query
     return DatabaseService.executeQuery(Constants.QUERIES.QUESTIONNAIRE.GET_ALL_QUESTIONNAIRES_BY_USER_AND_ORDERED(email))
 }
 
+export async function getAnsweredQuestionnaireList(email: string): Promise<QueryResult> {
+    return DatabaseService.executeQuery(Constants.QUERIES.QUESTIONNAIRE.GET_ANSWERED_QUESTIONNAIRE_LIST(email))
+}
+
 export async function add(priority: number, name: string): Promise<QueryResult> {
     return DatabaseService.executeQuery(Constants.QUERIES.QUESTIONNAIRE.ADD(priority, name));
 }

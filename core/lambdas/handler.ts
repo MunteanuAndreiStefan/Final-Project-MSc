@@ -9,7 +9,7 @@ import * as Constants from "../Utils/Constants";
 import {PostError} from "../Services/PostService";
 
 let dbCreationChecked = false;
-let global_email_To_Be_Removed = 'marin.andrei@domain.com'
+
 async function databaseCheckLogic(): Promise<void> {
     if (!dbCreationChecked) {
         await DatabaseCreatorService.createSchemaIfMissing();
@@ -18,7 +18,6 @@ async function databaseCheckLogic(): Promise<void> {
 }
 
 export async function hello(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-    console.log("hello handler")
     await databaseCheckLogic();
 
     console.log(event)
@@ -30,8 +29,24 @@ export async function hello(event: APIGatewayProxyEvent): Promise<APIGatewayProx
     }
 }
 
-export async function getPosts(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-    let posts = await PostService.getComputedPostList(global_email_To_Be_Removed)
+export async function getPosts(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
+    let posts = await PostService.getComputedPostList(params.authorization.email)
+    return {
+        statusCode: 200,
+        body: JSON.stringify(posts)
+    }
+}
+
+export async function getCategories(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
+    let posts = await PostService.getCategories(params.authorization.email)
+    return {
+        statusCode: 200,
+        body: JSON.stringify(posts)
+    }
+}
+
+export async function getPostsByCategoryId(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
+    let posts = await PostService.getAllByCategoryId(params.authorization.email, params.categoryId)
     return {
         statusCode: 200,
         body: JSON.stringify(posts)
@@ -43,7 +58,7 @@ export async function reactionAddHandle(event: APIGatewayProxyEvent, params: any
     if (post_id != body.post_id) {
         throw new PostError(Constants.MESSAGES.NOT_FOUND.status, Constants.MESSAGES.NOT_FOUND.POST);
     }
-    let response = await PostService.reactionAddHandle(post_id, body, global_email_To_Be_Removed);
+    let response = await PostService.reactionAddHandle(post_id, body, params.authorization.email);
     return {
         statusCode: 200,
         body: JSON.stringify(response)
@@ -65,7 +80,7 @@ export async function commentAddHandle(event: APIGatewayProxyEvent, params: any,
     if (post_id != body.post_id) {
         throw new PostError(Constants.MESSAGES.NOT_FOUND.status, Constants.MESSAGES.NOT_FOUND.POST);
     }
-    let response = await PostService.commentAddHandle(post_id, body, global_email_To_Be_Removed);
+    let response = await PostService.commentAddHandle(post_id, body, params.authorization.email);
     return {
         statusCode: 200,
         body: JSON.stringify(response)
@@ -82,8 +97,8 @@ export async function commentDeleteHandle(event: APIGatewayProxyEvent, params: a
     }
 }
 
-export async function getQuestionnaires(event: APIGatewayProxyEvent): Promise<object> {
-    let questionnaires = await QuestionnaireService.getComputedQuestionnaireList(global_email_To_Be_Removed)
+export async function getQuestionnaires(event: APIGatewayProxyEvent, params: any): Promise<object> {
+    let questionnaires = await QuestionnaireService.getComputedQuestionnaireList(params.authorization.email)
     return {
         statusCode: 200,
         body: JSON.stringify(questionnaires)
@@ -91,7 +106,15 @@ export async function getQuestionnaires(event: APIGatewayProxyEvent): Promise<ob
 }
 
 export async function addUserAnswers(event: APIGatewayProxyEvent, params: any, body: any): Promise<object> {
-    let response = await QuestionnaireService.addUserAnswers(params.questionnaireId, body, global_email_To_Be_Removed)
+    let response = await QuestionnaireService.addUserAnswers(params.questionnaireId, body, params.authorization.email)
+    return {
+        statusCode: 200,
+        body: JSON.stringify(response)
+    }
+}
+
+export async function deleteQuestionnaire(event: APIGatewayProxyEvent, params: any): Promise<object> {
+    let response = await QuestionnaireService.deleteQuestionnaire(params.questionnaireId,  params.authorization.email)
     return {
         statusCode: 200,
         body: JSON.stringify(response)
@@ -106,16 +129,41 @@ export async function getSubscriptions(event: APIGatewayProxyEvent): Promise<API
     }
 }
 
-export async function getCurrentUser(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-    let user = await UserService.getCurrentUser(global_email_To_Be_Removed)
+export async function getCurrentUser(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
+    let user = await UserService.getCurrentUser(params.authorization.email)
     return {
         statusCode: 200,
         body: JSON.stringify(user)
     }
 }
+
+export async function getUserContactInfo(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
+    let user = await UserService.getById(params.userId)
+    let userContactInfo = {
+        email: user.email,
+        username: user.username,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        address: user.address,
+        city: user.city
+    }
+    return {
+        statusCode: 200,
+        body: JSON.stringify(userContactInfo)
+    }
+}
+
+export async function changeUserDetails(event: APIGatewayProxyEvent, params: any, body: any): Promise<APIGatewayProxyResult> {
+    let user = await UserService.changeUserDetails(params.authorization.email, body)
+    return {
+        statusCode: 200,
+        body: JSON.stringify(user)
+    }
+}
+
 export async function changeSubscription(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
     let subscription_id = params.subscriptionId;
-    let user = await UserService.changeSubscription(subscription_id, global_email_To_Be_Removed)
+    let user = await UserService.changeSubscription(subscription_id, params.authorization.email)
     return {
         statusCode: 200,
         body: JSON.stringify(user)

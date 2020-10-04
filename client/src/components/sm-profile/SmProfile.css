@@ -10,6 +10,26 @@
     width: 90%;
 }
 
+.sm-profile-init {
+    margin: 3% 20% 0 3%;
+    display: table;
+    margin-right: auto;
+    margin-left: auto;
+    width: 800px;
+}
+
+.sm-profile-init .sm-profile-header-info{
+    margin: 20px 0 20px 0;
+}
+
+.sm-profile-init > * {
+    margin-bottom: 15px;
+}
+
+.sm-profile-init .MuiFormControl-root {
+    width: 90%;
+}
+
 .sm-profile-subscriptions {
     margin: 10px 0;
     display: flex;

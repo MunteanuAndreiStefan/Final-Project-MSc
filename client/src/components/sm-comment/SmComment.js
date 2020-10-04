@@ -13,6 +13,7 @@ import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import {Button} from "@material-ui/core";
 
 class SmComment extends Component {
     constructor(props) {
@@ -60,7 +61,9 @@ class SmComment extends Component {
         </IconButton> : null;
 
         return (
-            <div>
+            <Button onClick={this.props.handleViewUserContactInfo(this.props.comment.user.user_internal_id)}
+                    className={"sm-comment-post-contact-info-button"}
+            >
                 <Card className={"comment-root"}>
                     <CardHeader
                         avatar={
@@ -83,7 +86,7 @@ class SmComment extends Component {
                         <MenuItem onClick={this.__handleCommentDelete}>Delete</MenuItem>
                     </Menu>
                 </Card>
-            </div>
+            </Button>
         );
     }
 }

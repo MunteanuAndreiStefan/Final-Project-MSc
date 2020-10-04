@@ -7,7 +7,7 @@ import * as ReactionRepository from "../Repository/ReactionRepository";
 import * as QuestionRepository from "../Repository/QuestionRepository";
 import * as QuestionnaireRepository from '../Repository/QuestionnaireRepository';
 import * as UserAnswerRepository from '../Repository/UserAnswerRepository';
-import {getUserInternalIdBy} from "./UserService";
+import {getUserInternalIdBy, getCurrentUser} from "./UserService";
 import {Answer, Question, Questionnaire} from "../Models/Questionnaire";
 
 export class QuestionnaireError extends Error {
@@ -71,23 +71,50 @@ export async function getComputedQuestionnaireList(email: string) {
         })
     }
 
-    return questionnairesResponse
+    let answeredQuestionnaireListResponse = await QuestionnaireRepository.getAnsweredQuestionnaireList(email);
+
+    return {
+        answeredQuestionnaireNumber: answeredQuestionnaireListResponse.rowCount,
+        questionnaires: questionnairesResponse
+    }
 }
 
 export async function addUserAnswers(questionnaireId: number, body: any, email: string) {
     let userAnswers = body.userAnswers;
-
+    console.log(userAnswers);
     let user_internal_id = await getUserInternalIdBy(email);
 
-    Object.keys(userAnswers).forEach((questionId) => {
-        userAnswers[questionId].forEach((answerId: any) => {
-            UserAnswerRepository.add(user_internal_id, Number(questionId), answerId);
+    userAnswers.forEach((obj: any) => {
+        obj.answers.forEach((answerId: any) => {
+            UserAnswerRepository.add(user_internal_id, Number(obj.questionId), answerId);
         })
     });
 
     return {
         statusCode: 200,
         body: "User answers registered successfully."
+    };
+}
+
+export async function deleteQuestionnaire(questionnaireId: number, email: string) {
+    const currentUser = await getCurrentUser(email);
+    if (currentUser.type != 'ADMIN') {
+        return {
+            statusCode: 403,
+            body: "User has no right to delete."
+        };
+    }
+
+    const questionnaires = await QuestionnaireRepository.remove(questionnaireId);
+    let rowCount = questionnaires.rowCount;
+
+    if (rowCount === 0) {
+        throw new QuestionnaireError(Constants.MESSAGES.NOT_FOUND.status, Constants.MESSAGES.NOT_FOUND.QUESTIONNAIRE);
+    }
+
+    return {
+        statusCode: 200,
+        body: "Questionnaire deleted successfully."
     };
 }
 

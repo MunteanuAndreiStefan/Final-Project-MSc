@@ -162,6 +162,35 @@ async function remove(id) {
 
 /***/ }),
 
+/***/ "./Repository/CategoryRepository.ts":
+/*!******************************************!*\
+  !*** ./Repository/CategoryRepository.ts ***!
+  \******************************************/
+/*! exports provided: add, remove, getAll */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAll", function() { return getAll; });
+/* harmony import */ var _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Services/Database/DatabaseService */ "./Services/Database/DatabaseService.ts");
+/* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
+
+
+async function add(text) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].CATEGORY.ADD(text));
+}
+async function remove(id) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].CATEGORY.DELETE(id));
+}
+async function getAll() {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].CATEGORY.GET_ALL());
+}
+
+
+/***/ }),
+
 /***/ "./Repository/CommentRepository.ts":
 /*!*****************************************!*\
   !*** ./Repository/CommentRepository.ts ***!
@@ -199,7 +228,7 @@ async function remove(id) {
 /*!**************************************!*\
   !*** ./Repository/PostRepository.ts ***!
   \**************************************/
-/*! exports provided: getById, add, remove, getPostsBySubscriptionAndOrdered, getAll */
+/*! exports provided: getById, add, remove, getPostsBySubscriptionAndOrdered, getAll, getAllByCategoryId, count */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -209,6 +238,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPostsBySubscriptionAndOrdered", function() { return getPostsBySubscriptionAndOrdered; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAll", function() { return getAll; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAllByCategoryId", function() { return getAllByCategoryId; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "count", function() { return count; });
 /* harmony import */ var _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Services/Database/DatabaseService */ "./Services/Database/DatabaseService.ts");
 /* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
 
@@ -227,6 +258,12 @@ async function getPostsBySubscriptionAndOrdered(email) {
 }
 async function getAll() {
     return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].POST.GET_ALL());
+}
+async function getAllByCategoryId(category_id) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].POST.GET_ALL_BY_CATEGORY_ID(category_id));
+}
+async function count() {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].POST.COUNT());
 }
 
 
@@ -269,7 +306,7 @@ async function remove(id) {
 /*!***********************************************!*\
   !*** ./Repository/QuestionnaireRepository.ts ***!
   \***********************************************/
-/*! exports provided: getById, getAll, getComputedQuestionnaireList, add, remove */
+/*! exports provided: getById, getAll, getComputedQuestionnaireList, getAnsweredQuestionnaireList, add, remove */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -277,6 +314,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getById", function() { return getById; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAll", function() { return getAll; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getComputedQuestionnaireList", function() { return getComputedQuestionnaireList; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAnsweredQuestionnaireList", function() { return getAnsweredQuestionnaireList; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
 /* harmony import */ var _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Services/Database/DatabaseService */ "./Services/Database/DatabaseService.ts");
@@ -291,6 +329,9 @@ async function getAll() {
 }
 async function getComputedQuestionnaireList(email) {
     return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].QUESTIONNAIRE.GET_ALL_QUESTIONNAIRES_BY_USER_AND_ORDERED(email));
+}
+async function getAnsweredQuestionnaireList(email) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].QUESTIONNAIRE.GET_ANSWERED_QUESTIONNAIRE_LIST(email));
 }
 async function add(priority, name) {
     return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].QUESTIONNAIRE.ADD(priority, name));
@@ -434,7 +475,7 @@ async function remove(id) {
 /*!**************************************!*\
   !*** ./Repository/UserRepository.ts ***!
   \**************************************/
-/*! exports provided: getById, getByEmail, changeSubscription, add, remove, getShallowUsersByIds, getAll */
+/*! exports provided: getById, getByEmail, changeSubscription, add, editDetails, remove, getShallowUsersByIds, getAll */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -443,6 +484,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getByEmail", function() { return getByEmail; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeSubscription", function() { return changeSubscription; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editDetails", function() { return editDetails; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getShallowUsersByIds", function() { return getShallowUsersByIds; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAll", function() { return getAll; });
@@ -461,6 +503,9 @@ async function changeSubscription(subscription_id, user_email) {
 }
 async function add(subscription_id, type, email, username, first_name, last_name, address, city, country, zip_code, theme) {
     return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].USER.ADD(subscription_id, type, email, username, first_name, last_name, address, city, country, zip_code, theme));
+}
+async function editDetails(email, new_email, first_name, last_name, city, country, zip_code) {
+    return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].USER.EDIT_DETAILS(email, new_email, first_name, last_name, city, country, zip_code));
 }
 async function remove(id) {
     return _Services_Database_DatabaseService__WEBPACK_IMPORTED_MODULE_0__["executeQuery"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["QUERIES"].USER.DELETE(id));
@@ -549,7 +594,7 @@ function executeQuery(query) {
         client.query(query)
             .then(resolve)
             .catch((error) => {
-            console.error(error);
+            console.error(query, error);
             resolve(error);
             //reject(error);
         });
@@ -563,14 +608,16 @@ function executeQuery(query) {
 /*!*********************************!*\
   !*** ./Services/PostService.ts ***!
   \*********************************/
-/*! exports provided: PostError, getById, getComputedPostList, reactionAddHandle, reactionDeleteHandle, commentAddHandle, commentDeleteHandle, add, remove */
+/*! exports provided: PostError, getById, getAllByCategoryId, getComputedPostList, getCategories, reactionAddHandle, reactionDeleteHandle, commentAddHandle, commentDeleteHandle, add, remove */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PostError", function() { return PostError; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getById", function() { return getById; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAllByCategoryId", function() { return getAllByCategoryId; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getComputedPostList", function() { return getComputedPostList; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCategories", function() { return getCategories; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reactionAddHandle", function() { return reactionAddHandle; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reactionDeleteHandle", function() { return reactionDeleteHandle; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "commentAddHandle", function() { return commentAddHandle; });
@@ -578,12 +625,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
 /* harmony import */ var _Repository_PostRepository__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Repository/PostRepository */ "./Repository/PostRepository.ts");
-/* harmony import */ var _Repository_ResourceRepository__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Repository/ResourceRepository */ "./Repository/ResourceRepository.ts");
-/* harmony import */ var _Repository_CommentRepository__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Repository/CommentRepository */ "./Repository/CommentRepository.ts");
-/* harmony import */ var _Repository_ReactionRepository__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Repository/ReactionRepository */ "./Repository/ReactionRepository.ts");
-/* harmony import */ var _Repository_UserRepository__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Repository/UserRepository */ "./Repository/UserRepository.ts");
-/* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
-/* harmony import */ var _UserService__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./UserService */ "./Services/UserService.ts");
+/* harmony import */ var _Repository_CategoryRepository__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Repository/CategoryRepository */ "./Repository/CategoryRepository.ts");
+/* harmony import */ var _Repository_ResourceRepository__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Repository/ResourceRepository */ "./Repository/ResourceRepository.ts");
+/* harmony import */ var _Repository_CommentRepository__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Repository/CommentRepository */ "./Repository/CommentRepository.ts");
+/* harmony import */ var _Repository_ReactionRepository__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Repository/ReactionRepository */ "./Repository/ReactionRepository.ts");
+/* harmony import */ var _Repository_UserRepository__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Repository/UserRepository */ "./Repository/UserRepository.ts");
+/* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
+/* harmony import */ var _UserService__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./UserService */ "./Services/UserService.ts");
+
 
 
 
@@ -602,22 +651,43 @@ async function getById(id) {
     const response = await _Repository_PostRepository__WEBPACK_IMPORTED_MODULE_0__["getById"](id);
     let rowCount = response.rowCount;
     if (rowCount === 0) {
-        throw new PostError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_5__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_5__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
+        throw new PostError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
     }
     return response.rows[0];
+}
+async function getAllByCategoryId(userEmail, categoryId) {
+    const posts = await _Repository_PostRepository__WEBPACK_IMPORTED_MODULE_0__["getPostsBySubscriptionAndOrdered"](userEmail);
+    let rowCount = posts.rowCount;
+    if (rowCount === 0) {
+        throw new PostError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.POST);
+    }
+    let validPosts = posts.rows.filter((post) => post.post_category_id == categoryId);
+    return computePostDetails(validPosts);
 }
 async function getComputedPostList(userEmail) {
     const posts = await _Repository_PostRepository__WEBPACK_IMPORTED_MODULE_0__["getPostsBySubscriptionAndOrdered"](userEmail);
     let rowCount = posts.rowCount;
     if (rowCount === 0) {
-        throw new PostError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_5__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_5__["MESSAGES"].NOT_FOUND.POST);
+        throw new PostError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.POST);
     }
+    return computePostDetails(posts.rows);
+}
+async function computePostDetails(posts) {
     let response = [];
-    for (const post of posts.rows) {
+    let postLength = posts.length;
+    if (postLength === 0) {
+        return {
+            posts: [],
+            totalPostCount: 0,
+            users: []
+        };
+    }
+    for (const post of posts) {
         let postId = post.id;
-        let resources = (await _Repository_ResourceRepository__WEBPACK_IMPORTED_MODULE_1__["getAllByPostId"](postId)).rows;
-        let comments = (await _Repository_CommentRepository__WEBPACK_IMPORTED_MODULE_2__["getAllByPostId"](postId)).rows;
-        let reactions = (await _Repository_ReactionRepository__WEBPACK_IMPORTED_MODULE_3__["getAllByPostId"](postId)).rows;
+        let resources = (await _Repository_ResourceRepository__WEBPACK_IMPORTED_MODULE_2__["getAllByPostId"](postId)).rows;
+        let comments = (await _Repository_CommentRepository__WEBPACK_IMPORTED_MODULE_3__["getAllByPostId"](postId)).rows;
+        let reactions = (await _Repository_ReactionRepository__WEBPACK_IMPORTED_MODULE_4__["getAllByPostId"](postId)).rows;
+        comments = comments.filter((comment) => comment.visible);
         response.push({
             ...post,
             resources: resources,
@@ -626,23 +696,35 @@ async function getComputedPostList(userEmail) {
         });
     }
     let userIds = getUniqueUserInternalIdsFromPosts(response);
-    let shallowUsers = (await _Repository_UserRepository__WEBPACK_IMPORTED_MODULE_4__["getShallowUsersByIds"](userIds)).rows
+    let shallowUsers = (await _Repository_UserRepository__WEBPACK_IMPORTED_MODULE_5__["getShallowUsersByIds"](userIds)).rows
         .map((user) => {
         return {
             ...user,
             user_internal_id: user.user_internal_id.toString()
         };
     });
+    const postCountResponse = await _Repository_PostRepository__WEBPACK_IMPORTED_MODULE_0__["count"]();
+    if (postCountResponse.rowCount > 0) {
+        postLength = postCountResponse.rows[0].count;
+    }
     return {
         posts: response,
+        totalPostCount: postLength,
         users: shallowUsers
     };
 }
+async function getCategories(userEmail) {
+    const categories = await _Repository_CategoryRepository__WEBPACK_IMPORTED_MODULE_1__["getAll"]();
+    let rowCount = categories.rowCount;
+    return {
+        categories: categories.rows
+    };
+}
 async function reactionAddHandle(postId, body, userEmail) {
-    let user_internal_id = await Object(_UserService__WEBPACK_IMPORTED_MODULE_6__["getUserInternalIdBy"])(userEmail);
-    const response = await _Repository_ReactionRepository__WEBPACK_IMPORTED_MODULE_3__["add"](user_internal_id, body.post_id, body.reaction);
+    let user_internal_id = await Object(_UserService__WEBPACK_IMPORTED_MODULE_7__["getUserInternalIdBy"])(userEmail);
+    const response = await _Repository_ReactionRepository__WEBPACK_IMPORTED_MODULE_4__["add"](user_internal_id, body.post_id, body.reaction);
     if (response.code && response.code == 23505) {
-        const reactionsByPost = await _Repository_ReactionRepository__WEBPACK_IMPORTED_MODULE_3__["getAllByPostId"](body.post_id);
+        const reactionsByPost = await _Repository_ReactionRepository__WEBPACK_IMPORTED_MODULE_4__["getAllByPostId"](body.post_id);
         let reaction = reactionsByPost.rows.find((row) => row.user_internal_id == user_internal_id);
         return {
             reactionId: reaction.id
@@ -653,23 +735,23 @@ async function reactionAddHandle(postId, body, userEmail) {
     };
 }
 async function reactionDeleteHandle(post_id, reactionId) {
-    const response = await _Repository_ReactionRepository__WEBPACK_IMPORTED_MODULE_3__["remove"](reactionId);
+    const response = await _Repository_ReactionRepository__WEBPACK_IMPORTED_MODULE_4__["remove"](reactionId);
     return {
         deletedReactionsCount: response.rowCount
     };
 }
 async function commentAddHandle(postId, body, userEmail) {
-    let user_internal_id = await Object(_UserService__WEBPACK_IMPORTED_MODULE_6__["getUserInternalIdBy"])(userEmail);
-    const response = await _Repository_CommentRepository__WEBPACK_IMPORTED_MODULE_2__["add"](user_internal_id, body.post_id, body.comment);
+    let user_internal_id = await Object(_UserService__WEBPACK_IMPORTED_MODULE_7__["getUserInternalIdBy"])(userEmail);
+    const response = await _Repository_CommentRepository__WEBPACK_IMPORTED_MODULE_3__["add"](user_internal_id, body.post_id, body.comment);
     if (response.rowCount === 0) {
-        throw new PostError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_5__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_5__["MESSAGES"].NOT_FOUND.COMMENT);
+        throw new PostError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.COMMENT);
     }
     return {
         commentId: response.rows[0].id
     };
 }
 async function commentDeleteHandle(post_id, commentId) {
-    const response = await _Repository_CommentRepository__WEBPACK_IMPORTED_MODULE_2__["remove"](commentId);
+    const response = await _Repository_CommentRepository__WEBPACK_IMPORTED_MODULE_3__["remove"](commentId);
     return {
         deletedCommentsCount: response.rowCount
     };
@@ -690,7 +772,7 @@ async function add(user_internal_id, text, priority) {
 async function remove(id) {
     const response = await _Repository_PostRepository__WEBPACK_IMPORTED_MODULE_0__["remove"](id);
     if (response.rowCount === 0) {
-        throw new PostError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_5__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_5__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
+        throw new PostError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
     }
     return response.rows;
 }
@@ -702,7 +784,7 @@ async function remove(id) {
 /*!******************************************!*\
   !*** ./Services/QuestionnaireService.ts ***!
   \******************************************/
-/*! exports provided: QuestionnaireError, getById, getAll, getComputedQuestionnaireList, addUserAnswers, add, remove */
+/*! exports provided: QuestionnaireError, getById, getAll, getComputedQuestionnaireList, addUserAnswers, deleteQuestionnaire, add, remove */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -712,6 +794,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAll", function() { return getAll; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getComputedQuestionnaireList", function() { return getComputedQuestionnaireList; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addUserAnswers", function() { return addUserAnswers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteQuestionnaire", function() { return deleteQuestionnaire; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
 /* harmony import */ var _Utils_Constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Utils/Constants */ "./Utils/Constants.ts");
@@ -773,19 +856,42 @@ async function getComputedQuestionnaireList(email) {
             questions: questionsResponse
         });
     }
-    return questionnairesResponse;
+    let answeredQuestionnaireListResponse = await _Repository_QuestionnaireRepository__WEBPACK_IMPORTED_MODULE_3__["getAnsweredQuestionnaireList"](email);
+    return {
+        answeredQuestionnaireNumber: answeredQuestionnaireListResponse.rowCount,
+        questionnaires: questionnairesResponse
+    };
 }
 async function addUserAnswers(questionnaireId, body, email) {
     let userAnswers = body.userAnswers;
+    console.log(userAnswers);
     let user_internal_id = await Object(_UserService__WEBPACK_IMPORTED_MODULE_5__["getUserInternalIdBy"])(email);
-    Object.keys(userAnswers).forEach((questionId) => {
-        userAnswers[questionId].forEach((answerId) => {
-            _Repository_UserAnswerRepository__WEBPACK_IMPORTED_MODULE_4__["add"](user_internal_id, Number(questionId), answerId);
+    userAnswers.forEach((obj) => {
+        obj.answers.forEach((answerId) => {
+            _Repository_UserAnswerRepository__WEBPACK_IMPORTED_MODULE_4__["add"](user_internal_id, Number(obj.questionId), answerId);
         });
     });
     return {
         statusCode: 200,
         body: "User answers registered successfully."
+    };
+}
+async function deleteQuestionnaire(questionnaireId, email) {
+    const currentUser = await Object(_UserService__WEBPACK_IMPORTED_MODULE_5__["getCurrentUser"])(email);
+    if (currentUser.type != 'ADMIN') {
+        return {
+            statusCode: 403,
+            body: "User has no right to delete."
+        };
+    }
+    const questionnaires = await _Repository_QuestionnaireRepository__WEBPACK_IMPORTED_MODULE_3__["remove"](questionnaireId);
+    let rowCount = questionnaires.rowCount;
+    if (rowCount === 0) {
+        throw new QuestionnaireError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_0__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_0__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
+    }
+    return {
+        statusCode: 200,
+        body: "Questionnaire deleted successfully."
     };
 }
 async function add(priority, name) {
@@ -867,7 +973,7 @@ async function remove(id) {
 /*!*********************************!*\
   !*** ./Services/UserService.ts ***!
   \*********************************/
-/*! exports provided: UserError, getById, getUserInternalIdBy, getCurrentUser, changeSubscription, add, remove */
+/*! exports provided: UserError, getById, getUserInternalIdBy, getCurrentUser, changeUserDetails, changeSubscription, add, remove */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -876,6 +982,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getById", function() { return getById; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUserInternalIdBy", function() { return getUserInternalIdBy; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCurrentUser", function() { return getCurrentUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeUserDetails", function() { return changeUserDetails; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeSubscription", function() { return changeSubscription; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
@@ -910,9 +1017,34 @@ async function getCurrentUser(email) {
     const response = await _Repository_UserRepository__WEBPACK_IMPORTED_MODULE_0__["getByEmail"](email);
     let rowCount = response.rowCount;
     if (rowCount === 0) {
-        throw new UserError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.QUESTIONNAIRE);
+        throw new UserError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.USER);
     }
     return response.rows[0];
+}
+async function doAddUserDetails(email, body) {
+    const response = await _Repository_UserRepository__WEBPACK_IMPORTED_MODULE_0__["add"](1, 'USER', email, email, body.first_name, body.last_name, 'address', body.city, body.country, body.zip_code, 'LIGHT');
+    let rowCount = response.rowCount;
+    if (rowCount === 0) {
+        throw new UserError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.USER);
+    }
+    return getCurrentUser(email);
+}
+async function doEditUserDetails(email, body) {
+    console.log('doEditUserDetails', email, body);
+    const response = await _Repository_UserRepository__WEBPACK_IMPORTED_MODULE_0__["editDetails"](email, body.email, body.first_name, body.last_name, body.city, body.country, body.zip_code);
+    let rowCount = response.rowCount;
+    console.log('doEditUserDetails', rowCount);
+    if (rowCount === 0) {
+        throw new UserError(_Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].NOT_FOUND.USER);
+    }
+    return getCurrentUser(body.email);
+}
+async function changeUserDetails(email, body) {
+    console.log('changeUserDetails', email, body);
+    if (body.email === undefined || body.email === null) {
+        return await doAddUserDetails(email, body);
+    }
+    return await doEditUserDetails(email, body);
 }
 async function changeSubscription(subscription_id, user_email) {
     const response = await _Repository_UserRepository__WEBPACK_IMPORTED_MODULE_0__["changeSubscription"](subscription_id, user_email);
@@ -989,7 +1121,19 @@ const SCHEMAS = {
             POST: {
                 NAME: 'post',
                 COLUMNS: [
-                    'user_internal_id', 'text', 'priority', 'timestamp'
+                    'user_internal_id', 'post_category_id', 'text', 'priority', 'timestamp'
+                ]
+            },
+            CATEGORY: {
+                NAME: 'post_category',
+                COLUMNS: [
+                    'text'
+                ]
+            },
+            POST_CATEGORY: {
+                NAME: 'post_category',
+                COLUMNS: [
+                    'text'
                 ]
             },
             RESOURCE: {
@@ -1001,7 +1145,7 @@ const SCHEMAS = {
             COMMENT: {
                 NAME: 'comment',
                 COLUMNS: [
-                    'user_internal_id', 'post_id', 'text', 'timestamp'
+                    'user_internal_id', 'post_id', 'text', 'visible', 'timestamp'
                 ]
             },
             REACTION: {
@@ -1025,7 +1169,7 @@ const SCHEMAS = {
             USER: {
                 NAME: 'user',
                 COLUMNS: [
-                    'user_internal_id', 'subscription_id', 'type', 'email', 'username', 'first_name', 'last_name', 'address', 'city', 'country', 'zip_code', 'theme', 'timestamp'
+                    'subscription_id', 'type', 'email', 'username', 'first_name', 'last_name', 'address', 'city', 'country', 'zip_code', 'theme', 'timestamp'
                 ]
             },
             QUESTIONNAIRE_TAG: {
@@ -1080,6 +1224,21 @@ const QUERIES = {
                     LIMIT (
                         SELECT s.questionnaire_limit FROM social_media_db."user" u 
                         JOIN social_media_db."subscription" s ON u.subscription_id = s.id WHERE u.email = '${email}'
+                    )`;
+        },
+        GET_ANSWERED_QUESTIONNAIRE_LIST: (email) => {
+            return `SELECT * FROM social_media_db.questionnaire q2 WHERE q2.id IN (
+                        SELECT DISTINCT (questionnaire_id) 
+                        FROM social_media_db.question q 
+                        WHERE q.id IN (
+                            SELECT question_id 
+                            FROM social_media_db.user_answer ua 
+                            WHERE ua.user_internal_id  = (
+                                SELECT user_internal_id 
+                                FROM social_media_db.USER 
+                                WHERE email = '${email}'
+                            )
+                        )
                     )`;
         },
     },
@@ -1174,6 +1333,14 @@ const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName}`;
         },
+        GET_ALL_BY_CATEGORY_ID: (category_id) => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName} WHERE post_category_id = ${category_id};`;
+        },
+        COUNT: () => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST.NAME;
+            return `SELECT COUNT(*) FROM ${schemaAndDatabaseName}`;
+        },
         GET_BY_ID: (id) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST.NAME;
             return `SELECT * FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
@@ -1189,12 +1356,28 @@ const QUERIES = {
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
         GET_ALL_BY_SUBSCRIPTION_AND_ORDERED: (email) => {
-            return `SELECT p.id, p.user_internal_id, p."text", p.priority, p."timestamp" FROM social_media_db.post p
+            return `SELECT p.id, p.post_category_id, p.user_internal_id, p."text", p.priority, p."timestamp" FROM social_media_db.post p
                     ORDER BY priority DESC, "timestamp" DESC 
                     LIMIT (
                         SELECT s.post_limit FROM social_media_db."user" u 
                         JOIN social_media_db."subscription" s ON u.subscription_id = s.id WHERE u.email = '${email}' LIMIT 1
                     )`;
+        }
+    },
+    CATEGORY: {
+        GET_ALL: () => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.CATEGORY.NAME;
+            return `SELECT * FROM ${schemaAndDatabaseName}`;
+        },
+        ADD: (text) => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.CATEGORY.NAME;
+            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.CATEGORY.COLUMNS.join(', ');
+            let values = '\'' + text + '\'';
+            return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
+        },
+        DELETE: (id) => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.CATEGORY.NAME;
+            return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         }
     },
     RESOURCE: {
@@ -1330,16 +1513,21 @@ const QUERIES = {
         },
         GET_BY_EMAIL: (email) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
-            let selectedColumns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.COLUMNS.join(',');
-            return `SELECT ${selectedColumns} FROM ${schemaAndDatabaseName} WHERE email = '${email}';`;
+            return `SELECT * FROM ${schemaAndDatabaseName} WHERE email = '${email}';`;
         },
         ADD: (subscription_id, type, email, username, first_name, last_name, address, city, country, zip_code, theme) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
-            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ');
+            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.COLUMNS.join(', ');
             let values = subscription_id + ', \'' + type + '\', \'' + email + '\', \''
                 + username + '\', \'' + first_name + '\', \'' + last_name + '\', \'' + address + '\', \'' + city + '\', \''
                 + country + '\', \'' + zip_code + '\', \'' + theme + '\', CURRENT_TIMESTAMP';
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
+        },
+        EDIT_DETAILS: (email, new_email, first_name, last_name, city, country, zip_code) => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
+            return `UPDATE ${schemaAndDatabaseName} u
+                SET email = '${new_email}',  first_name = '${first_name}', last_name = '${last_name}', city = '${city}', country = '${country}', zip_code = '${zip_code}'
+                WHERE u.email = '${email}'`;
         },
         DELETE: (id) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME;
@@ -1437,6 +1625,7 @@ const MESSAGES = {
         USER_ANSWER: 'USER_ANSWER not found.',
         USER: 'USER not found.',
         POST: 'POST not found.',
+        CATEGORIES: 'CATEGORIES not found.',
         RESOURCE: 'RESOURCE not found.',
         COMMENT: 'COMMENT not found.',
         REACTION: 'REACTION not found.',
@@ -1496,21 +1685,26 @@ const Lambdas = {
 /*!****************************!*\
   !*** ./lambdas/handler.ts ***!
   \****************************/
-/*! exports provided: hello, getPosts, reactionAddHandle, reactionDeleteHandle, commentAddHandle, commentDeleteHandle, getQuestionnaires, addUserAnswers, getSubscriptions, getCurrentUser, changeSubscription */
+/*! exports provided: hello, getPosts, getCategories, getPostsByCategoryId, reactionAddHandle, reactionDeleteHandle, commentAddHandle, commentDeleteHandle, getQuestionnaires, addUserAnswers, deleteQuestionnaire, getSubscriptions, getCurrentUser, getUserContactInfo, changeUserDetails, changeSubscription */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hello", function() { return hello; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPosts", function() { return getPosts; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCategories", function() { return getCategories; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPostsByCategoryId", function() { return getPostsByCategoryId; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reactionAddHandle", function() { return reactionAddHandle; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reactionDeleteHandle", function() { return reactionDeleteHandle; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "commentAddHandle", function() { return commentAddHandle; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "commentDeleteHandle", function() { return commentDeleteHandle; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getQuestionnaires", function() { return getQuestionnaires; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addUserAnswers", function() { return addUserAnswers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteQuestionnaire", function() { return deleteQuestionnaire; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSubscriptions", function() { return getSubscriptions; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCurrentUser", function() { return getCurrentUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUserContactInfo", function() { return getUserContactInfo; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeUserDetails", function() { return changeUserDetails; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeSubscription", function() { return changeSubscription; });
 /* harmony import */ var _Controllers_QuestionnaireController__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Controllers/QuestionnaireController */ "./Controllers/QuestionnaireController.ts");
 /* harmony import */ var _Services_Database_DatabaseCreatorService__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Services/Database/DatabaseCreatorService */ "./Services/Database/DatabaseCreatorService.ts");
@@ -1528,7 +1722,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let dbCreationChecked = false;
-let global_email_To_Be_Removed = 'marin.andrei@domain.com';
 async function databaseCheckLogic() {
     if (!dbCreationChecked) {
         await _Services_Database_DatabaseCreatorService__WEBPACK_IMPORTED_MODULE_1__["createSchemaIfMissing"]();
@@ -1536,7 +1729,6 @@ async function databaseCheckLogic() {
     }
 }
 async function hello(event) {
-    console.log("hello handler");
     await databaseCheckLogic();
     console.log(event);
     console.log(_Controllers_QuestionnaireController__WEBPACK_IMPORTED_MODULE_0__);
@@ -1545,8 +1737,22 @@ async function hello(event) {
         body: JSON.stringify({ message: 'data' })
     };
 }
-async function getPosts(event) {
-    let posts = await _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["getComputedPostList"](global_email_To_Be_Removed);
+async function getPosts(event, params) {
+    let posts = await _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["getComputedPostList"](params.authorization.email);
+    return {
+        statusCode: 200,
+        body: JSON.stringify(posts)
+    };
+}
+async function getCategories(event, params) {
+    let posts = await _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["getCategories"](params.authorization.email);
+    return {
+        statusCode: 200,
+        body: JSON.stringify(posts)
+    };
+}
+async function getPostsByCategoryId(event, params) {
+    let posts = await _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["getAllByCategoryId"](params.authorization.email, params.categoryId);
     return {
         statusCode: 200,
         body: JSON.stringify(posts)
@@ -1557,7 +1763,7 @@ async function reactionAddHandle(event, params, body) {
     if (post_id != body.post_id) {
         throw new _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["PostError"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.POST);
     }
-    let response = await _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["reactionAddHandle"](post_id, body, global_email_To_Be_Removed);
+    let response = await _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["reactionAddHandle"](post_id, body, params.authorization.email);
     return {
         statusCode: 200,
         body: JSON.stringify(response)
@@ -1577,7 +1783,7 @@ async function commentAddHandle(event, params, body) {
     if (post_id != body.post_id) {
         throw new _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["PostError"](_Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.status, _Utils_Constants__WEBPACK_IMPORTED_MODULE_6__["MESSAGES"].NOT_FOUND.POST);
     }
-    let response = await _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["commentAddHandle"](post_id, body, global_email_To_Be_Removed);
+    let response = await _Services_PostService__WEBPACK_IMPORTED_MODULE_2__["commentAddHandle"](post_id, body, params.authorization.email);
     return {
         statusCode: 200,
         body: JSON.stringify(response)
@@ -1592,15 +1798,22 @@ async function commentDeleteHandle(event, params) {
         body: JSON.stringify(response)
     };
 }
-async function getQuestionnaires(event) {
-    let questionnaires = await _Services_QuestionnaireService__WEBPACK_IMPORTED_MODULE_5__["getComputedQuestionnaireList"](global_email_To_Be_Removed);
+async function getQuestionnaires(event, params) {
+    let questionnaires = await _Services_QuestionnaireService__WEBPACK_IMPORTED_MODULE_5__["getComputedQuestionnaireList"](params.authorization.email);
     return {
         statusCode: 200,
         body: JSON.stringify(questionnaires)
     };
 }
 async function addUserAnswers(event, params, body) {
-    let response = await _Services_QuestionnaireService__WEBPACK_IMPORTED_MODULE_5__["addUserAnswers"](params.questionnaireId, body, global_email_To_Be_Removed);
+    let response = await _Services_QuestionnaireService__WEBPACK_IMPORTED_MODULE_5__["addUserAnswers"](params.questionnaireId, body, params.authorization.email);
+    return {
+        statusCode: 200,
+        body: JSON.stringify(response)
+    };
+}
+async function deleteQuestionnaire(event, params) {
+    let response = await _Services_QuestionnaireService__WEBPACK_IMPORTED_MODULE_5__["deleteQuestionnaire"](params.questionnaireId, params.authorization.email);
     return {
         statusCode: 200,
         body: JSON.stringify(response)
@@ -1613,8 +1826,30 @@ async function getSubscriptions(event) {
         body: JSON.stringify(subscriptions)
     };
 }
-async function getCurrentUser(event) {
-    let user = await _Services_UserService__WEBPACK_IMPORTED_MODULE_3__["getCurrentUser"](global_email_To_Be_Removed);
+async function getCurrentUser(event, params) {
+    let user = await _Services_UserService__WEBPACK_IMPORTED_MODULE_3__["getCurrentUser"](params.authorization.email);
+    return {
+        statusCode: 200,
+        body: JSON.stringify(user)
+    };
+}
+async function getUserContactInfo(event, params) {
+    let user = await _Services_UserService__WEBPACK_IMPORTED_MODULE_3__["getById"](params.userId);
+    let userContactInfo = {
+        email: user.email,
+        username: user.username,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        address: user.address,
+        city: user.city
+    };
+    return {
+        statusCode: 200,
+        body: JSON.stringify(userContactInfo)
+    };
+}
+async function changeUserDetails(event, params, body) {
+    let user = await _Services_UserService__WEBPACK_IMPORTED_MODULE_3__["changeUserDetails"](params.authorization.email, body);
     return {
         statusCode: 200,
         body: JSON.stringify(user)
@@ -1622,7 +1857,7 @@ async function getCurrentUser(event) {
 }
 async function changeSubscription(event, params) {
     let subscription_id = params.subscriptionId;
-    let user = await _Services_UserService__WEBPACK_IMPORTED_MODULE_3__["changeSubscription"](subscription_id, global_email_To_Be_Removed);
+    let user = await _Services_UserService__WEBPACK_IMPORTED_MODULE_3__["changeSubscription"](subscription_id, params.authorization.email);
     return {
         statusCode: 200,
         body: JSON.stringify(user)

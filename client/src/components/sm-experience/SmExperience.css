@@ -1,0 +1,63 @@
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #BBB;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+.sm-experience {
+    margin-top: 30px;
+}
+
+.sm-experience .sm-experience-panel {
+    display: flex;
+}
+
+.sm-experience .sm-experience-left-panel {
+    width: 30%;
+    overflow-y: scroll;
+    height: 500px;
+    padding: 10px;
+}
+
+.sm-experience .sm-experience-right-panel {
+    width: 70%;
+    margin: 0 15px;
+}
+
+.sm-experience .sm-experience-right-panel .card-root {
+    max-width: 100%;
+}
+
+.sm-row {
+    display: flow-root !important;
+}
+
+.sm-line {
+    display: flex !important;
+}
+
+.sm-left-align {
+    float: left;
+}
+
+.sm-right-align {
+    float: right;
+}
+
+.sm-questionnaire-statistics {
+    margin: 25px 0 0 10px;
+}
+
+.sm-posts-statistics {
+    margin: 25px 0 0 10px;
+}

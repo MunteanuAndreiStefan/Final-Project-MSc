@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/pg": "^7.14.4",
+    "atob": "^2.1.2",
     "awesome-typescript-loader": "^5.2.1",
     "aws-sdk": "^2.745.0",
     "aws-serverless-express": "^3.3.8",

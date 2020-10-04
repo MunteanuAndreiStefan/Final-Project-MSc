@@ -20,6 +20,10 @@ export async function add(subscription_id: number, type: string, email: string, 
     return DatabaseService.executeQuery(Constants.QUERIES.USER.ADD(subscription_id, type, email, username, first_name, last_name, address, city, country, zip_code, theme));
 }
 
+export async function editDetails(email: string, new_email: string, first_name: string, last_name: string, city: string, country: string, zip_code: string): Promise<QueryResult> {
+    return DatabaseService.executeQuery(Constants.QUERIES.USER.EDIT_DETAILS(email, new_email, first_name, last_name, city, country, zip_code));
+}
+
 export async function remove(id: number): Promise<QueryResult> {
     return DatabaseService.executeQuery(Constants.QUERIES.USER.DELETE(id));
 }

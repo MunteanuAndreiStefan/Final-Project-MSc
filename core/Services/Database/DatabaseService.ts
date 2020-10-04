@@ -21,7 +21,7 @@ export function executeQuery(query: string): Promise<QueryResult> {
         client.query(query)
             .then(resolve)
             .catch((error) => {
-                console.error(error);
+                console.error(query, error);
                 resolve(error);
                 //reject(error);
             })
