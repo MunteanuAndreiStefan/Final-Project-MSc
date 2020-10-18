@@ -45,7 +45,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box p={3}>
-                    <Typography>{children}</Typography>
+                    <Typography component={'span'}>{children}</Typography>
                 </Box>
             )}
         </div>
@@ -96,10 +96,10 @@ class SmAdminPanel extends Component {
                     >
                         <Tab label="General" icon={<BuildIcon />}/>
                         <Tab label="Statistics" icon={<PieChartIcon />}/>
-                        <Tab label="Posts" icon={<AllInboxIcon />}/>
-                        <Tab label="Comments" icon={<ChatBubbleIcon />}/>
-                        <Tab label="Questionnaires" icon={<ContactSupportIcon />}/>
-                        <Tab label="Experiences" icon={<GroupWorkIcon />}/>
+                        <Tab label="Post Creator" icon={<AllInboxIcon />}/>
+                        <Tab label="Questionnaire Creator" icon={<ContactSupportIcon />}/>
+                        <Tab label="Experience Creator" icon={<GroupWorkIcon />}/>
+                        <Tab label="Comment Manager" icon={<ChatBubbleIcon />}/>
                         <Tab label="Accounts" icon={<SupervisorAccountIcon />}/>
                         <Tab label="Messages" icon={<ChatIcon />}/>
                     </Tabs>
@@ -114,13 +114,13 @@ class SmAdminPanel extends Component {
                     <SmAdminPosts></SmAdminPosts>
                 </TabPanel>
                 <TabPanel value={this.state.value} index={3}>
-                    <SmAdminComments></SmAdminComments>
-                </TabPanel>
-                <TabPanel value={this.state.value} index={4}>
                     <SmAdminQuestionnaires></SmAdminQuestionnaires>
                 </TabPanel>
-                <TabPanel value={this.state.value} index={5}>
+                <TabPanel value={this.state.value} index={4}>
                     <SmAdminExperiences></SmAdminExperiences>
+                </TabPanel>
+                <TabPanel value={this.state.value} index={5}>
+                    <SmAdminComments></SmAdminComments>
                 </TabPanel>
                 <TabPanel value={this.state.value} index={6}>
                     <SmAdminAccounts></SmAdminAccounts>

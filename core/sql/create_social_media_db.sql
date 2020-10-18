@@ -48,7 +48,8 @@ CREATE TABLE social_media_db."user" (
   zip_code      	  varchar(255) NOT NULL,
   about_me      	  varchar(255),
   theme      	      varchar(255) NOT NULL,
-  "timestamp"    	        timestamp NOT NULL,
+  "timestamp"    	     timestamp NOT NULL,
+  active                   BOOLEAN DEFAULT true,
   CONSTRAINT user_id_pk PRIMARY KEY (user_internal_id),
   CONSTRAINT user_email_unique UNIQUE(email),
   CONSTRAINT user_to_subscription_fk FOREIGN KEY (subscription_id) REFERENCES social_media_db.subscription (id)
@@ -134,7 +135,7 @@ DROP TABLE IF EXISTS social_media_db.resource;
 CREATE TABLE social_media_db.resource (
   id                        serial NOT NULL,
   post_id      	              int8 NOT NULL,
-  url      	          varchar(255) NOT NULL,
+  resource      	   varchar(255) NOT NULL,
   "type"      	resource_type_enum NOT NULL,
   "timestamp"    	        timestamp NOT NULL,
   CONSTRAINT resource_id_pk PRIMARY KEY (id),
@@ -208,41 +209,57 @@ CREATE TABLE social_media_db.linkage_tag (
 );
 
 DROP TABLE IF EXISTS social_media_db.post_tag;
-CREATE TABLE social_media_db.post_tag (
-  id                        serial NOT NULL,
-  tag_id      	              int8 NOT NULL,
-  post_id      	          int8 NOT NULL,
-  interest			      	  int8 NOT NULL,
-  CONSTRAINT post_tag_id_pk PRIMARY KEY (id),
-  CONSTRAINT post_tag_to_tag_fk FOREIGN KEY (tag_id) REFERENCES social_media_db.tag (id),
-  CONSTRAINT post_tag_to_post_fk FOREIGN KEY (post_id) REFERENCES social_media_db.post (id)
+CREATE TABLE social_media_db.post_tag
+(
+    id       serial NOT NULL,
+    tag_id   int8   NOT NULL,
+    post_id  int8   NOT NULL,
+    interest int8   NOT NULL,
+    CONSTRAINT post_tag_id_pk PRIMARY KEY (id),
+    CONSTRAINT post_tag_to_tag_fk FOREIGN KEY (tag_id) REFERENCES social_media_db.tag (id),
+    CONSTRAINT post_tag_to_post_fk FOREIGN KEY (post_id) REFERENCES social_media_db.post (id)
 );
 
+DROP TABLE IF EXISTS social_media_db.notification;
+CREATE TABLE social_media_db.notification
+(
+    id          		serial       NOT NULL,
+    user_internal_id    numeric      NOT NULL,
+    "timestamp" 		timestamp    NOT NULL,
+    message     		varchar(255) NOT NULL,
+    type        		varchar(255) NOT NULL,
+    info        		varchar(255),
+    CONSTRAINT notification_id_pk PRIMARY KEY (id)
+);
 
-INSERT INTO social_media_db.subscription (name, description, post_limit, questionnaire_limit, comments_active, reactions_active, "support", price)
+INSERT INTO social_media_db.subscription (name, description, post_limit, questionnaire_limit, comments_active,
+                                          reactions_active, "support", price)
 VALUES ('Free tier', 'This contains limited features.', 10, 5, FALSE, FALSE, 'No', 0.0);
-INSERT INTO social_media_db.subscription (name, description, post_limit, questionnaire_limit, comments_active, reactions_active, "support", price)
+INSERT INTO social_media_db.subscription (name, description, post_limit, questionnaire_limit, comments_active,
+                                          reactions_active, "support", price)
 VALUES ('Silver tier', 'This contains more features.', 50, 25, FALSE, TRUE, 'No', 9.99);
-INSERT INTO social_media_db.subscription (name, description, post_limit, questionnaire_limit, comments_active, reactions_active, "support", price)
+INSERT INTO social_media_db.subscription (name, description, post_limit, questionnaire_limit, comments_active,
+                                          reactions_active, "support", price)
 VALUES ('Gold tier', 'This contains a lot of features.', 100, 50, TRUE, TRUE, 'Bussines hours', 17.99);
-INSERT INTO social_media_db.subscription (name, description, post_limit, questionnaire_limit, comments_active, reactions_active, "support", price)
+INSERT INTO social_media_db.subscription (name, description, post_limit, questionnaire_limit, comments_active,
+                                          reactions_active, "support", price)
 VALUES ('Pltinum tier', 'This contains all the features.', -1, -1, TRUE, TRUE, '24/7', 29.99);
 
 INSERT INTO social_media_db."user"
-(subscription_id, "type", email, username, first_name, last_name, address, city, country, zip_code, theme, "timestamp")
-VALUES (1, 'USER', 'marin.andrei@domain.com', 'marin.andrei', 'Marin', 'Andrei', 'Str. Principala', 'Iasi', 'Romania', '787878', 'dark', CURRENT_TIMESTAMP);
+(subscription_id, "type", email, username, first_name, last_name, address, city, country, zip_code, theme, "timestamp", active)
+VALUES (1, 'USER', 'marin.andrei@domain.com', 'marin.andrei', 'Marin', 'Andrei', 'Str. Principala', 'Iasi', 'Romania', '787878', 'dark', CURRENT_TIMESTAMP, TRUE);
 
 INSERT INTO social_media_db."user"
-(subscription_id, "type", email, username, first_name, last_name, address, city, country, zip_code, theme, "timestamp")
-VALUES (3, 'ADMIN', 'marcu.andrei@domain.com', 'marcu.andrei', 'Marcu', 'Andrei', 'Str. Mare', 'Botosani', 'Romania', '787878', 'dark', CURRENT_TIMESTAMP);
+(subscription_id, "type", email, username, first_name, last_name, address, city, country, zip_code, theme, "timestamp", active)
+VALUES (3, 'ADMIN', 'marcu.andrei@domain.com', 'marcu.andrei', 'Marcu', 'Andrei', 'Str. Mare', 'Botosani', 'Romania', '787878', 'dark', CURRENT_TIMESTAMP, TRUE);
 
 INSERT INTO social_media_db."user"
-(subscription_id, "type", email, username, first_name, last_name, address, city, country, zip_code, theme, "timestamp")
-VALUES (2, 'USER', 'popescu.robert@domain.com', 'popescu.robert', 'Popescu', 'Robert', 'Str. Ciurci', 'Cluj', 'Romania', '787878', 'dark', CURRENT_TIMESTAMP);
+(subscription_id, "type", email, username, first_name, last_name, address, city, country, zip_code, theme, "timestamp", active)
+VALUES (2, 'USER', 'popescu.robert@domain.com', 'popescu.robert', 'Popescu', 'Robert', 'Str. Ciurci', 'Cluj', 'Romania', '787878', 'dark', CURRENT_TIMESTAMP, TRUE);
 
 INSERT INTO social_media_db."user"
-(subscription_id, "type", email, username, first_name, last_name, address, city, country, zip_code, theme, "timestamp")
-VALUES (2, 'USER', 'george.ai@domain.com', 'george.ai', 'Aionesei', 'George', 'Str. Rozelor', 'Timisoara', 'Romania', '787878', 'dark', CURRENT_TIMESTAMP);
+(subscription_id, "type", email, username, first_name, last_name, address, city, country, zip_code, theme, "timestamp", active)
+VALUES (2, 'USER', 'george.ai@domain.com', 'george.ai', 'Aionesei', 'George', 'Str. Rozelor', 'Timisoara', 'Romania', '787878', 'dark', CURRENT_TIMESTAMP, TRUE);
 
 INSERT INTO social_media_db.questionnaire (priority, title, description) VALUES (5, 'Politics', 'Lets find out how much do you know about the people you vote with.') RETURNING id;
 INSERT INTO social_media_db.questionnaire (priority, title, description) VALUES (8, 'Sports', 'Fotbal or Tenis? Snooker or Golf? Answer this to mark it.');
@@ -338,12 +355,13 @@ INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", pr
 INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", priority, "timestamp") VALUES (3, 2, 'Top advisers blame everyone but the president for the nation’s plight during the pandemic.', 4, CURRENT_TIMESTAMP);
 INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", priority, "timestamp") VALUES (4, 1, 'The pandemic has left airlines hard-hit amid safety concerns and as other countries bar American travelers from entry.', 5, CURRENT_TIMESTAMP);
 
-INSERT INTO social_media_db.resource (post_id, url, "type", "timestamp") VALUES (1, 'https://static.toiimg.com/thumb/msid-67586673,width-800,height-600,resizemode-75,imgsize-3918697,pt-32,y_pad-40/67586673.jpg', 'IMAGE', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.resource (post_id, url, "type", "timestamp") VALUES (5, 'https://emerging-europe.com/wp-content/uploads/2020/04/bigstock-121724798-990x556.jpg', 'IMAGE', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.resource (post_id, url, "type", "timestamp") VALUES (2, 'https://isor.ro/wp-content/uploads/2018/07/photo-video02.png', 'IMAGE', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.resource (post_id, url, "type", "timestamp") VALUES (3, 'https://pbs.twimg.com/profile_images/943443404503035905/IR4g2F3r.jpg', 'IMAGE', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.resource (post_id, url, "type", "timestamp") VALUES (4, 'https://www.oceanfm.ie/wp-content/uploads/2020/04/EUhGDpvXYAAt-i6-1.jpg', 'IMAGE', CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.resource (post_id, url, "type", "timestamp") VALUES (6, 'https://vignette.wikia.nocookie.net/future/images/3/38/Cruz.jpg/revision/latest?cb=20170710144551', 'IMAGE', CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.resource (post_id, resource, "type", "timestamp") VALUES (1, 'https://static.toiimg.com/thumb/msid-67586673,width-800,height-600,resizemode-75,imgsize-3918697,pt-32,y_pad-40/67586673.jpg', 'IMAGE', CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.resource (post_id, resource, "type", "timestamp") VALUES (1, '<h1>Ceva</h1>', 'HTML', CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.resource (post_id, resource, "type", "timestamp") VALUES (5, 'https://emerging-europe.com/wp-content/uploads/2020/04/bigstock-121724798-990x556.jpg', 'IMAGE', CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.resource (post_id, resource, "type", "timestamp") VALUES (2, 'https://isor.ro/wp-content/uploads/2018/07/photo-video02.png', 'IMAGE', CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.resource (post_id, resource, "type", "timestamp") VALUES (3, 'https://pbs.twimg.com/profile_images/943443404503035905/IR4g2F3r.jpg', 'IMAGE', CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.resource (post_id, resource, "type", "timestamp") VALUES (4, 'https://www.oceanfm.ie/wp-content/uploads/2020/04/EUhGDpvXYAAt-i6-1.jpg', 'IMAGE', CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.resource (post_id, resource, "type", "timestamp") VALUES (6, 'https://vignette.wikia.nocookie.net/future/images/3/38/Cruz.jpg/revision/latest?cb=20170710144551', 'IMAGE', CURRENT_TIMESTAMP);
 
 INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (1, 2, 'Politics comment.', TRUE, CURRENT_TIMESTAMP);
 INSERT INTO social_media_db.comment (user_internal_id, post_id, text, visible, "timestamp") VALUES (1, 2, 'Trump is gay', TRUE, CURRENT_TIMESTAMP);
@@ -399,23 +417,44 @@ INSERT INTO social_media_db.questionnaire_tag (tag_id, questionnaire_id, interes
 INSERT INTO social_media_db.questionnaire_tag (tag_id, questionnaire_id, interest) VALUES (6, 1, 15);
 INSERT INTO social_media_db.questionnaire_tag (tag_id, questionnaire_id, interest) VALUES (3, 2, 15);
 
-INSERT INTO social_media_db.question_tag (tag_id, question_id, interest) VALUES (1, 1, 10);
-INSERT INTO social_media_db.question_tag (tag_id, question_id, interest) VALUES (2, 1, 20);
-INSERT INTO social_media_db.question_tag (tag_id, question_id, interest) VALUES (3, 1, 5);
-INSERT INTO social_media_db.question_tag (tag_id, question_id, interest) VALUES (4, 1, 10);
-INSERT INTO social_media_db.question_tag (tag_id, question_id, interest) VALUES (6, 1, 15);
-INSERT INTO social_media_db.question_tag (tag_id, question_id, interest) VALUES (3, 2, 15);
+INSERT INTO social_media_db.question_tag (tag_id, question_id, interest)
+VALUES (1, 1, 10);
+INSERT INTO social_media_db.question_tag (tag_id, question_id, interest)
+VALUES (2, 1, 20);
+INSERT INTO social_media_db.question_tag (tag_id, question_id, interest)
+VALUES (3, 1, 5);
+INSERT INTO social_media_db.question_tag (tag_id, question_id, interest)
+VALUES (4, 1, 10);
+INSERT INTO social_media_db.question_tag (tag_id, question_id, interest)
+VALUES (6, 1, 15);
+INSERT INTO social_media_db.question_tag (tag_id, question_id, interest)
+VALUES (3, 2, 15);
 
-INSERT INTO social_media_db.linkage_tag (tag_id, linkage_id, interest) VALUES (1, 1, 10);
-INSERT INTO social_media_db.linkage_tag (tag_id, linkage_id, interest) VALUES (2, 1, 20);
-INSERT INTO social_media_db.linkage_tag (tag_id, linkage_id, interest) VALUES (3, 1, 5);
-INSERT INTO social_media_db.linkage_tag (tag_id, linkage_id, interest) VALUES (4, 1, 10);
-INSERT INTO social_media_db.linkage_tag (tag_id, linkage_id, interest) VALUES (6, 1, 15);
-INSERT INTO social_media_db.linkage_tag (tag_id, linkage_id, interest) VALUES (3, 2, 15);
+INSERT INTO social_media_db.linkage_tag (tag_id, linkage_id, interest)
+VALUES (1, 1, 10);
+INSERT INTO social_media_db.linkage_tag (tag_id, linkage_id, interest)
+VALUES (2, 1, 20);
+INSERT INTO social_media_db.linkage_tag (tag_id, linkage_id, interest)
+VALUES (3, 1, 5);
+INSERT INTO social_media_db.linkage_tag (tag_id, linkage_id, interest)
+VALUES (4, 1, 10);
+INSERT INTO social_media_db.linkage_tag (tag_id, linkage_id, interest)
+VALUES (6, 1, 15);
+INSERT INTO social_media_db.linkage_tag (tag_id, linkage_id, interest)
+VALUES (3, 2, 15);
 
-INSERT INTO social_media_db.post_tag (tag_id, post_id, interest) VALUES (1, 1, 10);
-INSERT INTO social_media_db.post_tag (tag_id, post_id, interest) VALUES (2, 1, 20);
-INSERT INTO social_media_db.post_tag (tag_id, post_id, interest) VALUES (3, 1, 5);
-INSERT INTO social_media_db.post_tag (tag_id, post_id, interest) VALUES (4, 1, 10);
-INSERT INTO social_media_db.post_tag (tag_id, post_id, interest) VALUES (6, 1, 15);
-INSERT INTO social_media_db.post_tag (tag_id, post_id, interest) VALUES (3, 2, 15);
+INSERT INTO social_media_db.post_tag (tag_id, post_id, interest)
+VALUES (1, 1, 10);
+INSERT INTO social_media_db.post_tag (tag_id, post_id, interest)
+VALUES (2, 1, 20);
+INSERT INTO social_media_db.post_tag (tag_id, post_id, interest)
+VALUES (3, 1, 5);
+INSERT INTO social_media_db.post_tag (tag_id, post_id, interest)
+VALUES (4, 1, 10);
+INSERT INTO social_media_db.post_tag (tag_id, post_id, interest)
+VALUES (6, 1, 15);
+INSERT INTO social_media_db.post_tag (tag_id, post_id, interest)
+VALUES (3, 2, 15);
+
+INSERT INTO social_media_db.notification (user_internal_id, "timestamp", message, type, info)
+VALUES (-1, CURRENT_TIMESTAMP, 'Welcome everybody', 'alert', NULL);

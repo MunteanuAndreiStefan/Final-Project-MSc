@@ -11,7 +11,7 @@ export async function getAll() {
 
 export async function add(request: { body: any; }) {
     let body = request.body;
-    return QuestionnaireService.add(body.priority, body.name);
+    return QuestionnaireService.add(body.priority, body.title, body.description);
 }
 
 export async function remove(request: APIGatewayProxyEvent) {

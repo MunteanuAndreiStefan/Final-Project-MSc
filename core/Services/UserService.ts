@@ -1,8 +1,10 @@
 import * as UserRepository from '../Repository/UserRepository';
+import * as PostRepository from '../Repository/PostRepository';
+import * as CommentRepository from '../Repository/CommentRepository';
+import * as ReactionRepository from '../Repository/ReactionRepository';
+import * as UserAnswerRepository from '../Repository/UserAnswerRepository';
 import * as Constants from '../Utils/Constants';
 import {QueryResult} from "pg";
-import * as DatabaseService from "./Database/DatabaseService";
-import {PostError} from "./PostService";
 
 export class UserError extends Error {
     readonly status
@@ -20,7 +22,7 @@ export async function getById(id: number) {
     let rowCount = response.rowCount;
 
     if (rowCount === 0) {
-        throw new UserError(Constants.MESSAGES.NOT_FOUND.status, Constants.MESSAGES.NOT_FOUND.QUESTIONNAIRE);
+        throw new UserError(Constants.MESSAGES.NOT_FOUND.status, Constants.MESSAGES.NOT_FOUND.USER);
     }
 
     return response.rows[0]
@@ -49,9 +51,69 @@ export async function getCurrentUser(email: string) {
     return response.rows[0]
 }
 
+export async function changeActiveStatus(email: string, user_internal_id: number) {
+    if (!(await currentUserIsAdmin(email))) {
+        return {
+            statusCode: 403,
+            body: "User has no right to call this API."
+        };
+    }
+    const response = await UserRepository.getByUserInternalId(user_internal_id);
+    let rowCount = response.rowCount;
+
+    if (rowCount === 0) {
+        throw new UserError(Constants.MESSAGES.NOT_FOUND.status, Constants.MESSAGES.NOT_FOUND.USER);
+    }
+
+    let nextStatus = !response.rows[0].active;
+
+    const updateResponse = await UserRepository.changeActiveStatus(user_internal_id, nextStatus);
+
+    return updateResponse.rowCount > 0 ? "Active status changed successfully." : "Active status change failed.";
+}
+
+export async function getUserActivity(email: string, user_internal_id: number) {
+    if (!(await currentUserIsAdmin(email))) {
+        return {
+            statusCode: 403,
+            body: "User has no right to call this API."
+        };
+    }
+
+    let posts = (await PostRepository.getActivityOf(user_internal_id)).rows;
+    let comments = (await CommentRepository.getActivityOf(user_internal_id)).rows;
+    let reactions = (await ReactionRepository.getActivityOf(user_internal_id)).rows;
+    let answers = (await UserAnswerRepository.getActivityOf(user_internal_id)).rows;
+
+    return {
+        statusCode: 200,
+        body: {
+            posts: posts,
+            comments: comments,
+            reactions: reactions,
+            answers: answers
+        }
+    };
+}
+
+export async function currentUserIsAdmin(email: string) {
+    const currentUser = await getCurrentUser(email);
+    return currentUser.type == 'ADMIN';
+}
+
+export async function getAllUsersInShallowForm(email: string) {
+    if (!(await currentUserIsAdmin(email))) {
+        return {
+            statusCode: 403,
+            body: "User has no right to call this API."
+        };
+    }
+    return (await UserRepository.getAll()).rows;
+}
+
 async function doAddUserDetails(email: string, body: any) {
     const response = await UserRepository.add(1, 'USER', email, email, body.first_name,
-                        body.last_name, 'address', body.city, body.country, body.zip_code, 'LIGHT');
+        body.last_name, 'address', body.city, body.country, body.zip_code, 'LIGHT');
     let rowCount = response.rowCount;
 
     if (rowCount === 0) {
@@ -62,11 +124,8 @@ async function doAddUserDetails(email: string, body: any) {
 }
 
 async function doEditUserDetails(email: string, body: any) {
-    console.log('doEditUserDetails', email, body);
     const response = await UserRepository.editDetails(email, body.email, body.first_name, body.last_name, body.city, body.country, body.zip_code);
     let rowCount = response.rowCount;
-
-    console.log('doEditUserDetails', rowCount);
 
     if (rowCount === 0) {
         throw new UserError(Constants.MESSAGES.NOT_FOUND.status, Constants.MESSAGES.NOT_FOUND.USER);
@@ -76,7 +135,6 @@ async function doEditUserDetails(email: string, body: any) {
 }
 
 export async function changeUserDetails(email: string, body: any) {
-    console.log('changeUserDetails', email, body);
     if (body.email === undefined || body.email === null) {
         return await doAddUserDetails(email, body);
     }

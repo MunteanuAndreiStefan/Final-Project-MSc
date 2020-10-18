@@ -1,0 +1,87 @@
+.sm-admin-posts-panel {
+    display: flex;
+}
+
+.sm-admin-posts-right-panel {
+    width: 50%;
+}
+
+.sm-admin-posts-right-panel > * {
+    margin: 5px !important;
+}
+
+.sm-admin-posts-left-panel {
+    width: 45%;
+}
+
+.sm-admin-posts-left-panel {
+    margin-right: 5%;
+}
+
+.sm-admin-posts-left-panel > * {
+    margin-bottom: 30px !important;
+}
+
+.sm-admin-posts-left-panel > .MuiInput-root {
+    width: 60%;
+}
+
+.sm-admin-posts-left-panel > .MuiFormControl-root {
+    width: 80%;
+}
+
+.sm-admin-posts-left-panel-down-part {
+
+}
+
+.sm-admin-posts-left-panel-down-part > * {
+    margin-right: 10px;
+}
+
+.sm-admin-posts-right-panel .sm-admin-row .MuiSelect-select.MuiSelect-select{
+    width: 100px
+}
+
+.sm-admin-posts-right-panel .sm-admin-row > * {
+    margin-bottom: 20px !important;
+}
+
+.right-panel-html {
+    margin: 10px 0 !important;
+}
+
+.sm-post-priority {
+    margin-left: 20px !important;
+}
+
+.sm-admin-posts-right-panel > * {
+    margin-bottom: 10px;
+}
+
+.sm-admin-posts-panel-row.right-panel-html .MuiOutlinedInput-multiline{
+    width: 600px;
+}
+
+.upload-file-panel {
+    display: flex;
+}
+
+.sm-admin-posts-panel-row.right-panel-html.upload-file-panel {
+    margin-top: 30px;
+}
+
+.sm-admin-posts-panel-row > * {
+    margin: 5px;
+}
+
+.sm-admin-row {
+    margin-bottom: 15px;
+}
+
+.sm-chip {
+    margin: 5px !important;
+}
+
+.tag-chips > *{
+    margin: 5px !important;
+}

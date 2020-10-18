@@ -15,7 +15,7 @@ class SmAuthScreen extends Component {
         return (
             <div className="sm-auth-screen">
                 <div className={"center-controls"}>
-                    Nice text about our social network.
+                    {this.props.text}
                 </div>
             </div>
         );

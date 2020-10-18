@@ -87,3 +87,7 @@
 .sm-admin-q-row .w80percent {
     display: flow-root;
 }
+
+.content-flex {
+    display: flex !important;
+}

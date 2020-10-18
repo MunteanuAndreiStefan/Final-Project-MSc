@@ -1,0 +1,8 @@
+.sm-admin-accounts-cards {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.sm-admin-accounts-cards > * {
+    margin: 10px;
+}

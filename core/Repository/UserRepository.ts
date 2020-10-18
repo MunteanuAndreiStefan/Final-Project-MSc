@@ -6,8 +6,16 @@ export async function getById(id: number): Promise<QueryResult> {
     return DatabaseService.executeQuery(Constants.QUERIES.USER.GET_BY_ID(id))
 }
 
+export async function getByUserInternalId(user_internal_id: number): Promise<QueryResult> {
+    return DatabaseService.executeQuery(Constants.QUERIES.USER.GET_BY_USER_INTERNAL_ID(user_internal_id))
+}
+
 export async function getByEmail(email: string): Promise<QueryResult> {
     return DatabaseService.executeQuery(Constants.QUERIES.USER.GET_BY_EMAIL(email))
+}
+
+export async function changeActiveStatus(user_internal_id: number, active_status: boolean): Promise<QueryResult> {
+    return DatabaseService.executeQuery(Constants.QUERIES.USER.CHANGE_ACTIVE_STATUS(user_internal_id, active_status))
 }
 
 export async function changeSubscription(subscription_id: number, user_email: string): Promise<QueryResult> {

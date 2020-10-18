@@ -6,8 +6,8 @@ export async function getById(id: number): Promise<QueryResult> {
     return DatabaseService.executeQuery(Constants.QUERIES.POST.GET_BY_ID(id))
 }
 
-export async function add(user_internal_id: number, text: string, priority: number): Promise<QueryResult> {
-    return DatabaseService.executeQuery(Constants.QUERIES.POST.ADD(user_internal_id, text, priority));
+export async function add(user_internal_id: number, post_category_id: number, text: string, priority: number): Promise<QueryResult> {
+    return DatabaseService.executeQuery(Constants.QUERIES.POST.ADD(user_internal_id, post_category_id, text, priority));
 }
 
 export async function remove(id: number): Promise<QueryResult> {
@@ -30,3 +30,6 @@ export async function count(): Promise<QueryResult> {
     return DatabaseService.executeQuery(Constants.QUERIES.POST.COUNT())
 }
 
+export async function getActivityOf(user_internal_id: number): Promise<QueryResult> {
+    return DatabaseService.executeQuery(Constants.QUERIES.POST.GET_ACTIVITY_OF(user_internal_id))
+}

@@ -17,3 +17,7 @@
 .sm-comment-post-contact-info-button .MuiCard-root{
     width: 100%;
 }
+
+.comment-approve-text {
+    margin-left: 30px;
+}

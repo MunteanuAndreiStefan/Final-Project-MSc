@@ -6,7 +6,9 @@ const app = express();
 const bodyParser = require('body-parser');
 
 app.use(awsServerlessExpressMiddleware.eventContext())
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '10mb', extended: true}))
+app.use(bodyParser.urlencoded({limit: '10mb', extended: true}))
 
 if (process.env.NODE_ENV === 'development') {
   const cors = require('cors');
@@ -17,6 +19,7 @@ app.use('/questionnaires', require('./routes/questionnairesRouter'));
 app.use('/posts', require('./routes/postsRouter'));
 app.use('/users', require('./routes/usersRouter'));
 app.use('/subscriptions', require('./routes/subscriptionsRouter'));
+app.use('/notifications', require('./routes/notificationRouter'))
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

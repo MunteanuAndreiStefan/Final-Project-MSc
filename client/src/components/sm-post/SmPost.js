@@ -138,7 +138,6 @@ class SmPost extends Component {
 
         if (!currentState) {
             let res = await CommunicationService.reactToPost(this.props.post.id, 'LIKE')
-            console.log('reactToPost', this.props.post.id, res)
             if (res.reactionId) {
                 let reactionObj = {
                     id: res.reactionId,
@@ -291,11 +290,17 @@ class SmPost extends Component {
 
         if (this.state.post.resources && this.state.post.resources.length > 0) {
             let imageResources = this.state.post.resources.filter((res) => res.type === 'IMAGE')
-            let auxImg = imageResources.length > 0 ? imageResources[0].url : null
-            cardMedia = <CardMedia
-                className={"card-media"}
-                image={auxImg}
-            />
+            let htmlResources = this.state.post.resources.filter((res) => res.type === 'HTML')
+            let html = htmlResources.length > 0 ? htmlResources[0].resource : null;
+            let auxImg = imageResources.length > 0 ? imageResources[0].resource : null
+            if (html && !auxImg) {
+                cardMedia = <div dangerouslySetInnerHTML={{__html: html}}/>
+            } else if (!html && auxImg) {
+                cardMedia = <CardMedia
+                    className={"card-media"}
+                    image={auxImg}
+                />
+            }
         }
         if (this.state.post.text) {
             cardContent = <CardContent>

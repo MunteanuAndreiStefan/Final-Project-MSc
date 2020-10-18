@@ -41,6 +41,11 @@ async function doDelete(url) {
     return doRequest('DELETE', url);
 }
 
+export async function createQuestionnaire(postBody) {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.QUESTIONNAIRES.CREATE;
+    return doPost(apiURL, postBody)
+}
+
 export async function getQuestionnaires() {
     let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.QUESTIONNAIRES.GET_ALL_BY_USER;
     return doGet(apiURL)
@@ -70,6 +75,26 @@ export async function getPosts() {
     return doGet(apiURL)
 }
 
+export async function createPost(postBody) {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.POST.CREATE;
+    return doPost(apiURL, postBody)
+}
+
+export async function getUnapprovedComments() {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.POST.GET_ALL_UNAPPROVED_COMMENTS;
+    return doGet(apiURL)
+}
+
+export async function approveComment(commentId) {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.POST.APPROVE_COMMENT(commentId);
+    return doPut(apiURL)
+}
+
+export async function deleteComment(commentId) {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.POST.DELETE_COMMENT(commentId);
+    return doDelete(apiURL)
+}
+
 export async function getPostsByCategoryId(categoryId) {
     let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.POST.GET_ALL_BY_CATEGORY_ID(categoryId);
     return doGet(apiURL)
@@ -80,8 +105,35 @@ export async function getCategories() {
     return doGet(apiURL)
 }
 
+export async function getTags() {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.POST.GET_ALL_TAGS;
+    return doGet(apiURL)
+}
+
+export async function createCategory(text) {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.POST.CREATE_CATEGORY;
+    return doPost(apiURL, {
+        text: text
+    })
+}
+
 export async function getSubscriptions() {
     let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.SUBSCRIPTION.GET_ALL_BY_USER;
+    return doGet(apiURL)
+}
+
+export async function getAllShallow() {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.USER.GET_ALL_SHALLOW;
+    return doGet(apiURL)
+}
+
+export async function changeActiveStatus(userInternalId) {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.USER.CHANGE_ACTIVE_STATUS(userInternalId);
+    return doPut(apiURL)
+}
+
+export async function getUserActivity(userInternalId) {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.USER.GET_USER_ACTIVITY(userInternalId);
     return doGet(apiURL)
 }
 

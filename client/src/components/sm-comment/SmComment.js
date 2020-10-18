@@ -57,23 +57,26 @@ class SmComment extends Component {
         let currentUserId = this.state.currentUser.user_internal_id;
         let commentOptionButton = currentUserId === this.state.comment.user_internal_id || currentUserId == this.state.postUserId
             ? <IconButton aria-label="settings">
-            <MoreVertIcon onClick={this.__handleOpenCommentMenu}/>
-        </IconButton> : null;
-
+                <MoreVertIcon onClick={this.__handleOpenCommentMenu}/>
+            </IconButton> : null;
+        console.log('comments', this.props.comment)
+        let computedSubHeaderText = this.props.comment.visible === true ? this.props.comment.text : '(Pending...) ' + this.props.comment.text;
         return (
-            <Button onClick={this.props.handleViewUserContactInfo(this.props.comment.user.user_internal_id)}
-                    className={"sm-comment-post-contact-info-button"}
-            >
+            <div>
                 <Card className={"comment-root"}>
                     <CardHeader
                         avatar={
-                            <Avatar aria-label="recipe" className={"card-avatar"}>
-                                {this.props.comment.user.avatar}
-                            </Avatar>
+                            <Button
+                                onClick={this.props.handleViewUserContactInfo(this.props.comment.user.user_internal_id)}
+                                className={"sm-comment-post-contact-info-button"}>
+                                <Avatar aria-label="recipe" className={"card-avatar"}>
+                                    {this.props.comment.user.avatar}
+                                </Avatar>
+                            </Button>
                         }
                         action={commentOptionButton}
                         title={this.props.comment.user.full_name}
-                        subheader={this.props.comment.text}
+                        subheader={computedSubHeaderText}
                         titleTypographyProps={{variant: "h6"}}
                         subheaderTypographyProps={{variant: "subtitle1"}}
                     />
@@ -86,7 +89,7 @@ class SmComment extends Component {
                         <MenuItem onClick={this.__handleCommentDelete}>Delete</MenuItem>
                     </Menu>
                 </Card>
-            </Button>
+            </div>
         );
     }
 }

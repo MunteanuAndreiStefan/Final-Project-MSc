@@ -10,8 +10,8 @@ export async function getAllByPostId(post_id: number): Promise<QueryResult> {
     return DatabaseService.executeQuery(Constants.QUERIES.RESOURCE.GET_BY_POST_ID(post_id))
 }
 
-export async function add(post_id: number, url: string, type: string): Promise<QueryResult> {
-    return DatabaseService.executeQuery(Constants.QUERIES.RESOURCE.ADD(post_id, url, type));
+export async function add(post_id: number, resource: any, type: any): Promise<QueryResult> {
+    return DatabaseService.executeQuery(Constants.QUERIES.RESOURCE.ADD(post_id, resource, type));
 }
 
 export async function remove(id: number): Promise<QueryResult> {

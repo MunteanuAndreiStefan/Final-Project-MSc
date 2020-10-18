@@ -37,7 +37,6 @@ class SmProfile extends Component {
 
     __handleContentChange = (event) => {
         let currentUser = this.props.currentUser;
-    debugger;
         let keys = Object.keys(currentUser);
         for (let i = 0; i < keys.length; i++) {
             let value = currentUser[keys[i]];

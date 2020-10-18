@@ -13,3 +13,8 @@ export async function add(user_internal_id: number, question_id: number, answer_
 export async function remove(id: number): Promise<QueryResult> {
     return DatabaseService.executeQuery(Constants.QUERIES.USER_ANSWER.DELETE(id));
 }
+
+export async function getActivityOf(user_internal_id: number): Promise<QueryResult> {
+    return DatabaseService.executeQuery(Constants.QUERIES.USER_ANSWER.GET_ACTIVITY_OF(user_internal_id))
+}
+

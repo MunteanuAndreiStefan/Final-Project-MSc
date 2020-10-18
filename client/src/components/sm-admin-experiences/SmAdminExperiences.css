@@ -1,0 +1,31 @@
+.sm-admin-experiences {
+    margin-top: 30px;
+}
+
+.sm-admin-experiences .sm-admin-experiences-panel {
+    display: flex;
+}
+
+.sm-admin-experiences .sm-admin-experiences-left-panel {
+    width: 30%;
+    overflow-y: scroll;
+    height: 500px;
+    padding: 10px;
+}
+
+.sm-admin-experiences .sm-admin-experiences-right-panel {
+    width: 70%;
+    margin: 0 15px;
+}
+
+.sm-admin-experiences .sm-admin-experiences-right-panel .MuiCard-root {
+    width: 300px;
+}
+
+.sm-admin-experiences .sm-admin-experiences-right-panel .MuiFormControl-root {
+    width: 200px;
+}
+
+.sm-admin-experiences .sm-admin-experiences-right-panel .card-root {
+    max-width: 100%;
+}

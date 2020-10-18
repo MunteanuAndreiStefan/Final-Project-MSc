@@ -2,11 +2,12 @@ import {APIGatewayProxyEvent, APIGatewayProxyResult} from "aws-lambda";
 import * as QuestionnaireController from "../Controllers/QuestionnaireController";
 import * as DatabaseCreatorService from "../Services/Database/DatabaseCreatorService";
 import * as PostService from "../Services/PostService";
+import {PostError} from "../Services/PostService";
 import * as UserService from "../Services/UserService";
 import * as SubscriptionService from "../Services/SubscriptionService";
 import * as QuestionnaireService from "../Services/QuestionnaireService";
+import * as NotificationsService from "../Services/NotificationsService";
 import * as Constants from "../Utils/Constants";
-import {PostError} from "../Services/PostService";
 
 let dbCreationChecked = false;
 
@@ -37,8 +38,56 @@ export async function getPosts(event: APIGatewayProxyEvent, params: any): Promis
     }
 }
 
+export async function createPost(event: APIGatewayProxyEvent, params: any, body: any): Promise<APIGatewayProxyResult> {
+    let posts = await PostService.createPost(params.authorization.email, body)
+    return {
+        statusCode: 200,
+        body: JSON.stringify(posts)
+    }
+}
+
+export async function getUnapprovedComments(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
+    let posts = await PostService.getUnapprovedComments(params.authorization.email)
+    return {
+        statusCode: 200,
+        body: JSON.stringify(posts)
+    }
+}
+
+export async function approveComment(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
+    let response = await PostService.approveComment(params.authorization.email, params.commentId)
+    return {
+        statusCode: 200,
+        body: JSON.stringify(response)
+    }
+}
+
+export async function deleteComment(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
+    let response = await PostService.deleteComment(params.authorization.email, params.commentId)
+    return {
+        statusCode: 200,
+        body: JSON.stringify(response)
+    }
+}
+
 export async function getCategories(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
     let posts = await PostService.getCategories(params.authorization.email)
+    return {
+        statusCode: 200,
+        body: JSON.stringify(posts)
+    }
+}
+
+export async function getTags(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
+    let tags = await PostService.getTags(params.authorization.email)
+    return {
+        statusCode: 200,
+        body: JSON.stringify(tags)
+    }
+}
+
+export async function createCategory(event: APIGatewayProxyEvent, params: any, body: any): Promise<APIGatewayProxyResult> {
+    let posts = await PostService.createCategory(params.authorization.email, body.text)
     return {
         statusCode: 200,
         body: JSON.stringify(posts)
@@ -104,6 +153,13 @@ export async function getQuestionnaires(event: APIGatewayProxyEvent, params: any
         body: JSON.stringify(questionnaires)
     }
 }
+export async function createQuestionnaire(event: APIGatewayProxyEvent, params: any, body: any): Promise<object> {
+    let questionnaires = await QuestionnaireService.createQuestionnaire(params.authorization.email, body)
+    return {
+        statusCode: 200,
+        body: JSON.stringify(questionnaires)
+    }
+}
 
 export async function addUserAnswers(event: APIGatewayProxyEvent, params: any, body: any): Promise<object> {
     let response = await QuestionnaireService.addUserAnswers(params.questionnaireId, body, params.authorization.email)
@@ -131,9 +187,43 @@ export async function getSubscriptions(event: APIGatewayProxyEvent): Promise<API
 
 export async function getCurrentUser(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
     let user = await UserService.getCurrentUser(params.authorization.email)
+    if (user.active) {
+        return {
+            statusCode: 200,
+            body: JSON.stringify(user)
+        }
+    }
+    return {
+        statusCode: 404,
+        body: JSON.stringify({
+            message: "User is not active."
+        })
+    }
+}
+
+export async function changeActiveStatus(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
+    let response = await UserService.changeActiveStatus(params.authorization.email, params.user_internal_id)
     return {
         statusCode: 200,
-        body: JSON.stringify(user)
+        body: JSON.stringify({
+            message: response
+        })
+    }
+}
+
+export async function getUserActivity(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
+    let response = await UserService.getUserActivity(params.authorization.email, params.user_internal_id)
+    return {
+        statusCode: 200,
+        body: JSON.stringify(response)
+    }
+}
+
+export async function getAllUsersInShallowForm(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
+    let users = await UserService.getAllUsersInShallowForm(params.authorization.email)
+    return {
+        statusCode: 200,
+        body: JSON.stringify(users)
     }
 }
 
@@ -167,5 +257,59 @@ export async function changeSubscription(event: APIGatewayProxyEvent, params: an
     return {
         statusCode: 200,
         body: JSON.stringify(user)
+    }
+}
+
+export async function addNotificationForUser(event: APIGatewayProxyEvent, params: any, body: any): Promise<APIGatewayProxyResult> {
+    try {
+        await NotificationsService.addNotification(body.userId, body.message, body.type, body.info);
+    } catch (err) {
+        const typedError = err as NotificationsService.NotificationError
+
+        return {
+            statusCode: typedError.status ?? 500,
+            body: typedError.error ?? "Something went wrong"
+        }
+    }
+
+    return {
+        statusCode: 201,
+        body: ''
+    }
+}
+
+export async function addNotificationAlert(event: APIGatewayProxyEvent, params: any, body: any): Promise<APIGatewayProxyResult> {
+    try {
+        await NotificationsService.addAlert(body.userId, body.info);
+    } catch (err) {
+        const typedError = err as NotificationsService.NotificationError
+
+        return {
+            statusCode: typedError.status ?? 500,
+            body: typedError.error ?? "Something went wrong"
+        }
+    }
+
+    return {
+        statusCode: 201,
+        body: ''
+    }
+}
+
+export async function getNotificationForUser(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
+    try {
+        const notifications = await NotificationsService.getForUserWithId(params.userId);
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify(notifications)
+        }
+    } catch (err) {
+        const typedError = err as NotificationsService.NotificationError
+
+        return {
+            statusCode: typedError.status ?? 500,
+            body: typedError.error ?? "Something went wrong"
+        }
     }
 }

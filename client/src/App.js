@@ -112,39 +112,40 @@ class App extends Component {
         const auth = await this.isAuth();
         if (!auth) {
             return;
-        } else {
-            Constants.AUTHORIZATION = `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`
-            this.userHasAuthenticated(true);
-            CommunicationService.getCurrentUser()
-                .then((res) => {
-                    if (res.status == 404) {
-                        this.setState({
-                            userWasNotInit: true,
-                            currentUser: {
-                                first_name: null,
-                                last_name: null,
-                                zip_code: null,
-                                city: null,
-                                country: null
-                            }
-                        });
-                    } else {
-                        this.setState({
-                            currentUser: enhanceUser(res)
-                        })
-                        CommunicationService.getSubscriptions()
-                            .then((res) => this.setState({
-                                subscriptions: res
-                            }))
-                            .catch(console.error)
-                    }
-                })
-                .catch(console.error)
         }
+        Constants.AUTHORIZATION = `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`
+        this.userHasAuthenticated(true);
+        CommunicationService.getCurrentUser()
+            .then((res) => {
+                if (res.status === 404) {
+                    this.setState({
+                        userIsActive: res.message !== "User is not active.",
+                        userWasNotInit: true,
+                        currentUser: {
+                            first_name: null,
+                            last_name: null,
+                            zip_code: null,
+                            city: null,
+                            country: null
+                        }
+                    });
+                } else {
+                    this.setState({
+                        currentUser: enhanceUser(res),
+                        userIsActive: res.active
+                    })
+                    CommunicationService.getSubscriptions()
+                        .then((res) => this.setState({
+                            subscriptions: res
+                        }))
+                        .catch(console.error)
+                }
+            })
+            .catch(console.error)
     }
 
     userHasAuthenticated = authenticated => {
-        this.setState({ isAuthenticated: authenticated });
+        this.setState({isAuthenticated: authenticated});
     };
 
     handleLogout = async event => {
@@ -183,6 +184,7 @@ class App extends Component {
     _questionnaireClick = (event) => {
         CommunicationService.getQuestionnaires()
             .then((res) => {
+                debugger
                 this.setState({
                     answeredQuestionnaireNumber: res.answeredQuestionnaireNumber,
                     questionnaires: res.questionnaires
@@ -216,12 +218,13 @@ class App extends Component {
         this.setState({
             questionnaires: questionnaires
         });
-        console.log('__handleQuestionnaireDelete', questionnaireId);
     };
 
     getContent() {
         if (!this.state.isAuthenticated) {
-            return <SmAuthScreen></SmAuthScreen>;
+            return <SmAuthScreen text={"Please login to continue."}></SmAuthScreen>;
+        } else if (!this.state.userIsActive) {
+            return <SmAuthScreen text={"Your account has been deactivated. Please contact an admin to solve the problem."}></SmAuthScreen>;
         } else if (this.state.userWasNotInit) {
             return <SmProfile currentUser={this.state.currentUser}
                               subscriptions={[]}
@@ -246,10 +249,10 @@ class App extends Component {
                 <Feed state={this.state}/>
             </Route>);
             routes.push(<Route path="/questionnaires">
-                <Questionnaires state={this.state} __handleQuestionnaireDelete={this.__handleQuestionnaireDelete} />
+                <Questionnaires state={this.state} __handleQuestionnaireDelete={this.__handleQuestionnaireDelete}/>
             </Route>);
             routes.push(<Route path="/experiences">
-                <Experiences state={this.state} />
+                <Experiences state={this.state}/>
             </Route>);
             routes.push(<Route path="/about">
                 <About/>
@@ -284,22 +287,22 @@ class App extends Component {
     render() {
         return (
             <div className={"AppContainer"}>
-                    <Router>
-                        <div>
-                            <div className={"sm-navbar"}>
-                                <SmNavbar logOut={this.handleLogout}
-                                          logIn={this.handleLogin}
-                                          currentUser={this.state.currentUser}
-                                          authenticated={this.state.isAuthenticated}
-                                          userWasNotInit={this.state.userWasNotInit}
-                                ></SmNavbar>
-                            </div>
-                            <div className={"sm-content"}>
-                                {this.getContent()}
-                            </div>
+                <Router>
+                    <div>
+                        <div className={"sm-navbar"}>
+                            <SmNavbar logOut={this.handleLogout}
+                                      logIn={this.handleLogin}
+                                      currentUser={this.state.currentUser}
+                                      authenticated={this.state.isAuthenticated}
+                                      userWasNotInit={this.state.userWasNotInit}
+                            ></SmNavbar>
                         </div>
-                    </Router>
-                </div>
+                        <div className={"sm-content"}>
+                            {this.getContent()}
+                        </div>
+                    </div>
+                </Router>
+            </div>
         );
     }
 }
