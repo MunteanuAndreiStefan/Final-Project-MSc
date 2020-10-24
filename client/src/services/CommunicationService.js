@@ -182,3 +182,13 @@ export async function deleteCommentFromPost(post_id, comment_id) {
     let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.POST.UNCOMMENT(post_id, comment_id);
     return doDelete(apiURL)
 }
+
+export async function getNotifications() {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.NOTIFICATIONS.GET_ALL;
+    return doGet(apiURL);
+}
+
+export async function sendAlert(message) {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.NOTIFICATIONS.ADD_ALERT;
+    return doPost(apiURL, {message});
+}

@@ -8,6 +8,6 @@ const MainLambda = bundle.Lambdas.MainLambda
 router.post('/addAlert', utils.createRouteWithLambda(MainLambda.addNotificationAlert));
 
 router.post('/addNotification', utils.createRouteWithLambda(MainLambda.addNotificationForUser));
-router.get('/:userId', utils.createRouteWithLambda(MainLambda.getNotificationForUser));
+router.get('/', utils.createRouteWithLambda(MainLambda.getNotificationForUser));
 
 module.exports = router;

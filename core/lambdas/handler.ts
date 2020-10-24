@@ -280,7 +280,7 @@ export async function addNotificationForUser(event: APIGatewayProxyEvent, params
 
 export async function addNotificationAlert(event: APIGatewayProxyEvent, params: any, body: any): Promise<APIGatewayProxyResult> {
     try {
-        await NotificationsService.addAlert(body.userId, body.info);
+        await NotificationsService.addAlert(body.message, body.info);
     } catch (err) {
         const typedError = err as NotificationsService.NotificationError
 
@@ -298,7 +298,8 @@ export async function addNotificationAlert(event: APIGatewayProxyEvent, params: 
 
 export async function getNotificationForUser(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
     try {
-        const notifications = await NotificationsService.getForUserWithId(params.userId);
+        const user = await UserService.getCurrentUser(params.authorization.email)
+        const notifications = await NotificationsService.getForUserWithId(user.user_internal_id);
 
         return {
             statusCode: 200,
@@ -311,5 +312,21 @@ export async function getNotificationForUser(event: APIGatewayProxyEvent, params
             statusCode: typedError.status ?? 500,
             body: typedError.error ?? "Something went wrong"
         }
+    }
+}
+
+export async function createDB(event: APIGatewayProxyEvent, params: any, body: any): Promise<APIGatewayProxyResult> {
+    try {
+        await DatabaseCreatorService.createSchemaIfMissing()
+    } catch (err) {
+        return {
+            statusCode: 500,
+            body: `Error creating db ${err.toString()}, ${JSON.stringify(err)}`
+        }
+    }
+
+    return {
+        statusCode: 201,
+        body: ''
     }
 }

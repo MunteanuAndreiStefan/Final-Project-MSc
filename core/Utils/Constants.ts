@@ -429,7 +429,7 @@ export const QUERIES = {
         },
         ADD: (name: string): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.TAG.NAME;
-            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ')
+            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.TAG.COLUMNS.join(', ')
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES ('${name}') RETURNING id;`;
         },
         DELETE: (id: number): string => {
@@ -524,7 +524,7 @@ export const QUERIES = {
         },
         ADD: (tag_id: number, questionnaire_id: number, interest: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTIONNAIRE_TAG.NAME;
-            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ')
+            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTIONNAIRE_TAG.COLUMNS.join(', ')
             let values = tag_id + ', ' + questionnaire_id + ', ' + interest;
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
@@ -544,7 +544,7 @@ export const QUERIES = {
         },
         ADD: (tag_id: number, question_id: number, interest: number): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTION_TAG.NAME;
-            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.RESOURCE.COLUMNS.join(', ')
+            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.QUESTION_TAG.COLUMNS.join(', ')
             let values = tag_id + ', ' + question_id + ', ' + interest;
             return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${values}) RETURNING id;`;
         },
@@ -611,7 +611,7 @@ export const QUERIES = {
             let goodInfo = info == null ? `NULL` : `'${info}'`
             let user_internal_id = -1
             let type = 'alert'
-            return `INSERT INTO ${schemaAndDatabaseName} (${columns} VALUES (${user_internal_id}, CURRENT_TIMESTAMP, '${message}', '${type}', ${goodInfo}))`
+            return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${user_internal_id}, CURRENT_TIMESTAMP, '${message}', '${type}', ${goodInfo})`
         }
     },
 };

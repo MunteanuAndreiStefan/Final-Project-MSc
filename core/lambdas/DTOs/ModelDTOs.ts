@@ -25,7 +25,7 @@ export interface PostDTO {
 export interface AnswerDTO {
     text: string;
     scale_value: number;
-    image_url: string;
+    image: string;
 }
 
 export interface QuestionDTO {

@@ -10,6 +10,7 @@ import * as Constants from '../Utils/Constants';
 import {Post, PostComment, PostReaction, PostResource} from "../Models/Post";
 import {CommentDTO, PostDTO, ReactionDTO} from "../lambdas/DTOs/ModelDTOs";
 import {currentUserIsAdmin, getUserInternalIdBy} from "./UserService";
+import {upload, uuidv4, BUCKET_URL} from "./FilesService";
 
 export class PostError extends Error {
     readonly status
@@ -87,11 +88,21 @@ export async function createPost(userEmail: string, body: PostDTO) {
     let innerHTML = body.innerHTML;
     let image = body.image;
 
+    console.log('POST - ', innerHTML, image)
     if (innerHTML && !image) {
+        console.log('POST - first ')
         await ResourceRepository.add(postId, innerHTML, 'HTML')
     } else if (!innerHTML && image) {
-        // SEND image to S3 and put the url into this
-        await ResourceRepository.add(postId, 'https://www.vets4pets.com/siteassets/species/cat/close-up-of-cat-looking-up.jpg', 'IMAGE')
+        console.log('POST - second ')
+        let imageUUID = uuidv4();
+        let response = await upload(image, imageUUID)
+        console.log('POST - image uuid ', imageUUID)
+        console.log('POST - upload response ', response)
+        if (response.ETag) {
+            console.log('POST - ETAG ', response.ETag)
+
+            await ResourceRepository.add(postId, BUCKET_URL + imageUUID, 'IMAGE')
+        }
     }
 
     let postToBeReturned = await PostRepository.getById(postId)

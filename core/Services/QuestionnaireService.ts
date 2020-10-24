@@ -15,6 +15,7 @@ import {AnswerDTO, PostDTO, QuestionnaireDTO, TagDTO} from "../lambdas/DTOs/Mode
 import * as PostRepository from "../Repository/PostRepository";
 import * as PostTagRepository from "../Repository/PostTagRepository";
 import {PostError} from "./PostService";
+import {BUCKET_URL, upload, uuidv4} from "./FilesService";
 
 export class QuestionnaireError extends Error {
     readonly status
@@ -119,7 +120,15 @@ export async function createQuestionnaire(userEmail: string, body: Questionnaire
         }
 
         for (const answer of question.answers) {
-            await AnswerRepository.add(questionId, question.answers.indexOf(answer), answer.scale_value, answer.text, answer.image_url);
+            if (answer.image) {
+                let imageUUID = uuidv4();
+                let response = await upload(answer.image, imageUUID)
+                if (response.ETag) {
+                    await AnswerRepository.add(questionId, question.answers.indexOf(answer), answer.scale_value, answer.text, BUCKET_URL + imageUUID);
+                }
+            } else {
+                await AnswerRepository.add(questionId, question.answers.indexOf(answer), answer.scale_value, answer.text, answer.image);
+            }
         }
     }
 

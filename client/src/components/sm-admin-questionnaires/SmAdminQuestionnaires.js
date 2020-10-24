@@ -238,30 +238,52 @@ class SmAdminQuestionnaires extends Component {
         })
     }
 
-    prepareQuestionForSend = (question) => {
+    async readFile(file) {
+        return new Promise(((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = (e) => {
+                resolve(e.target.result);
+            };
+        }))
+    }
+
+    async returnFileContent(file) {
+        return await this.readFile(file);
+    }
+
+    prepareQuestionForSend = async (question) => {
+        let answersForSend = [];
+        for (let answer of question.answers) {
+            answersForSend.push({
+                text: question.question_type === 'TEXT' ? answer.text : null,
+                scale_value: question.question_type === 'SCALE' ? parseInt(answer.scale_value) : null,
+                image: question.question_type === 'IMAGE' ? await this.returnFileContent(answer.image_url) : null,
+            })
+        }
+
         return {
             title: question.title,
             description: question.description,
             type: question.question_type,
             multiple_answers: question.multiple_answers == 'yes',
             tags: this.mapTagsForSend(question.selectedTags),
-            answers: question.answers.map(answer => {
-                return {
-                    text: question.question_type === 'TEXT' ? answer.text : null,
-                    scale_value: question.question_type === 'SCALE' ? parseInt(answer.scale_value) : null,
-                    image_url: question.question_type === 'IMAGE' ? answer.image_url : null,
-                }
-            })
+            answers: answersForSend
         }
     }
 
-    questionnaireCreateOnClick = () => {
+    questionnaireCreateOnClick = async () => {
+        let questionsForSend = []
+        for (let question of this.state.questionList) {
+            questionsForSend.push(await this.prepareQuestionForSend(question))
+        }
+
         let toBeSentObject = {
             priority: parseInt(this.state.priority),
             title: this.state.title,
             description: this.state.description,
             tags: this.mapTagsForSend(this.state.tagPriorityOrder),
-            questions: this.state.questionList.map(this.prepareQuestionForSend)
+            questions: questionsForSend
         }
         this.verifyBodyAndSend(toBeSentObject);
         console.log('questionnaireCreateOnClick', toBeSentObject)
@@ -274,22 +296,22 @@ class SmAdminQuestionnaires extends Component {
     answersAreValid = (answers) => {
         return answers.length > 1 && answers.length ===
             answers.filter(tag => (tag.text && tag.text.length > 0)
-                || ( tag.scale_value)
-                || (tag.image_url && tag.image_url.length > 0)).length
+                || (tag.scale_value)
+                || (tag.image && tag.image.length > 0)).length
     }
 
+
     verifyBodyAndSend = (body) => {
-        debugger
         if (!body.priority || !body.title || !body.description || !body.tags || !body.questions
             || !(body.title.length > 0) || !(body.description.length > 0) || !(body.tags.length > 0) || !(body.questions.length > 0)) {
             return this.handleAlertShow("Please fill in all the general details...", this.state.alert.types.ERROR);
         }
 
         if (!this.tagsAreValid(body.tags)) {
-            return this.handleAlertShow("Please fill in all the tags details...", this.state.alert.types.ERROR);
+                return this.handleAlertShow("Please fill in all the tags details...", this.state.alert.types.ERROR);
         }
 
-        let validQuestions = body.questions.filter(q => q.title && q.description && q.type && q.multiple_answers
+        let validQuestions = body.questions.filter(q => q.title && q.description && q.type && q.hasOwnProperty('multiple_answers')
             && q.description && (q.title.length > 0) && (q.description.length > 0) && (q.type.length > 0)
             && (q.description.length > 0) && this.tagsAreValid(q.tags) && this.answersAreValid(q.answers));
 
@@ -299,7 +321,6 @@ class SmAdminQuestionnaires extends Component {
 
         CommunicationService.createQuestionnaire(body)
             .then((res) => {
-                debugger
                 console.log('createQuestionnaire', res)
                 this.handleAlertShow("Success", this.state.alert.types.SUCCESS);
                 //this.clearObject()

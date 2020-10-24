@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "module": "esnext",
     "outDir": "./built",
     "allowJs": true,
     "target": "es2018",

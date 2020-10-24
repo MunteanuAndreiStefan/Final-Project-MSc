@@ -3,7 +3,7 @@ global.atob = require("atob");
 function respond(res, message) {
     if (message === undefined || message === null) {
         res.status(404).json({error: "Resource not  found."});
-    } else  {
+    } else {
         if (message.statusCode && message.body) {
             res.status(message.statusCode).json(JSON.parse(message.body));
         } else {
@@ -13,6 +13,7 @@ function respond(res, message) {
 }
 
 function errors(res, errors) {
+    console.error(errors);
     res.status(500).send(errors);
 }
 

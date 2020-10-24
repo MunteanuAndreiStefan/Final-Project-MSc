@@ -10,6 +10,8 @@ import Typography from "@material-ui/core/Typography";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ClearIcon from '@material-ui/icons/Clear';
+import Input from '@material-ui/core/Input';
+
 
 class SmAdminAnswer extends Component {
     constructor(props) {
@@ -40,15 +42,16 @@ class SmAdminAnswer extends Component {
     }
 
     getImageAnswer = (answer) => {
+        let someId = "contained-button-file-" + answer.id
         return <div className={"sm-admin-posts-panel-row right-panel-html upload-file-panel"}>
             <input
                 accept="image/*"
                 style={{display: "none"}}
-                id="contained-button-file"
+                id={someId}
                 type="file"
                 onChange={(event) => this.props.handleFileChange(answer, event)}
             />
-            <label htmlFor="contained-button-file">
+            <label htmlFor={someId}>
                 <Button
                     variant="contained"
                     color="primary"

@@ -1,26 +1,18 @@
 import React, {Component} from 'react';
-import {fade, makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import PowerSharpIcon from '@material-ui/icons/PowerSharp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
 import './SmNavbar.css';
 import {Button} from "react-bootstrap";
 import Grid from "@material-ui/core/Grid";
 import Chip from "@material-ui/core/Chip";
 import Avatar from "@material-ui/core/Avatar";
-import {Link, Route} from "react-router-dom";
+import {Link} from "react-router-dom";
+import SMNotifications from "../sm-notifications/SmNotifications";
 
 class SmNavbar extends Component {
     constructor(props) {
@@ -159,6 +151,7 @@ class SmNavbar extends Component {
                             <Grid item xs={6}>
 
                             </Grid>
+                            <SMNotifications/>
                             <Grid item xs className={"row"}>
                                 {rightNavbarSide}
                             </Grid>
