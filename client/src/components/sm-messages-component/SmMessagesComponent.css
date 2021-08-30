@@ -1,0 +1,28 @@
+.root {
+    width: 100%;
+    max-width: 36ch;
+}
+
+.inline {
+    display: inline;
+}
+
+.scrollableList {
+
+}
+
+.scrollableList .MuiList-root {
+    overflow-y: scroll;
+    height: 500px;
+}
+
+.interactionable {
+    padding-left: 16px;
+    padding-right: 16px;
+    justify-content: space-between;
+    display: flex;
+    width: 270px;
+}
+.interactionable .MuiFormControl-root {
+    width: 180px;
+}

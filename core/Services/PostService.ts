@@ -5,12 +5,14 @@ import * as CategoryRepository from '../Repository/CategoryRepository';
 import * as ResourceRepository from '../Repository/ResourceRepository';
 import * as CommentRepository from '../Repository/CommentRepository';
 import * as ReactionRepository from '../Repository/ReactionRepository';
+import * as NotificationService from '../Services/NotificationsService';
 import * as UserRepository from '../Repository/UserRepository';
+import * as UserService from '../Services/UserService';
 import * as Constants from '../Utils/Constants';
 import {Post, PostComment, PostReaction, PostResource} from "../Models/Post";
 import {CommentDTO, PostDTO, ReactionDTO} from "../lambdas/DTOs/ModelDTOs";
 import {currentUserIsAdmin, getUserInternalIdBy} from "./UserService";
-import {upload, uuidv4, BUCKET_URL} from "./FilesService";
+import {BUCKET_URL, upload, uuidv4} from "./FilesService";
 
 export class PostError extends Error {
     readonly status
@@ -34,30 +36,32 @@ export async function getById(id: number) {
     return response.rows[0]
 }
 
+async function computePosts(userEmail: string) {
+    const recommendedPostsResult = await PostRepository.getRecommendedPosts(userEmail)
+    const recommendedPosts = recommendedPostsResult.rows;
+    const recommendedPostsIds = recommendedPosts.map((post) => post.id);
+
+    const bulkPostsResult = await PostRepository.getBulkPosts(userEmail, recommendedPostsIds)
+    const bulkPosts = bulkPostsResult.rows
+    return [
+        ...recommendedPosts,
+        ...bulkPosts
+    ]
+}
+
 export async function getAllByCategoryId(userEmail: string, categoryId: number) {
-    const posts = await PostRepository.getPostsBySubscriptionAndOrdered(userEmail);
-    let rowCount = posts.rowCount;
+    const posts = await computePosts(userEmail);
 
-    if (rowCount === 0) {
-        throw new PostError(Constants.MESSAGES.NOT_FOUND.status, Constants.MESSAGES.NOT_FOUND.POST);
-    }
-
-    let validPosts = posts.rows.filter((post: any) => post.post_category_id == categoryId);
+    let validPosts = posts.filter((post: any) => post.post_category_id == categoryId);
     let user_internal_id = await getUserInternalIdBy(userEmail)
 
     return computePostDetails(validPosts, user_internal_id);
 }
 
 export async function getComputedPostList(userEmail: string) {
-    const posts = await PostRepository.getPostsBySubscriptionAndOrdered(userEmail);
-    let rowCount = posts.rowCount;
-
-    if (rowCount === 0) {
-        throw new PostError(Constants.MESSAGES.NOT_FOUND.status, Constants.MESSAGES.NOT_FOUND.POST);
-    }
-
+    const posts = await computePosts(userEmail);
     let user_internal_id = await getUserInternalIdBy(userEmail)
-    return computePostDetails(posts.rows, user_internal_id);
+    return computePostDetails(posts, user_internal_id);
 }
 
 export async function createPost(userEmail: string, body: PostDTO) {
@@ -244,6 +248,8 @@ export async function createCategory(userEmail: string, categoryText: string) {
 export async function reactionAddHandle(postId: number, body: ReactionDTO, userEmail: string) {
     let user_internal_id = await getUserInternalIdBy(userEmail);
     const response = await ReactionRepository.add(user_internal_id, body.post_id, body.reaction);
+    const user = await UserService.getById(user_internal_id);
+    await NotificationService.addNotificationForReaction(body.post_id, `${user.first_name} ${user.last_name}`, "general", null);
 
     if (response.code && response.code == 23505) {
         const reactionsByPost = await ReactionRepository.getAllByPostId(body.post_id);

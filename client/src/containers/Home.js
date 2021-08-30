@@ -15,7 +15,6 @@ export default class Home extends Component {
 
 	async isAuth() {
 		const result = await Auth.currentAuthenticatedUser().then(user => {
-			console.log(user);
 			return true;
 		}).catch(e => {
 			console.log(e);
@@ -46,7 +45,6 @@ export default class Home extends Component {
 	}
 
 	renderTestAPI(testApiCall) {
-		console.log(testApiCall);
 		return testApiCall.message;
 	}
 

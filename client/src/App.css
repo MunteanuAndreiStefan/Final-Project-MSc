@@ -28,12 +28,14 @@
 .sm-sidebar {
 	width: 15%;
 	height: 95vh;
+	min-width: 180px;
 	background-color: #1769aa;
 }
 
 .sm-dashboard {
 	width: 85%;
 	padding: 25px;
+	overflow-y: scroll;
 }
 
 .sm-sidebar, .sm-dashboard {
@@ -44,9 +46,39 @@
 	margin-bottom: 20px;
 }
 #search-field .MuiFormControl-root{
-	width: 250px;
+	width: 300px;
 }
 
 .sm-row {
 	display: flex;
+}
+
+.sm-left-panel {
+	z-index: 1;
+	left: 0;
+	overflow-x: hidden;
+	height: 100%;
+}
+
+.sm-left-panel a {
+	padding: 6px 8px 6px 16px;
+	text-decoration: none;
+	font-size: 20px;
+	color: white;
+	display: block;
+}
+
+.sm-left-panel a:hover {
+	color: #33eaff;
+}
+
+.sm-left-panel > * {
+	margin: 10px 0 10px 0;
+}
+
+.MuiPaper-root.MuiCard-root.card-root.MuiPaper-elevation1.MuiPaper-rounded {
+	max-width: 100%;
+}
+.MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-6 {
+	display: none;
 }

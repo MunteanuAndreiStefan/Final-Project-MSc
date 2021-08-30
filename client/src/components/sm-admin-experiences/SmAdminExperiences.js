@@ -40,7 +40,6 @@ class SmAdminExperiences extends Component {
     }
 
     experienceCreateOnClick = (event) => {
-        console.log(this.state.currentCategoryName)
         CommunicationService.createCategory(this.state.currentCategoryName)
             .then((res) => {
                 this.populateCategories();

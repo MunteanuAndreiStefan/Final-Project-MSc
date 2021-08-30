@@ -59,7 +59,6 @@ class SmComment extends Component {
             ? <IconButton aria-label="settings">
                 <MoreVertIcon onClick={this.__handleOpenCommentMenu}/>
             </IconButton> : null;
-        console.log('comments', this.props.comment)
         let computedSubHeaderText = this.props.comment.visible === true ? this.props.comment.text : '(Pending...) ' + this.props.comment.text;
         return (
             <div>

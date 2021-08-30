@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react';
+import './SmNotifications.css';
 import {withStyles} from '@material-ui/core/styles';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -95,7 +96,7 @@ export default function SMNotifications() {
     }
 
     return (
-        <div>
+        <div className={"notification-icon-wrapper"}>
             <IconButton
                 aria-controls="sm-notifications"
                 aria-haspopup="true"

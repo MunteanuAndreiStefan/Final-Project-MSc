@@ -18,6 +18,18 @@ export async function getPostsBySubscriptionAndOrdered(email: string): Promise<Q
     return DatabaseService.executeQuery(Constants.QUERIES.POST.GET_ALL_BY_SUBSCRIPTION_AND_ORDERED(email));
 }
 
+
+
+export async function getRecommendedPosts(email: string): Promise<QueryResult> {
+    return DatabaseService.executeQuery(Constants.QUERIES.POST.GET_RECOMMENDED(email));
+}
+
+export async function getBulkPosts(email: string, recommendedPostsIds: number[]): Promise<QueryResult> {
+    return DatabaseService.executeQuery(Constants.QUERIES.POST.GET_BULK(email, recommendedPostsIds));
+}
+
+
+
 export async function getAll(): Promise<QueryResult> {
     return DatabaseService.executeQuery(Constants.QUERIES.POST.GET_ALL())
 }

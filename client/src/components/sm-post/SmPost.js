@@ -147,20 +147,17 @@ class SmPost extends Component {
                 }
                 this.props.post.reactions.push(reactionObj);
             } else {
-                console.log('ERROR WHILE REACTING')
             }
         } else {
             let reactionIndex = this.props.post.reactions.findIndex(reaction => reaction.user_internal_id == this.props.currentUser.user_internal_id)
             let reactionId = this.props.post.reactions[reactionIndex].id;
             let res = await CommunicationService.unreactToPost(this.props.post.id, reactionId)
             if (res.deletedReactionsCount > 0) {
-                console.log('unreactToPost', this.props.post.id, res)
                 this.props.post.reactions = [
                     ...this.props.post.reactions.slice(0, reactionIndex),
                     ...this.props.post.reactions.slice(reactionIndex + 1),
                 ]
             } else {
-                console.log('ERROR WHILE DELETING REACTION', res)
             }
         }
         let nextReactions = this.props.post.reactions.map(reaction => this.mapComplementaryDataWithUserInfo(reaction, this.props.users));
@@ -180,9 +177,7 @@ class SmPost extends Component {
 
     __handleAddComment = async (event) => {
         let res = await CommunicationService.commentToPost(this.props.post.id, this.state.commentBox.value)
-        console.log('__handleAddComment', this.props.post.id, res)
         if (!res.commentId) {
-            console.log('ERROR WHILE COMMENTING')
             return;
         }
 
@@ -230,7 +225,6 @@ class SmPost extends Component {
     }
 
     __handleViewUserContactInfo = (userId) => async (event) => {
-        console.log('__handleViewUserContactInfo', userId, event);
         CommunicationService.getUserContactInfo(userId)
             .then((res) => {
                 this.__handleViewContactInfo(res)

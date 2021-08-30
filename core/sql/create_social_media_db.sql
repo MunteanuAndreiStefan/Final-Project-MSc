@@ -1,3 +1,4 @@
+
 DROP SCHEMA IF EXISTS social_media_db CASCADE;
 CREATE SCHEMA social_media_db;
 
@@ -223,12 +224,13 @@ CREATE TABLE social_media_db.post_tag
 DROP TABLE IF EXISTS social_media_db.notification;
 CREATE TABLE social_media_db.notification
 (
-    id          		serial       NOT NULL,
-    user_internal_id    numeric      NOT NULL,
-    "timestamp" 		timestamp    NOT NULL,
-    message     		varchar(255) NOT NULL,
-    type        		varchar(255) NOT NULL,
-    info        		varchar(255),
+    id          		         serial       NOT NULL,
+    receiver                     numeric      NOT NULL,
+    sender                       numeric      NOT NULL,
+    "timestamp" 		         timestamp    NOT NULL,
+    message     		         varchar(255) NOT NULL,
+    type        		         varchar(255) NOT NULL,
+    info        		         varchar(255),
     CONSTRAINT notification_id_pk PRIMARY KEY (id)
 );
 
@@ -456,5 +458,5 @@ VALUES (6, 1, 15);
 INSERT INTO social_media_db.post_tag (tag_id, post_id, interest)
 VALUES (3, 2, 15);
 
-INSERT INTO social_media_db.notification (user_internal_id, "timestamp", message, type, info)
-VALUES (-1, CURRENT_TIMESTAMP, 'Welcome everybody', 'alert', NULL);
+INSERT INTO social_media_db.notification (receiver, sender, "timestamp", message, type, info)
+VALUES (-1, -3, CURRENT_TIMESTAMP, 'Welcome everybody', 'alert', NULL);

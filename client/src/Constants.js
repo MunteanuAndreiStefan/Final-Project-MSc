@@ -3,7 +3,7 @@ import config from './config';
 let AUTHORIZATION = '';
 
 const API = {
-    HOST_AND_PORT: config.server.AWS,
+    HOST_AND_PORT: config.server.LOCAL,
     PATHS: {
         POST: {
             GET_ALL_BY_USER: '/posts',
@@ -40,7 +40,9 @@ const API = {
         },
         NOTIFICATIONS: {
             GET_ALL: '/notifications',
-            ADD_ALERT: '/notifications/addAlert'
+            GET_ALL_MESSAGES: '/notifications/messages',
+            ADD_ALERT: '/notifications/addAlert',
+            ADMIN_MESSAGE: '/notifications/addMessage'
         }
     }
 }

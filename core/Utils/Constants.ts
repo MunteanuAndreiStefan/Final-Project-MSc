@@ -1,3 +1,5 @@
+import {ALGORITHM} from './ALGORITHM_QUERIES'
+
 const SCHEMAS = {
     SOCIAL_MEDIA_DB: {
         NAME: 'social_media_db',
@@ -113,7 +115,7 @@ const SCHEMAS = {
             NOTIFICATION: {
                 NAME: 'notification',
                 COLUMNS: [
-                    'user_internal_id', 'timestamp', 'message', 'type', 'info'
+                    'receiver', 'sender', 'timestamp', 'message', 'type', 'info'
                 ]
             }
         }
@@ -285,14 +287,6 @@ export const QUERIES = {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.POST.NAME;
             return `DELETE FROM ${schemaAndDatabaseName} WHERE id = ${id};`;
         },
-        GET_ALL_BY_SUBSCRIPTION_AND_ORDERED: (email: string): string => {
-            return `SELECT p.id, p.post_category_id, p.user_internal_id, p."text", p.priority, p."timestamp" FROM social_media_db.post p
-                    ORDER BY priority DESC, "timestamp" DESC 
-                    LIMIT (
-                        SELECT s.post_limit FROM social_media_db."user" u 
-                        JOIN social_media_db."subscription" s ON u.subscription_id = s.id WHERE u.email = '${email}' LIMIT 1
-                    )`;
-        },
         GET_ACTIVITY_OF: (user_internal_id: number): string => {
             return `SELECT 
                         p."text" AS "post_text",
@@ -301,7 +295,22 @@ export const QUERIES = {
                     FROM social_media_db.post p 
                     JOIN social_media_db.post_category pc ON pc.id = p.post_category_id 
                     WHERE user_internal_id = ${user_internal_id};`;
-        }
+        },
+        GET_ALL_BY_SUBSCRIPTION_AND_ORDERED: (email: string): string => {
+            return `SELECT p.id, p.post_category_id, p.user_internal_id, p."text", p.priority, p."timestamp" FROM social_media_db.post p
+                    ORDER BY priority DESC, "timestamp" DESC 
+                    LIMIT (
+                        SELECT s.post_limit FROM social_media_db."user" u 
+                        JOIN social_media_db."subscription" s ON u.subscription_id = s.id WHERE u.email = '${email}' LIMIT 1
+                    )`;
+        },
+        GET_RECOMMENDED: (email: string): string => {
+            return ALGORITHM.GET_RECOMMENDED(email);
+        },
+        GET_BULK: (email: string, recommendedPostsIds: number[]): string => {
+            return ALGORITHM.GET_BULK(email, recommendedPostsIds);
+        },
+
     },
     CATEGORY: {
         GET_ALL: (): string => {
@@ -594,24 +603,46 @@ export const QUERIES = {
         }
     },
     NOTIFICATION: {
-        GET_FOR_USER_ID: (user_internal_id: number): string => {
+        GET_FOR_USER_ID: (user_internal_id: number, isAdmin: boolean): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.NOTIFICATION.NAME;
-            return `SELECT * FROM ${schemaAndDatabaseName} WHERE user_internal_id = ${user_internal_id} OR user_internal_id = -1
+            if (isAdmin) {
+                return `SELECT * FROM ${schemaAndDatabaseName} WHERE receiver = ${user_internal_id} OR receiver = -1 OR receiver = -2 AND TYPE != 'message'
+                    ORDER BY timestamp DESC;`
+            }
+
+            return `SELECT * FROM ${schemaAndDatabaseName} WHERE receiver = ${user_internal_id} OR receiver = -1 AND TYPE != 'message'
                     ORDER BY timestamp DESC;`
         },
-        ADD_FOR_USER: (user_internal_id: number, message: string, type: string, info: string): string => {
+        GET_MESSAGES_FOR_USER_ID: (user_internal_id: number, isAdmin: boolean): string => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.NOTIFICATION.NAME
+            if (isAdmin) {
+                return `SELECT * FROM ${schemaAndDatabaseName} WHERE (receiver = ${user_internal_id} OR receiver = -2 OR sender = ${user_internal_id}) AND TYPE = 'message' ORDER BY timestamp DESC;`
+            }
+            return `SELECT * FROM ${schemaAndDatabaseName} WHERE (receiver = ${user_internal_id} OR sender = ${user_internal_id}) AND TYPE = 'message' ORDER BY timestamp DESC;`
+        },
+        ADD_FOR_USER: (user_internal_id: number, sender: number, message: string, type: string, info: string): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.NOTIFICATION.NAME;
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.NOTIFICATION.COLUMNS.join(', ')
-            let goodInfo = info == null ? "NULL" : `'${info}'`
-            return `INSERT INTO ${schemaAndDatabaseName} (${columns} VALUES (${user_internal_id}, CURRENT_TIMESTAMP, '${message}', '${type}', ${goodInfo}))`
+            let goodInfo = (info === null || info === undefined) ? "NULL" : `'${info}'`
+            return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${user_internal_id}, ${sender}, CURRENT_TIMESTAMP, '${message}', '${type}', ${goodInfo})`
         },
         ADD_ALERT_FOR_ALL: (message: string, info: string) => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.NOTIFICATION.NAME;
             let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.NOTIFICATION.COLUMNS.join(', ')
-            let goodInfo = info == null ? `NULL` : `'${info}'`
+            let goodInfo = (info === null || info === undefined) ? `NULL` : `'${info}'`
             let user_internal_id = -1
             let type = 'alert'
-            return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${user_internal_id}, CURRENT_TIMESTAMP, '${message}', '${type}', ${goodInfo})`
+            return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES (${user_internal_id}, -3, CURRENT_TIMESTAMP, '${message}', '${type}', ${goodInfo})`
+        },
+        ADD_FOR_POST_ID: (postId: number, reactorName: string, type: string, info: string | null): string => {
+            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.NOTIFICATION.NAME;
+            let columns = SCHEMAS.SOCIAL_MEDIA_DB.TABLES.NOTIFICATION.COLUMNS.join(', ')
+            let goodInfo = (info === null || info === undefined) ? "NULL" : `'${info}'`
+
+            return `INSERT INTO ${schemaAndDatabaseName} (${columns}) VALUES ((SELECT receiver from social_media_db.post p where p.id = ${postId}), CURRENT_TIMESTAMP, '${reactorName} liked one of your posts', '${type}', ${goodInfo});
+            INSERT INTO ${schemaAndDatabaseName} (${columns})
+            select r.user_internal_id, CURRENT_TIMESTAMP, '${reactorName} liked a post you also liked', 'general', NULL from social_media_db.reaction r where r.post_id = ${postId};
+            `
         }
     },
 };

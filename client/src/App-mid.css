@@ -1,0 +1,7 @@
+@media only screen and (max-width: 770px) {
+    .MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-6 {
+        display: none;
+    }
+
+
+}

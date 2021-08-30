@@ -74,7 +74,6 @@ class SmAdminPosts extends Component {
     }
 
     handleChipClick = (inputTag) => {
-        console.log(inputTag)
 
         let categoryIndex = this.state.tags.findIndex(tag => tag.id == inputTag.id);
         let tagPriorityOrder = this.state.tagPriorityOrder;
@@ -99,7 +98,6 @@ class SmAdminPosts extends Component {
             ...this.state.tags.slice(categoryIndex + 1),
         ]
 
-        console.log('tagPriorityOrder', tagPriorityOrder)
         this.setState({
             tags: nextTags,
             tagPriorityOrder: tagPriorityOrder
@@ -198,7 +196,6 @@ class SmAdminPosts extends Component {
 
         CommunicationService.createPost(body)
             .then((res) => {
-                console.log('createPost', res)
                 this.handleAlertShow("Success", this.state.alert.types.SUCCESS);
                 this.clearObject()
             })

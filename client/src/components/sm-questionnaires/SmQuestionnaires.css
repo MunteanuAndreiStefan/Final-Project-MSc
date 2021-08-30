@@ -24,8 +24,9 @@
 
 .sm-questionnaires .sm-questionnaires-left-panel {
     width: 30%;
+    min-width: 500px;
     overflow-y: scroll;
-    height: 500px;
+    height: auto;
     padding: 10px;
 }
 

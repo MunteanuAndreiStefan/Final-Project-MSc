@@ -101,6 +101,11 @@ export async function currentUserIsAdmin(email: string) {
     return currentUser.type == 'ADMIN';
 }
 
+export async function currentUserIdIsAdmin(userId: number): Promise<boolean> {
+    const currentUser = await getById(userId)
+    return currentUser.type === 'ADMIN';
+}
+
 export async function getAllUsersInShallowForm(email: string) {
     if (!(await currentUserIsAdmin(email))) {
         return {

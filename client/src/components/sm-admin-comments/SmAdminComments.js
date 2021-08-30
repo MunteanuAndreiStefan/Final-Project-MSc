@@ -45,7 +45,6 @@ class SmAdminComments extends Component {
     approveComment = (commentId) => (event) => {
         CommunicationService.approveComment(commentId)
             .then((res) => {
-                console.log(res);
                 this.removeCommentFromState(commentId);
                 this.handleAlertShow(res.message, res.severity);
             })
@@ -55,7 +54,6 @@ class SmAdminComments extends Component {
     deleteComment = (commentId) => (event) => {
         CommunicationService.deleteComment(commentId)
             .then((res) => {
-                console.log(res);
                 this.removeCommentFromState(commentId);
                 this.handleAlertShow(res.message, res.severity);
             })

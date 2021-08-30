@@ -46,6 +46,10 @@
     margin-bottom: 20px !important;
 }
 
+.sm-admin-posts-right-panel .sm-admin-row .right-panel-html .MuiFormControl-root {
+    width: 100%;
+}
+
 .right-panel-html {
     margin: 10px 0 !important;
 }
@@ -59,7 +63,7 @@
 }
 
 .sm-admin-posts-panel-row.right-panel-html .MuiOutlinedInput-multiline{
-    width: 600px;
+    width: 100%;
 }
 
 .upload-file-panel {

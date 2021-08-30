@@ -17,6 +17,7 @@ import {ChatBubble} from "@material-ui/icons";
 import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import * as CommunicationService from "../../services/CommunicationService";
+import SmAlert from "../sm-alert/SmAlert";
 
 class SmQuestionnaire extends Component {
     constructor(props) {
@@ -28,22 +29,52 @@ class SmQuestionnaire extends Component {
         });
 
         this.state = {
+            alert: {
+                types: {
+                    SUCCESS: 'success',
+                    ERROR: 'error',
+                },
+                open: false,
+                severity: '',
+                message: ''
+            },
             questionnaire: props.questionnaire,
             questionToAnswerMap: questionToAnswerMap,
             anchorElement: null
         };
     }
 
+    handleAlertClose = () => {
+        this.setState({
+            alert: {
+                ...this.state.alert,
+                open: false
+            }
+        });
+    }
+
+    handleAlertShow = (message, severity) => {
+        this.setState({
+            alert: {
+                ...this.state.alert,
+                open: true,
+                severity: severity,
+                message: message
+            }
+        });
+    }
+
     __handleQuestionnaireReport = (event) => {
         let values = Object.values(this.state.questionToAnswerMap);
-        console.log('__handleQuestionnaireReport', JSON.stringify(this.state.questionToAnswerMap));
         if(values.filter(x => x.length === 0).length > 0) {
             alert('Complete the quiz.')
         } else {
             CommunicationService.answer(this.state.questionnaire.id, this.state.questionToAnswerMap)
                 .then((res) => {
-
-                    console.log('answer', res)
+                    if (res.statusCode == 200) {
+                        return this.handleAlertShow(JSON.stringify(res.body), this.state.alert.types.SUCCESS);
+                    }
+                    return this.handleAlertShow(JSON.stringify(res.body), this.state.alert.types.ERROR);
                 })
                 .catch(console.error)
         }
@@ -91,6 +122,8 @@ class SmQuestionnaire extends Component {
             </IconButton> : null;
         return (
             <div>
+                <SmAlert alert={this.state.alert} handleClose={this.handleAlertClose}/>
+
                 <Card>
                     <CardHeader
                         action={questionnaireOptionButton}

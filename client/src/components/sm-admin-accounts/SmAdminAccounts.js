@@ -52,7 +52,6 @@ class SmAdminAccounts extends Component {
     async componentDidMount() {
         CommunicationService.getAllShallow()
             .then((res) => {
-                console.log(res);
                 this.setState({
                     users: res.map((user) => enhanceUser(user))
                 });

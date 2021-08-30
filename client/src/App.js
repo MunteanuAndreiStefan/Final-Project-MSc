@@ -1,43 +1,20 @@
 import React, {Component} from 'react';
-import {withRouter} from 'react-router-dom';
-import SmLeftPanel from './components/sm-left-panel/SmLeftPanel'
-import {Nav, Navbar, NavItem} from 'react-bootstrap';
-import Routes from './Routes';
+import {BrowserRouter as Router, Link, Route, Switch, withRouter} from 'react-router-dom';
 import {Auth} from 'aws-amplify';
-import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import './App.css';
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
+import './App-min.css';
+import './App-mid.css';
 import SmPostFeed from "./components/sm-post-feed/SmPostFeed";
 import Constants from "./Constants";
-
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from "react-router-dom";
 import SmQuestionnaires from "./components/sm-questionnaires/SmQuestionnaires";
-import SmQuestionnaire from "./components/sm-questionnaire/SmQuestionnaire";
 import SmNavbar from "./components/sm-navbar/SmNavbar";
-import SmSidebar from "./components/sm-sidebar/SmSidebar";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import SmProfile from "./components/sm-profile/SmProfile";
 import {enhanceUser} from "./services/UserService";
 import * as CommunicationService from "./services/CommunicationService";
-import Home from "./containers/Home";
 import SmAuthScreen from "./components/sm-auth-screen/SmAuthScreen";
 import SmAdminPanel from "./components/sm-admin-panel/SmAdminPanel";
 import SmExperience from "./components/sm-experience/SmExperience";
+import SMMessagesPage from "./components/sm-messages-page/SmMessagesPage";
 
 function Feed(props) {
     return <SmPostFeed
@@ -74,6 +51,7 @@ function Profile(props) {
                       subscriptions={props.state.subscriptions}
                       userWasNotInit={false}
                       changeUser={props.changeUser}
+                      initUser={props.initUser}
     ></SmProfile>;
 }
 
@@ -99,7 +77,6 @@ class App extends Component {
 
     async isAuth() {
         const result = await Auth.currentAuthenticatedUser().then(user => {
-            console.log(user);
             return true;
         }).catch(e => {
             console.log(e);
@@ -184,7 +161,6 @@ class App extends Component {
     _questionnaireClick = (event) => {
         CommunicationService.getQuestionnaires()
             .then((res) => {
-                debugger
                 this.setState({
                     answeredQuestionnaireNumber: res.answeredQuestionnaireNumber,
                     questionnaires: res.questionnaires
@@ -194,7 +170,6 @@ class App extends Component {
     }
 
     _adminClick = (event) => {
-        console.log('Admin click')
     }
 
     changeUser = (user) => {
@@ -232,6 +207,8 @@ class App extends Component {
                               changeUser={this.changeUser}
                               initUser={this.initUser}
             ></SmProfile>;
+        } else if (this.state.currentUser === {}) {
+            return <SmAuthScreen text={"Please wait ..."}></SmAuthScreen>;
         } else {
             const childProps = {
                 isAuthenticated: this.state.isAuthenticated,
@@ -243,6 +220,7 @@ class App extends Component {
             links.push(<Link onClick={this._questionnaireClick} to="/questionnaires">Questionnaires</Link>)
             links.push(<Link onClick={this._experienceFeedClick} to="/experiences">Experiences</Link>)
             links.push(<Link to="/about">About</Link>)
+            links.push(<Link to="/messages">Messages</Link>)
 
             let routes = [];
             routes.push(<Route path="/feed">
@@ -258,8 +236,12 @@ class App extends Component {
                 <About/>
             </Route>);
             routes.push(<Route path="/profile">
-                <Profile state={this.state} changeUser={this.changeUser}/>
+                <Profile state={this.state} changeUser={this.changeUser} initUser={this.initUser}/>
             </Route>);
+
+            routes.push(<Route path="/messages">
+                <SMMessagesPage state={this.state}/>
+            </Route>)
 
             if (this.state.currentUser.type === 'ADMIN') {
                 links.push(<Link onClick={this._adminClick} to="/admin">Admin Panel</Link>)

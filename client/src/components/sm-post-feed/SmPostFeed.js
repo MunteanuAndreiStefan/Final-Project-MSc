@@ -18,7 +18,6 @@ class SmPostFeed extends Component {
     }
 
     __handleDeletePost(event, postId) {
-        console.log('__handleDeletePost', event, postId)
     }
 
     _handleSearchFieldChange = (event) => {
@@ -32,7 +31,7 @@ class SmPostFeed extends Component {
     }
 
     getMappedPosts = () => {
-        if (this.posts.length === 0 || this.posts.length !== this.props.posts.length) {
+        if (this.posts && this.posts.length === 0 || this.posts.length !== this.props.posts.length) {
             this.posts = this.props.posts.map(post => <SmPost key={"sm-post-" + post.id}
                                                               post={post}
                                                               currentUser={this.props.currentUser}

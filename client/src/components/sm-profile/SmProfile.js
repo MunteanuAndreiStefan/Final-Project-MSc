@@ -36,12 +36,15 @@ class SmProfile extends Component {
     }
 
     __handleContentChange = (event) => {
+        debugger
         let currentUser = this.props.currentUser;
         let keys = Object.keys(currentUser);
         for (let i = 0; i < keys.length; i++) {
             let value = currentUser[keys[i]];
-            if (value === undefined || value === null || value.length < 3) {
-                console.log('Field ' + keys[i] + ' does not match contraints.');
+            if (keys[i] == 'about_me') {
+                break;
+            }
+            if (value === undefined || value === null) {
                 return;
             }
         }

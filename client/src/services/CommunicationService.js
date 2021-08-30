@@ -21,7 +21,6 @@ async function doRequest(method = 'GET', url = "/", data = {}) {
     }
 
     let response = await fetch(url, fetchParams);
-    console.log(response);
     return response.json();
 }
 
@@ -188,7 +187,17 @@ export async function getNotifications() {
     return doGet(apiURL);
 }
 
+export async function getMessages() {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.NOTIFICATIONS.GET_ALL_MESSAGES;
+    return doGet(apiURL);
+}
+
 export async function sendAlert(message) {
     let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.NOTIFICATIONS.ADD_ALERT;
+    return doPost(apiURL, {message});
+}
+
+export async function sendAdminMessage(message) {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.NOTIFICATIONS.ADMIN_MESSAGE;
     return doPost(apiURL, {message});
 }

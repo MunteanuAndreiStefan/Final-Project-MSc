@@ -60,7 +60,10 @@ Resources:
     Properties:
       Handler: handler.hello
       Runtime: nodejs10.x
-      CodeUri: s3://cf-templates-1j38krxlf5m0l-eu-west-1/911272cb4584145d391e9985a0c8d79d
+      CodeUri: s3://cf-templates-1j38krxlf5m0l-eu-west-1/087fbc5c9b5d5e91f5e7eaf4df85afbb
+      Policies:
+      - AmazonS3FullAccess
+      - AWSLambdaBasicExecutionRole
       Environment:
         Variables:
           DB_HOST:
@@ -88,8 +91,15 @@ Resources:
           Properties:
             RestApiId:
               Ref: SocialMediaAPI
-            Path: /hello
-            Method: GET
+            Path: /
+            Method: ANY
+        ProxyApiGreedy:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: SocialMediaAPI
+            Path: /{proxy+}
+            Method: ANY
   SocialMediaCognitoUserPool:
     Type: AWS::Cognito::UserPool
     Properties:
@@ -127,9 +137,9 @@ Resources:
       - email
       - openid
       CallbackURLs:
-      - http://localhost:3000/
+      - https://social-media-app-hosting-bucket.s3-eu-west-1.amazonaws.com/index.html
       LogoutURLs:
-      - http://localhost:3000/
+      - https://social-media-app-hosting-bucket.s3-eu-west-1.amazonaws.com/index.html
       SupportedIdentityProviders:
       - COGNITO
       UserPoolId:
@@ -154,6 +164,59 @@ Resources:
       Principal: cognito-idp.amazonaws.com
       SourceArn:
         Fn::Sub: arn:${AWS::Partition}:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${SocialMediaCognitoUserPool}
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+      BucketName: social-media-app-hosting-bucket
+    DeletionPolicy: Retain
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      PolicyDocument:
+        Id: MyPolicy
+        Version: 2012-10-17
+        Statement:
+        - Sid: PublicReadForGetBucketObjects
+          Effect: Allow
+          Principal: '*'
+          Action: s3:GetObject
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:s3:::'
+              - Ref: S3Bucket
+              - /*
+      Bucket:
+        Ref: S3Bucket
+  MainS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicRead
+      BucketName: social-media-app-main-bucket
+    DeletionPolicy: Retain
+  MainBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      PolicyDocument:
+        Id: MainMyPolicy
+        Version: 2012-10-17
+        Statement:
+        - Sid: PublicReadForGetBucketObjects
+          Effect: Allow
+          Principal: '*'
+          Action: s3:GetObject
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:s3:::'
+              - Ref: MainS3Bucket
+              - /*
+      Bucket:
+        Ref: MainS3Bucket
 Outputs:
   Region:
     Description: Region
@@ -175,3 +238,18 @@ Outputs:
     Description: Cognito User Pool Client Id
     Value:
       Ref: CognitoUserPoolClient
+  WebsiteURL:
+    Value:
+      Fn::GetAtt:
+      - S3Bucket
+      - WebsiteURL
+    Description: URL for website hosted on S3
+  S3BucketSecureURL:
+    Value:
+      Fn::Join:
+      - ''
+      - - https://
+        - Fn::GetAtt:
+          - S3Bucket
+          - DomainName
+    Description: Name of S3 bucket to hold website content

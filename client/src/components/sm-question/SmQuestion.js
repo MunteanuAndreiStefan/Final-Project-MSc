@@ -52,7 +52,6 @@ class SmQuestion extends Component {
     render() {
         let question = this.props.question;
         let answerList = this.state.question.possibleAnswers.map((answer, index) => {
-            console.log(answer, question);
             return <SmAnswer answer={answer} type={question.question_type} key={index}
                       selectedAnswerIds={this.state.selectedAnswerIds}
                       handleValueChange={this.__handleValueChange}

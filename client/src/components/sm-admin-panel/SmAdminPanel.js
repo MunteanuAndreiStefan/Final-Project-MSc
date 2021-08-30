@@ -94,40 +94,40 @@ class SmAdminPanel extends Component {
                         aria-label="scrollable force tabs example"
                         centered
                     >
-                        <Tab label="General" icon={<BuildIcon />}/>
-                        <Tab label="Statistics" icon={<PieChartIcon />}/>
                         <Tab label="Post Creator" icon={<AllInboxIcon />}/>
                         <Tab label="Questionnaire Creator" icon={<ContactSupportIcon />}/>
                         <Tab label="Experience Creator" icon={<GroupWorkIcon />}/>
                         <Tab label="Comment Manager" icon={<ChatBubbleIcon />}/>
                         <Tab label="Accounts" icon={<SupervisorAccountIcon />}/>
                         <Tab label="Messages" icon={<ChatIcon />}/>
+                        {/*<Tab label="General" icon={<BuildIcon />}/>*/}
+                        {/*<Tab label="Statistics" icon={<PieChartIcon />}/>*/}
                     </Tabs>
                 </AppBar>
                 <TabPanel value={this.state.value} index={0}>
-                    <SmAdminGeneral></SmAdminGeneral>
-                </TabPanel>
-                <TabPanel value={this.state.value} index={1}>
-                    <SmAdminStatistics></SmAdminStatistics>
-                </TabPanel>
-                <TabPanel value={this.state.value} index={2}>
                     <SmAdminPosts></SmAdminPosts>
                 </TabPanel>
-                <TabPanel value={this.state.value} index={3}>
+                <TabPanel value={this.state.value} index={1}>
                     <SmAdminQuestionnaires></SmAdminQuestionnaires>
                 </TabPanel>
-                <TabPanel value={this.state.value} index={4}>
+                <TabPanel value={this.state.value} index={2}>
                     <SmAdminExperiences></SmAdminExperiences>
                 </TabPanel>
-                <TabPanel value={this.state.value} index={5}>
+                <TabPanel value={this.state.value} index={3}>
                     <SmAdminComments></SmAdminComments>
                 </TabPanel>
-                <TabPanel value={this.state.value} index={6}>
+                <TabPanel value={this.state.value} index={4}>
                     <SmAdminAccounts></SmAdminAccounts>
                 </TabPanel>
-                <TabPanel value={this.state.value} index={7}>
+                <TabPanel value={this.state.value} index={5}>
                     <SmAdminMessages></SmAdminMessages>
                 </TabPanel>
+                {/*<TabPanel value={this.state.value} index={6}>*/}
+                {/*    <SmAdminGeneral></SmAdminGeneral>*/}
+                {/*</TabPanel>*/}
+                {/*<TabPanel value={this.state.value} index={7}>*/}
+                {/*    <SmAdminStatistics></SmAdminStatistics>*/}
+                {/*</TabPanel>*/}
             </div>
         );
     }

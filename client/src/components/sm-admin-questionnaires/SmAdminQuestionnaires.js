@@ -286,7 +286,6 @@ class SmAdminQuestionnaires extends Component {
             questions: questionsForSend
         }
         this.verifyBodyAndSend(toBeSentObject);
-        console.log('questionnaireCreateOnClick', toBeSentObject)
     }
 
     tagsAreValid = (tags) => {
@@ -321,7 +320,6 @@ class SmAdminQuestionnaires extends Component {
 
         CommunicationService.createQuestionnaire(body)
             .then((res) => {
-                console.log('createQuestionnaire', res)
                 this.handleAlertShow("Success", this.state.alert.types.SUCCESS);
                 //this.clearObject()
             })
