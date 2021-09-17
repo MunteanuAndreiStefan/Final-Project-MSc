@@ -76,18 +76,21 @@ class SmAdminMessages extends Component {
     async componentDidMount() {
         CommunicationService.getMessages()
             .then((messages) => {
+                debugger
                 let usersWithMessages = {};
                 let users = [];
                 messages.forEach(m => {
                     let dominantId = m.receiver > 0 ? m.receiver : m.sender;
                     if (usersWithMessages[dominantId] === undefined) {
+                        let fullName = m.first_name + ' ' + m.last_name;
                         usersWithMessages[dominantId] = {
-                            email: m.info,
+                            name: fullName,
+                            email: m.email,
                             messages: []
                         }
                         users.push({
                             id: dominantId,
-                            email: m.info
+                            email: fullName + ' (' + m.email + ')'
                         })
                     }
                     usersWithMessages[dominantId].messages.push(m);
@@ -154,7 +157,8 @@ class SmAdminMessages extends Component {
                         aria-controls="additional-actions1-content"
                         id="additional-actions1-header"
                     >
-                        <Typography variant="h5">{user.email}</Typography>
+                        <Typography variant="h5">{user.name}</Typography>
+                        <Typography variant="h6">{user.email}</Typography>
                     </AccordionSummary>
                     <AccordionDetails className={"sm-row"}>
                         <div className={"sm-left-align"}>

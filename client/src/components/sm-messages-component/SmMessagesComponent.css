@@ -26,3 +26,33 @@
 .interactionable .MuiFormControl-root {
     width: 180px;
 }
+
+ul.MuiList-root.root.MuiList-padding,
+ol.MuiList-root.root.MuiList-padding {
+    flex-direction: column-reverse;
+    display: flex;
+}
+
+.scrollableList ul {
+    max-width: 350px;
+}
+
+.scrollableList .isNotMeLi,
+.scrollableList .isMeLi {
+    margin-bottom: 3px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 10px;
+    width: 95%;
+}
+
+.scrollableList .isNotMeLi {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.scrollableList .isMeLi {
+    background-color: rgb(37, 150, 190);
+    color: white !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+}

@@ -42,7 +42,8 @@ const API = {
             GET_ALL: '/notifications',
             GET_ALL_MESSAGES: '/notifications/messages',
             ADD_ALERT: '/notifications/addAlert',
-            ADMIN_MESSAGE: '/notifications/addMessage'
+            ADMIN_MESSAGE: '/notifications/addMessageForAdmin',
+            USER_MESSAGE: '/notifications/addMessageForUserAsAdmin'
         }
     }
 }

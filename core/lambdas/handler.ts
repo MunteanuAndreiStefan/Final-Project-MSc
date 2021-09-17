@@ -279,6 +279,34 @@ export async function addNotificationForUser(event: APIGatewayProxyEvent, params
     }
 }
 
+
+export async function addMessageForUserAsAdmin(event: APIGatewayProxyEvent, params: any, body: any): Promise<APIGatewayProxyResult> {
+    try {
+        let user = await UserService.getCurrentUser(params.authorization.email);
+        if (user.type != 'ADMIN') {
+            return {
+                statusCode: 403,
+                body: "User has no right to call this API."
+            };
+        }
+        let message = body.message;
+        await NotificationsService.addNotification(message.receiver, -2, message.text, 'message', params.authorization.email);
+    } catch (err) {
+        const typedError = err as NotificationsService.NotificationError
+
+        return {
+            statusCode: typedError.status ?? 500,
+            body: typedError.error ?? "Something went wrong"
+        }
+    }
+
+    return {
+        statusCode: 201,
+        body: '{}'
+    }
+}
+
+
 export async function addAdminMessage(event: APIGatewayProxyEvent, params: any, body: any): Promise<APIGatewayProxyResult> {
     try {
         let user = await UserService.getCurrentUser(params.authorization.email);

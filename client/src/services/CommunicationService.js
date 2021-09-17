@@ -201,3 +201,8 @@ export async function sendAdminMessage(message) {
     let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.NOTIFICATIONS.ADMIN_MESSAGE;
     return doPost(apiURL, {message});
 }
+
+export async function sendUserMessage(message) {
+    let apiURL = Constants.API.HOST_AND_PORT + Constants.API.PATHS.NOTIFICATIONS.USER_MESSAGE;
+    return doPost(apiURL, {message});
+}

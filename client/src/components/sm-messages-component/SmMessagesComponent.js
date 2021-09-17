@@ -7,18 +7,18 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
 import Box from "@material-ui/core/Box";
 import SmAlert from "../sm-alert/SmAlert";
 import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import SendIcon from '@material-ui/icons/Send';
+import { deepOrange, deepPurple } from '@mui/material/colors';
+
 
 class SmMessagesComponent extends Component {
     constructor(props) {
         super(props);
-
+        debugger
         this.state = {
             messages: this.props.messages,
             userInternalId: this.props.userInternalId,
@@ -43,27 +43,32 @@ class SmMessagesComponent extends Component {
 
     buttonClick = () => {
         debugger
-        // CommunicationService.sendAdminMessage(this.state.alertText)
-        //     .then(() => {
-        //         let messages = this.state.messages;
-        //         messages.push({
-        //             info: '',
-        //             receiver: -2,
-        //             message: this.state.alertText,
-        //             timestamp: 'Just now ...',
-        //         })
-        //         this.setState({
-        //             messages: messages
-        //         })
-        //         this.setState({
-        //             alertText: ''
-        //         });
-        //         this.handleAlertShow("Message successfully sent", this.state.alert.types.SUCCESS);
-        //     })
-        //     .catch(err => {
-        //         this.handleAlertShow("Error sending the message", this.state.alert.types.ERROR);
-        //     })
-
+        CommunicationService.sendUserMessage({
+            receiver: this.state.userInternalId,
+            text: this.state.alertText
+        })
+            .then(() => {
+                let messages = [
+                    {
+                        info: '',
+                        sender: -2,
+                        receiver: this.state.userInternalId,
+                        message: this.state.alertText,
+                        timestamp: 'Just now ...',
+                    },
+                    ...this.state.messages
+                ];
+                this.setState({
+                    messages: messages
+                })
+                this.setState({
+                    alertText: ''
+                });
+                this.handleAlertShow("Message successfully sent", this.state.alert.types.SUCCESS);
+            })
+            .catch(err => {
+                this.handleAlertShow("Error sending the message", this.state.alert.types.ERROR);
+            })
     }
 
     handleAlertClose = () => {
@@ -89,15 +94,23 @@ class SmMessagesComponent extends Component {
     getListItemFromMessage(message) {
         let left = null;
         let right = null;
-        let info = <ListItemAvatar>
-            <Avatar alt={message.info}/>
-        </ListItemAvatar>;
-        if (message.receiver < 0) {
-            right = info;
-        } else {
-            left = info;
+        let avatarInitials = '';
+        if (message.first_name && message.last_name) {
+            avatarInitials = message.first_name[0] + message.last_name[0];
         }
-        return <ListItem>
+        let className = '';
+        if (message.receiver < 0) {
+            left = <ListItemAvatar>
+                <Avatar sx={{ bgcolor: deepOrange[500] }} alt={avatarInitials}>{avatarInitials}</Avatar>
+            </ListItemAvatar>;
+            className = 'isNotMeLi';
+        } else {
+            right = <ListItemAvatar>
+                <Avatar alt={avatarInitials}>A</Avatar>
+            </ListItemAvatar>;
+            className = 'isMeLi';
+        }
+        return <ListItem className={className}>
             {left}
             <ListItemText
                 primary={message.message}
@@ -122,7 +135,7 @@ class SmMessagesComponent extends Component {
                     <TextField id="standard-basic" label="Your message ..." onChange={this.updateAlertText}
                                value={this.state.alertText}/>
                     <IconButton onClick={this.buttonClick}>
-                        <SendIcon fontSize="large" />
+                        <SendIcon fontSize="large"/>
                     </IconButton>
                 </div>
             </Box>

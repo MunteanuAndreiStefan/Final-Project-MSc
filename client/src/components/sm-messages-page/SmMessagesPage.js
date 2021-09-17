@@ -14,6 +14,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import SendIcon from '@material-ui/icons/Send';
+import { deepOrange, deepPurple } from '@mui/material/colors';
 
 class SmMessagesPage extends Component {
     constructor(props) {
@@ -37,6 +38,7 @@ class SmMessagesPage extends Component {
     async componentDidMount() {
         CommunicationService.getMessages()
             .then((messages) => {
+                debugger
                 this.setState({
                     messages: messages
                 })
@@ -53,13 +55,15 @@ class SmMessagesPage extends Component {
     buttonClick = () => {
         CommunicationService.sendAdminMessage(this.state.alertText)
             .then(() => {
-                let messages = this.state.messages;
-                messages.push({
-                    info: '',
-                    receiver: -2,
-                    message: this.state.alertText,
-                    timestamp: 'Just now ...',
-                })
+                let messages = [
+                    {
+                        info: '',
+                        receiver: -2,
+                        message: this.state.alertText,
+                        timestamp: 'Just now ...',
+                    },
+                    ...this.state.messages
+                ];
                 this.setState({
                     messages: messages
                 })
@@ -97,15 +101,23 @@ class SmMessagesPage extends Component {
     getListItemFromMessage(message) {
         let left = null;
         let right = null;
-        let info = <ListItemAvatar>
-            <Avatar alt={message.info}/>
-        </ListItemAvatar>;
-        if (message.receiver < 0) {
-            right = info;
-        } else {
-            left = info;
+        let avatarInitials = '';
+        if (message.first_name && message.last_name) {
+            avatarInitials = message.first_name[0] + message.last_name[0];
         }
-        return <ListItem>
+        let className = '';
+        if (message.receiver < 0) {
+            right = <ListItemAvatar>
+                <Avatar  sx={{ bgcolor: deepPurple[500] }} alt={avatarInitials}>{avatarInitials}</Avatar>
+            </ListItemAvatar>;
+            className = 'isNotMeLi';
+        } else {
+            left = <ListItemAvatar>
+                <Avatar alt={avatarInitials}>A</Avatar>
+            </ListItemAvatar>;
+            className = 'isMeLi';
+        }
+        return <ListItem className={className}>
             {left}
             <ListItemText
                 primary={message.message}

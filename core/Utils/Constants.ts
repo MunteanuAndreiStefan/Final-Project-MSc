@@ -614,11 +614,31 @@ export const QUERIES = {
                     ORDER BY timestamp DESC;`
         },
         GET_MESSAGES_FOR_USER_ID: (user_internal_id: number, isAdmin: boolean): string => {
-            let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.NOTIFICATION.NAME
+            let schemaAndNotificationsDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.NOTIFICATION.NAME
+            let schemaAndUserDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.USER.NAME
+            let extraCondition = '';
+
             if (isAdmin) {
-                return `SELECT * FROM ${schemaAndDatabaseName} WHERE (receiver = ${user_internal_id} OR receiver = -2 OR sender = ${user_internal_id}) AND TYPE = 'message' ORDER BY timestamp DESC;`
+                extraCondition = 'OR n.receiver = -2 OR n.sender = -2';
             }
-            return `SELECT * FROM ${schemaAndDatabaseName} WHERE (receiver = ${user_internal_id} OR sender = ${user_internal_id}) AND TYPE = 'message' ORDER BY timestamp DESC;`
+            return `SELECT u.first_name, u.last_name, u.email, n.*
+                    FROM ${schemaAndNotificationsDatabaseName} n
+                    JOIN ${schemaAndUserDatabaseName} u ON u.id = (
+                        CASE WHEN(n.receiver = ${user_internal_id}) 
+                             THEN n.receiver
+                             ELSE 
+                                CASE WHEN(n.receiver > 0) 
+                                    THEN n.receiver
+                                    ELSE n.sender
+                                END
+                        END
+                    )
+                    WHERE 
+                    (
+                        n.receiver = ${user_internal_id} OR n.sender = ${user_internal_id} 
+                        ${extraCondition}
+                    ) 
+                    AND n.type = 'message' ORDER BY n.timestamp ASC;`
         },
         ADD_FOR_USER: (user_internal_id: number, sender: number, message: string, type: string, info: string): string => {
             let schemaAndDatabaseName = SCHEMAS.SOCIAL_MEDIA_DB.NAME + '.' + SCHEMAS.SOCIAL_MEDIA_DB.TABLES.NOTIFICATION.NAME;
