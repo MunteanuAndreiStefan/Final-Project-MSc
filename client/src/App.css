@@ -33,9 +33,14 @@
 }
 
 .sm-dashboard {
-	width: 85%;
+	width: max-content;
+	min-width: 1000px;
 	padding: 25px;
-	overflow-y: scroll;
+}
+
+.sm-dashboard>div {
+	overflow-y: auto;
+	width: auto;
 }
 
 .sm-sidebar, .sm-dashboard {
@@ -79,6 +84,33 @@
 .MuiPaper-root.MuiCard-root.card-root.MuiPaper-elevation1.MuiPaper-rounded {
 	max-width: 100%;
 }
+
 .MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-6 {
 	display: none;
 }
+
+.MuiChip-outlinedPrimary {
+	color: white !important;
+	border: 1px solid white !important;
+}
+
+.notification-icon-wrapper>button {
+	color: white !important;
+}
+
+.top-grid {
+	display: contents !important;
+}
+
+#primary-search-account-menu > div.MuiPaper-root.MuiMenu-paper.MuiPopover-paper.MuiPaper-elevation8.MuiPaper-rounded {
+	top: 54px !important;
+}
+
+.MuiChip-root .MuiChip-avatarColorPrimary {
+	background-color: greenyellow !important;
+	color: black !important;
+}
+
+/*#sm-notifications > div.MuiPaper-root.MuiMenu-paper.Component-paper-1.MuiPopover-paper.MuiPaper-elevation0.MuiPaper-rounded > ul > li {*/
+/*	background-color: #4caf50;*/
+/*}*/

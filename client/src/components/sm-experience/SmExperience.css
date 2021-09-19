@@ -25,7 +25,6 @@
 .sm-experience .sm-experience-left-panel {
     width: 30%;
     min-width: 300px;
-    overflow-y: scroll;
     height: auto;
     padding: 10px;
 }

@@ -1,0 +1,50 @@
+.root {
+    display: flex !important;
+}
+
+.appBar {
+    transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important;
+}
+
+.appBarShift {
+    width: calc(100% - 240px) !important;
+    transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important;
+    margin-left: 240px !important;
+}
+
+.title {
+    flex-grow: 1 !important;
+}
+
+.hide {
+    display: none !important;
+}
+
+.drawer {
+    width: 240px !important;
+    flex-shrink: 0 !important;
+}
+
+.drawerPaper {
+    width:  240px !important;
+}
+
+.drawerHeader {
+    display: flex !important;
+    align-items: center !important;
+    padding: 10px !important;
+    justify-content: flex-end !important;
+}
+
+.content {
+    display: flex;
+    width: auto;
+    height: auto;
+    margin-top: 60px;
+
+}
+
+.contentShift {
+    transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important;
+    margin-left: 240px !important;
+}
