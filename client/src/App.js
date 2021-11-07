@@ -41,6 +41,7 @@ import ContactSupportIcon from '@material-ui/icons/ContactSupport';
 import {ClearAll, DynamicFeed, Info, Message, Tune} from "@material-ui/icons";
 
 function Feed(props) {
+    debugger
     return <SmPostFeed
         currentUser={props.state.currentUser}
         totalPostCount={props.state.totalPostCount}
@@ -50,6 +51,8 @@ function Feed(props) {
 }
 
 function Questionnaires(props) {
+
+    debugger
     return <SmQuestionnaires
         isAdmin={props.state.currentUser.type === 'ADMIN'}
         questionnaires={props.state.questionnaires}
@@ -59,6 +62,7 @@ function Questionnaires(props) {
 }
 
 function Experiences(props) {
+    debugger
     return <SmExperience
         categories={props.state.categories}
         currentUser={props.state.currentUser}
@@ -71,6 +75,7 @@ function About() {
 }
 
 function Profile(props) {
+    debugger
     return <SmProfile currentUser={props.state.currentUser}
                       subscriptions={props.state.subscriptions}
                       userWasNotInit={false}
@@ -80,6 +85,7 @@ function Profile(props) {
 }
 
 function AdminPanel(props) {
+    debugger
     return <SmAdminPanel></SmAdminPanel>;
 }
 
@@ -441,7 +447,6 @@ class App extends Component {
         }
 
         let rightNavbarSide = null;
-        debugger
         if (this.state.userWasNotInit) {
             rightNavbarSide = <div>
                 <Button onClick={this.handleLogout}
@@ -463,6 +468,7 @@ class App extends Component {
                     style={{marginLeft: "10px"}}
                     avatar={<Avatar>{this.state.currentUser.avatar}</Avatar>}
                     label={this.state.currentUser.full_name}
+                    size="large"
                     edge="end"
                     aria-label="account of current user"
                     aria-controls={'primary-search-account-menu'}
@@ -531,7 +537,7 @@ class App extends Component {
                                 </IconButton>
                             </div>
                             <Divider/>
-                            <List>
+                            <List className={"sidebar-links"}>
                                 {links}
                             </List>
                         </Drawer>

@@ -1,16 +1,8 @@
-const PostController = require('./Controllers/QuestionnaireController')
-const DatabaseCreatorService = require('./Services/Database/DatabaseCreatorService')
+'use strict'
+const awsServerlessExpress = require('aws-serverless-express')
+const app = require('./coreForLocal/app');
+const server = awsServerlessExpress.createServer(app)
 
-exports.hello = async (event) => {
-  DatabaseCreatorService.createSchemaIfMissing((err, data) => {
-    console.log(err, data);
-  })
-  console.log(event);
-  return {
-    statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*'
-    },
-    body: JSON.stringify({message: PostController.data})
-  }
+exports.hello = (event, context) => {
+    return awsServerlessExpress.proxy(server, event, context, 'PROMISE').promise;
 }

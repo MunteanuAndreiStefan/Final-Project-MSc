@@ -18,7 +18,6 @@ import { deepOrange, deepPurple } from '@mui/material/colors';
 class SmMessagesComponent extends Component {
     constructor(props) {
         super(props);
-        debugger
         this.state = {
             messages: this.props.messages,
             userInternalId: this.props.userInternalId,
@@ -42,7 +41,6 @@ class SmMessagesComponent extends Component {
     }
 
     buttonClick = () => {
-        debugger
         CommunicationService.sendUserMessage({
             receiver: this.state.userInternalId,
             text: this.state.alertText

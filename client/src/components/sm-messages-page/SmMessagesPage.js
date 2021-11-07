@@ -38,7 +38,6 @@ class SmMessagesPage extends Component {
     async componentDidMount() {
         CommunicationService.getMessages()
             .then((messages) => {
-                debugger
                 this.setState({
                     messages: messages
                 })

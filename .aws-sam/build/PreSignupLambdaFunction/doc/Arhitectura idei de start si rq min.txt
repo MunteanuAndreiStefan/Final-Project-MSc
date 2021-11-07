@@ -24,7 +24,8 @@ Arhitectura de baza va fi compusa din:
 
 + Demo aplicatie
 
-Cine va vrea sa implementeze o retea o va implementa peste cea minimala. Vom avea in repo 2 branches una cu Engine curat si una cu implementarea pentru aplicatie. + Cele pentru dev/master
+Cine va vrea sa implementeze o retea o va implementa peste cea minimala.
+Vom avea in repo 2 branches una cu Engine curat si una cu implementarea pentru aplicatie. + Cele pentru dev/master
 Instantierea unei noi retele va fi facuta cu un nou cloud formation.
 
 -> Pipeline build CI/CD

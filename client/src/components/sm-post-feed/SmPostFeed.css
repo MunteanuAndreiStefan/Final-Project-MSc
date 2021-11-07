@@ -26,3 +26,10 @@
     display: flex;
     text-transform: capitalize;
 }
+
+#root > div > div > main > div.sm-dashboard > div > div > div.sm-questionnaires-right-panel > div > div
+{
+    overflow-y: auto;
+    height: auto;
+    max-height: 85vh;
+}

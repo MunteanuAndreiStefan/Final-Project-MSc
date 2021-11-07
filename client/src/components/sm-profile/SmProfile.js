@@ -36,7 +36,6 @@ class SmProfile extends Component {
     }
 
     __handleContentChange = (event) => {
-        debugger
         let currentUser = this.props.currentUser;
         let keys = Object.keys(currentUser);
         for (let i = 0; i < keys.length; i++) {
@@ -89,10 +88,10 @@ class SmProfile extends Component {
                 <CardContent>
                     <div style={{display: "block", height: 60}}>
                         <Typography variant="subtitle1" component="p">
-                            {subscription.post_limit === -1 ? 'Unlimited' : subscription.post_limit} Posts
+                            {subscription.post_limit === 99999999 ? 'Unlimited' : subscription.post_limit} Posts
                         </Typography>
                         <Typography variant="subtitle1" component="p">
-                            {subscription.questionnaire_limit === -1 ? 'Unlimited' : subscription.questionnaire_limit} Questionnaires
+                            {subscription.questionnaire_limit === 99999999 ? 'Unlimited' : subscription.questionnaire_limit} Questionnaires
                         </Typography>
                         {
                             subscription.comments_active ? <Typography variant="subtitle1" component="p">Comment capability</Typography> : null

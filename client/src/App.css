@@ -41,6 +41,7 @@
 .sm-dashboard>div {
 	overflow-y: auto;
 	width: auto;
+	max-width: 80vw;
 }
 
 .sm-sidebar, .sm-dashboard {
@@ -114,3 +115,29 @@
 /*#sm-notifications > div.MuiPaper-root.MuiMenu-paper.Component-paper-1.MuiPopover-paper.MuiPaper-elevation0.MuiPaper-rounded > ul > li {*/
 /*	background-color: #4caf50;*/
 /*}*/
+
+#root > div > div > header > div > div > div:nth-child(2) > div > div {
+	font-size: 15px;
+}
+
+.root {
+	width: 100%;
+}
+
+#scrollable-force-tabpanel-1,
+#scrollable-force-tabpanel-0>div{
+	overflow-y: auto;
+	height: 80vh;
+}
+
+.sidebar-links .MuiSvgIcon-root {
+	font-size: 1.5em;
+}
+
+.sidebar-links .MuiTypography-body1{
+	font-size: 1.7rem;
+}
+
+a .MuiListItemIcon-root {
+	font-size: 18px;
+}

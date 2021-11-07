@@ -76,7 +76,6 @@ class SmAdminMessages extends Component {
     async componentDidMount() {
         CommunicationService.getMessages()
             .then((messages) => {
-                debugger
                 let usersWithMessages = {};
                 let users = [];
                 messages.forEach(m => {

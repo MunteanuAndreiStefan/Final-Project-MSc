@@ -1,0 +1,20 @@
+@media only screen and (max-width: 1000px) {
+    body {
+    }
+
+    #search-field .MuiFormControl-root {
+        width: 55vw !important;
+    }
+
+    .sm-post-feed > .sm-line {
+        display: block !important;
+    }
+
+    .sm-dashboard {
+        padding: 5px !important;
+    }
+
+    .sm-dashboard>div {
+        overflow-y: initial !important;
+    }
+}

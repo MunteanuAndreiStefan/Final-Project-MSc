@@ -83,7 +83,7 @@ class SmAdminPanel extends Component {
     render() {
 
         return (
-            <div>
+            <div className={"admin-dashboard"}>
                 <AppBar position="static" color="default">
                     <Tabs
                         value={this.state.value}

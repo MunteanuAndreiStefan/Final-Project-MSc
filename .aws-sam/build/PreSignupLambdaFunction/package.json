@@ -5,17 +5,22 @@
   "main": "index.js",
   "config": {
     "stackName": "social-media-stack",
-    "bucketName": "cf-templates-1j38krxlf5m0l-eu-west-1"
+    "bucketName": "cf-templates-1j38krxlf5m0l-eu-west-1",
+    "hostingBucketName": "social-media-app-hosting-bucket"
   },
   "scripts": {
     "deploy": "sam build --region eu-west-1 && sam package --template-file template.yml --s3-bucket %npm_package_config_bucketName% --output-template-file packaged.yaml && sam deploy --region eu-west-1 --template-file packaged.yaml --stack-name %npm_package_config_stackName% --capabilities CAPABILITY_NAMED_IAM && aws cloudformation describe-stacks --stack-name %npm_package_config_stackName% --region eu-west-1 --query 'Stacks[].Outputs'",
-    "describe": "aws cloudformation describe-stacks --region eu-west-1 --stack-name %npm_package_config_stackName% --query 'Stacks[].Outputs'"
+    "deploy-linux": "sam build --region eu-west-1 && sam package --template-file template.yml --s3-bucket cf-templates-1j38krxlf5m0l-eu-west-1 --output-template-file packaged.yaml && sam deploy --region eu-west-1 --template-file packaged.yaml --stack-name social-media-stack --capabilities CAPABILITY_NAMED_IAM && aws cloudformation describe-stacks --stack-name social-media-stack --region eu-west-1 --query 'Stacks[].Outputs'",
+    "describe": "aws cloudformation describe-stacks --region eu-west-1 --stack-name %npm_package_config_stackName% --query 'Stacks[].Outputs'",
+    "deploy-client": "aws s3 cp ./client/build s3://%npm_package_config_hostingBucketName% --recursive",
+    "deploy-client-linux": "aws s3 cp ./client/build s3://social-media-app-hosting-bucket --recursive"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "aws-amplify": "^3.0.21",
-    "material-dashboard-react": "^1.9.0"
+    "aws-lambda": "^1.0.6",
+    "react-router-dom": "^5.2.0"
   }
 }
