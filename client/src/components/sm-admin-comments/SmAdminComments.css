@@ -1,0 +1,31 @@
+.card-text-user {
+    margin-right: 100px;
+}
+
+
+@media only screen and (max-width: 450px) {
+    .card-item {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+        display: grid;
+    }
+
+    .card-user {
+        padding-right: 0px !important;
+    }
+
+    .MuiListItemAvatar-root {
+        width: 56px !important;
+    }
+
+    .card-text-user {
+        margin-right: auto;
+    }
+
+    .card-actions-user {
+        top: 0px !important;
+        right: 0px !important;
+        position: initial !important;
+        transform: none !important;
+        float: right;
+    }
+}

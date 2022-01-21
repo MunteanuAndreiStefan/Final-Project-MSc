@@ -14,7 +14,6 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import SendIcon from '@material-ui/icons/Send';
-import { deepOrange, deepPurple } from '@mui/material/colors';
 
 class SmMessagesPage extends Component {
     constructor(props) {
@@ -107,7 +106,7 @@ class SmMessagesPage extends Component {
         let className = '';
         if (message.receiver < 0) {
             right = <ListItemAvatar>
-                <Avatar  sx={{ bgcolor: deepPurple[500] }} alt={avatarInitials}>{avatarInitials}</Avatar>
+                <Avatar  sx={{ bgcolor: 'purple' }} alt={avatarInitials}>{avatarInitials}</Avatar>
             </ListItemAvatar>;
             className = 'isNotMeLi';
         } else {

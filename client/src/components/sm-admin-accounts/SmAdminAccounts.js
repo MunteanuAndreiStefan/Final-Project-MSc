@@ -122,7 +122,7 @@ class SmAdminAccounts extends Component {
     }
 
     getAccountCardFromUser = (user) => {
-        return <Card>
+        return <Card className={"admin-card"}>
             <CardHeader
                 avatar={<Avatar aria-label="recipe">{user.avatar}</Avatar>}
                 title={user.full_name}

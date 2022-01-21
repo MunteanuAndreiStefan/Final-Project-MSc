@@ -371,7 +371,7 @@ class SmPost extends Component {
                                         startIcon={<FaceIcon/>}>{this.state.reactionButton.label}
                                 </Button>
                             </CardActions>
-                            <CardContent>
+                            <CardContent className={"comment-area"}>
                                 <div className={"post-comments"}>
                                     {cardComments}
                                 </div>
@@ -389,6 +389,7 @@ class SmPost extends Component {
                                     />
                                     <Button onClick={this.__handleAddComment}
                                             disabled={this.props.currentUser.subscription_id < 3}
+                                            className={"comment-label-button"}
                                             color="primary" startIcon={<ChatBubble/>}>{"Comment"}</Button>
                                 </div>
                             </CardContent>

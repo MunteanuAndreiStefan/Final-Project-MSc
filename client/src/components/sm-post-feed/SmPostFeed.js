@@ -47,7 +47,7 @@ class SmPostFeed extends Component {
         let postsStats = `${this.props.posts !== undefined ? this.props.posts.length : 0} of ${this.props.totalPostCount} visible.`
         return (
             <div className={"sm-post-feed"}>
-                <div className={"sm-line"}>
+                <div className={"sm-line" + " search-element"}>
                     <div id={"search-field"}>
                         <Grid container spacing={1} alignItems="flex-end">
                             <Grid item>

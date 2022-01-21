@@ -7,12 +7,12 @@
 }
 
 .scrollableList {
-
+    height: calc(100vh - 190px);
 }
 
 .scrollableList .MuiList-root {
     overflow-y: scroll;
-    height: 500px;
+    height: 100%;
 }
 
 .interactionable {
@@ -22,6 +22,7 @@
     display: flex;
     width: 270px;
 }
+
 .interactionable .MuiFormControl-root {
     width: 180px;
 }
@@ -32,9 +33,10 @@ ol.MuiList-root.root.MuiList-padding {
     display: flex;
 }
 
+/*iulica
 .scrollableList ul {
     max-width: 350px;
-}
+}*/
 
 .scrollableList .isNotMeLi,
 .scrollableList .isMeLi {

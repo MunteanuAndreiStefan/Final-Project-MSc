@@ -1,63 +1,3 @@
-.sm-admin-questionnaires-top-panel {
-
-}
-
-.w30percent {
-    width: 20%;
-}
-
-.w31percent {
-    width: 31%;
-}
-
-.w40percent {
-    width: 40%;
-}
-
-.w15percent {
-    width: 15%;
-}
-
-.w60percent {
-    width: 60%;
-    margin: 0 30px 0 30px !important;
-}
-
-.w70percent {
-    width: 65%;
-    display: flex;
-}
-
-.w70percent .MuiChip-clickable {
-    margin: 0 5px 5px 5px !important;
-}
-
-.sm-admin-q-row .w70percent {
-    display: flow-root;
-}
-
-.w80percent {
-    width: 90%;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.w80percent .MuiChip-clickable {
-    margin: 0 5px 5px 5px !important;
-}
-
-.answers-list {
-    display: flex;
-    flex-flow: wrap;
-    margin-top: 15px;
-}
-
-.w10percent {
-    width: 10%;
-}
-.w8percent {
-    width: 8%;
-}
 
 .sm-questions {
     margin-top: 20px;
@@ -73,17 +13,60 @@
 }
 
 .sm-fresh-question > * {
-    margin: 0 10px !important;
+    margin: 0 10px;
 }
 
-.sm-admin-q-row .w31percent > * {
-    margin-right: 5px;
+.sm-admin-q-row .form-item {
+    width: 100%;
+    margin: 12px;
+}
+.sm-fresh-question{
+    display: flex;
 }
 
-.sm-admin-q-row .w80percent .MuiChip-root {
-    margin: 0 5px 5px 0;
+.sm-fresh-question .form-item {
+    width: 100%;
+    margin: 12px;
 }
 
-.sm-admin-q-row .w80percent {
-    display: flow-root;
+.action-buttons{
+    width: 50%;
+    display: flex;
+}
+.action-buttons .action-button-add{
+    margin: 0 3px;
+}
+
+.action-buttons .action-button-delete{
+    margin: 0 3px;
+}
+
+.tags-list {
+    width: 50%;
+}
+.answer-list .sm-fresh-question > *{
+    background: #33eaff;
+    margin-bottom: 6px;
+}
+
+@media only screen and (max-width: 900px) {
+    .sm-fresh-question{
+        display: block;
+    }
+    .sm-admin-q-row .form-item{
+        margin: 6px 0;
+    }
+    .action-buttons{
+        width: 100%;
+        display: block;
+    }
+    .action-buttons .action-button-delete,
+    .action-buttons .action-button-add{
+        margin: 6px;
+        width:calc(100% - 12px);
+    }
+    .tags-list {
+        width: 100%;
+        margin: 6px 0 ;
+    }
 }

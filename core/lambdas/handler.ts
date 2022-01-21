@@ -262,8 +262,7 @@ export async function changeSubscription(event: APIGatewayProxyEvent, params: an
 
 export async function addNotificationForUser(event: APIGatewayProxyEvent, params: any, body: any): Promise<APIGatewayProxyResult> {
     try {
-        let user = await UserService.getCurrentUser(params.authorization.email)
-        await NotificationsService.addNotification(body.userId, user.id, body.message, body.type, body.info);
+        await NotificationsService.addNotification(body.userId, body.message, body.type, body.info);
     } catch (err) {
         const typedError = err as NotificationsService.NotificationError
 
@@ -278,39 +277,10 @@ export async function addNotificationForUser(event: APIGatewayProxyEvent, params
         body: '{}'
     }
 }
-
-
-export async function addMessageForUserAsAdmin(event: APIGatewayProxyEvent, params: any, body: any): Promise<APIGatewayProxyResult> {
-    try {
-        let user = await UserService.getCurrentUser(params.authorization.email);
-        if (user.type != 'ADMIN') {
-            return {
-                statusCode: 403,
-                body: "User has no right to call this API."
-            };
-        }
-        let message = body.message;
-        await NotificationsService.addNotification(message.receiver, -2, message.text, 'message', params.authorization.email);
-    } catch (err) {
-        const typedError = err as NotificationsService.NotificationError
-
-        return {
-            statusCode: typedError.status ?? 500,
-            body: typedError.error ?? "Something went wrong"
-        }
-    }
-
-    return {
-        statusCode: 201,
-        body: '{}'
-    }
-}
-
 
 export async function addAdminMessage(event: APIGatewayProxyEvent, params: any, body: any): Promise<APIGatewayProxyResult> {
     try {
-        let user = await UserService.getCurrentUser(params.authorization.email);
-        await NotificationsService.addNotification(-2, user.id, body.message, 'message', params.authorization.email);
+        await NotificationsService.addNotification(-2, body.message, 'message', params.authorization.email);
     } catch (err) {
         const typedError = err as NotificationsService.NotificationError
 
@@ -356,30 +326,6 @@ export async function getNotificationForUser(event: APIGatewayProxyEvent, params
     } catch (err) {
         const typedError = err as NotificationsService.NotificationError
 
-        return {
-            statusCode: typedError.status ?? 500,
-            body: typedError.error ?? "Something went wrong"
-        }
-    }
-}
-
-export async function getMessagesForUser(event: APIGatewayProxyEvent, params: any): Promise<APIGatewayProxyResult> {
-    try {
-        const user = await UserService.getCurrentUser(params.authorization.email)
-        const messages = await NotificationsService.getMessagesForUserWithId(user.user_internal_id);
-
-        return {
-            statusCode: 200,
-            body: JSON.stringify(messages)
-        }
-    } catch (err) {
-        const typedError = err as NotificationsService.NotificationError
-        if (typedError.status == 404) {
-            return {
-                statusCode: 200,
-                body: JSON.stringify([])
-            }
-        }
         return {
             statusCode: typedError.status ?? 500,
             body: typedError.error ?? "Something went wrong"

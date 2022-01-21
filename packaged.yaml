@@ -60,7 +60,7 @@ Resources:
     Properties:
       Handler: handler.hello
       Runtime: nodejs10.x
-      CodeUri: s3://cf-templates-1j38krxlf5m0l-eu-west-1/b9e6643741679f835e43f1ecf1f93d2b
+      CodeUri: s3://cf-templates-1j38krxlf5m0l-eu-west-1/659466f2ba5b473026dbb1beba3ee324
       Policies:
       - AmazonS3FullAccess
       - AWSLambdaBasicExecutionRole

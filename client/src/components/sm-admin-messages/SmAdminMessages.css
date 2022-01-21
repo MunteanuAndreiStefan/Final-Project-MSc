@@ -12,7 +12,7 @@
 
 .scrollableList .MuiList-root {
     overflow-y: scroll;
-    height: 500px;
+    height: 100%;
 }
 
 .interactionable {
@@ -22,6 +22,20 @@
     display: flex;
     width: 270px;
 }
+
 .interactionable .MuiFormControl-root {
     width: 180px;
 }
+
+.admin-user-list {
+    overflow-y: scroll;
+    height: calc(100% - 50px);
+}
+
+
+@media only screen and (max-width: 900px) {
+    .admin-dashboard .scrollableList {
+        max-height: calc(100vh - 330px);
+    }
+}
+

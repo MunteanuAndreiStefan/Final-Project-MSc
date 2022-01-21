@@ -121,7 +121,7 @@ class SmQuestionnaire extends Component {
                 <MoreVertIcon onClick={this.__handleOpenOptionsMenu}/>
             </IconButton> : null;
         return (
-            <div>
+            <div className={"questionnaire-block"}>
                 <SmAlert alert={this.state.alert} handleClose={this.handleAlertClose}/>
 
                 <Card>

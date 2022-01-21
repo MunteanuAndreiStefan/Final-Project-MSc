@@ -3,7 +3,7 @@ import config from './config';
 let AUTHORIZATION = '';
 
 const API = {
-    HOST_AND_PORT: config.server.LOCAL,
+    HOST_AND_PORT: config.server.AWS,
     PATHS: {
         POST: {
             GET_ALL_BY_USER: '/posts',

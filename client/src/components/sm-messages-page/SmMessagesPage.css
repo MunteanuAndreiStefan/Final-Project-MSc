@@ -7,12 +7,12 @@
 }
 
 .scrollableList {
-
+height: calc(100vh - 190px);
 }
 
 .scrollableList .MuiList-root {
     overflow-y: scroll;
-    height: 500px;
+    height: 100%;
 }
 
 .interactionable {
@@ -33,7 +33,7 @@ ol.MuiList-root.root.MuiList-padding {
 }
 
 .scrollableList ul {
-    max-width: 350px;
+    /*max-width: 350px;*/
 }
 
 .scrollableList .isNotMeLi,

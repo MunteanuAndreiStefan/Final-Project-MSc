@@ -20,10 +20,9 @@ class SmAdminAnswer extends Component {
 
     getTextAnswer = (answer) => {
         return <TextField
-            className={""}
+            className={"text-field-answer"}
             id="outlined-multiline-static"
             label="Text"
-            variant="outlined"
             value={this.props.answer.text}
             onChange={(event) => this.props.handleTextChange(answer, event)}
         />
@@ -31,10 +30,9 @@ class SmAdminAnswer extends Component {
 
     getScaleAnswer = (answer) => {
         return <TextField
-            className={""}
+            className={"text-field-answer"}
             id="outlined-multiline-static"
             label="Scale value"
-            variant="outlined"
             type="number"
             value={this.props.answer.scale_value}
             onChange={(event) => this.props.handleScaleChange(answer, event)}
@@ -91,9 +89,9 @@ class SmAdminAnswer extends Component {
 
     render() {
         return (
-            <div className={""}>
+            <div className={"answer-card"}>
                 <Card className={""}>
-                    <CardContent className={"content-flex"}>
+                    <CardContent className={"answer-item"}>
                         <IconButton aria-label="delete"
                                     onClick={() => this.props.handleDeleteAnswer(this.props.answer)}>
                             <DeleteIcon fontSize="large"/>

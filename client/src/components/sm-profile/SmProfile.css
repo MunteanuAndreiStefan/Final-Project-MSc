@@ -11,14 +11,13 @@
 }
 
 .sm-profile-init {
-    margin: 3% 20% 0 3%;
     display: table;
     margin-right: auto;
     margin-left: auto;
-    width: 800px;
+    width: 80%
 }
 
-.sm-profile-init .sm-profile-header-info{
+.sm-profile-init .sm-profile-header-info {
     margin: 20px 0 20px 0;
 }
 
@@ -30,8 +29,23 @@
     width: 90%;
 }
 
+.subscription-cards {
+    margin-bottom: 15px;
+    width: 24%;
+    position: relative;
+    height: 200px;
+}
+
+.subscription-cards .MuiCardContent-root {
+    padding: 8px 16px;
+}
+
+.subscription-cards .MuiCardContent-root:last-child {
+    padding-bottom: 0;
+}
+
 .sm-profile-subscriptions {
-    margin: 10px 0;
+    /*margin: 10px 0;*/
     display: flex;
     justify-content: space-between;
 }
@@ -40,9 +54,9 @@
     background-color: beige !important;
 }
 
-.sm-profile-subscription-footer {
+/*.sm-profile-subscription-footer {
     margin-bottom: 20px;
-}
+}*/
 
 .float_left {
     float: left;
@@ -50,4 +64,69 @@
 
 .float_right {
     float: right;
+}
+
+.price {
+    line-height: 3;
+}
+
+.sm-profile-subscription-footer {
+    position: absolute;
+    bottom: 6px;
+    width: 100%;
+    border-top: 1px solid #777;
+}
+
+/*.MuiCardHeader-root {
+    padding: 0 !important;
+}*/
+
+.action-button-bar {
+    width: 100%;
+    display: inline-block;
+}
+
+.action-button {
+    float: right;
+}
+
+/*iulica resize*/
+@media only screen and (max-width: 900px) {
+    .sm-profile-init {
+        width: 90%;
+    }
+
+    .MuiGrid-container {
+        display: block;
+    }
+
+    .MuiGrid-spacing-xs-3 > .MuiGrid-item {
+        display: contents;
+    }
+
+    .MuiGrid-spacing-xs-3 {
+        margin: 0;
+    }
+
+    .sm-profile .MuiFormControl-root {
+        width: 100%;
+        margin-bottom: 12px;
+    }
+
+    .sm-profile-subscriptions {
+        display: block;
+    }
+
+    .subscription-cards {
+        width: 100%;
+    }
+
+    .MuiGrid-spacing-xs-3 {
+        width: auto !important;
+        margin: 0 !important;
+    }
+
+    .profile-header {
+        padding: 16px;
+    }
 }

@@ -41,7 +41,7 @@ import ContactSupportIcon from '@material-ui/icons/ContactSupport';
 import {ClearAll, DynamicFeed, Info, Message, Tune} from "@material-ui/icons";
 
 function Feed(props) {
-    debugger
+    // debugger iulica
     return <SmPostFeed
         currentUser={props.state.currentUser}
         totalPostCount={props.state.totalPostCount}
@@ -52,7 +52,7 @@ function Feed(props) {
 
 function Questionnaires(props) {
 
-    debugger
+    // debugger iulica
     return <SmQuestionnaires
         isAdmin={props.state.currentUser.type === 'ADMIN'}
         questionnaires={props.state.questionnaires}
@@ -62,7 +62,7 @@ function Questionnaires(props) {
 }
 
 function Experiences(props) {
-    debugger
+    // debugger iulica
     return <SmExperience
         categories={props.state.categories}
         currentUser={props.state.currentUser}
@@ -75,7 +75,7 @@ function About() {
 }
 
 function Profile(props) {
-    debugger
+    // debugger iulica
     return <SmProfile currentUser={props.state.currentUser}
                       subscriptions={props.state.subscriptions}
                       userWasNotInit={false}
@@ -85,7 +85,7 @@ function Profile(props) {
 }
 
 function AdminPanel(props) {
-    debugger
+    // debugger iulica
     return <SmAdminPanel></SmAdminPanel>;
 }
 

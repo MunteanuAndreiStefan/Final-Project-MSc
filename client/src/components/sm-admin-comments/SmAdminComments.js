@@ -100,18 +100,20 @@ class SmAdminComments extends Component {
                         let currentUser = this.state.users.find((user) => user.user_internal_id === comment.user_internal_id);
 
                         return (
-                            <ListItem button key={comment.id}>
-                                <ListItemAvatar>
-                                    <Avatar aria-label="recipe" className={"card-avatar"}>
-                                        {currentUser.avatar}
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText primary={currentUser.full_name} secondary={comment.text}/>
-                                <ListItemSecondaryAction>
-                                    <Button color="primary" onClick={this.approveComment(comment.id)}>Approve</Button>
-                                    <Button color="secondary" onClick={this.deleteComment(comment.id)}>Delete</Button>
-                                </ListItemSecondaryAction>
-                            </ListItem>
+                            <div className={"card-item"}>
+                                <ListItem button key={comment.id} className={"card-user"}>
+                                    <ListItemAvatar>
+                                        <Avatar aria-label="recipe" className={"card-avatar"}>
+                                            {currentUser.avatar}
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText  className={"card-text-user"} primary={currentUser.full_name} secondary={comment.text}/>
+                                    <ListItemSecondaryAction className={"card-actions-user"}>
+                                        <Button color="primary" className={"button-action"} onClick={this.approveComment(comment.id)}>Approve</Button>
+                                        <Button color="secondary" className={"button-action"} onClick={this.deleteComment(comment.id)}>Delete</Button>
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+                            </div>
                         )
                     })}
                 </List>

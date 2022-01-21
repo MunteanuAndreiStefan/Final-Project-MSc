@@ -1,4 +1,3 @@
-
 DROP SCHEMA IF EXISTS social_media_db CASCADE;
 CREATE SCHEMA social_media_db;
 
@@ -224,13 +223,12 @@ CREATE TABLE social_media_db.post_tag
 DROP TABLE IF EXISTS social_media_db.notification;
 CREATE TABLE social_media_db.notification
 (
-    id          		         serial       NOT NULL,
-    receiver                     numeric      NOT NULL,
-    sender                       numeric      NOT NULL,
-    "timestamp" 		         timestamp    NOT NULL,
-    message     		         varchar(255) NOT NULL,
-    type        		         varchar(255) NOT NULL,
-    info        		         varchar(255),
+    id          		serial       NOT NULL,
+    user_internal_id    numeric      NOT NULL,
+    "timestamp" 		timestamp    NOT NULL,
+    message     		varchar(255) NOT NULL,
+    type        		varchar(255) NOT NULL,
+    info        		varchar(255),
     CONSTRAINT notification_id_pk PRIMARY KEY (id)
 );
 
@@ -245,7 +243,7 @@ INSERT INTO social_media_db.subscription (name, description, post_limit, questio
 VALUES ('Gold tier', 'This contains a lot of features.', 100, 50, TRUE, TRUE, 'Bussines hours', 17.99);
 INSERT INTO social_media_db.subscription (name, description, post_limit, questionnaire_limit, comments_active,
                                           reactions_active, "support", price)
-VALUES ('Platinum tier', 'This contains all the features.', 99999999, 99999999, TRUE, TRUE, '24/7', 29.99);
+VALUES ('Pltinum tier', 'This contains all the features.', -1, -1, TRUE, TRUE, '24/7', 29.99);
 
 INSERT INTO social_media_db."user"
 (subscription_id, "type", email, username, first_name, last_name, address, city, country, zip_code, theme, "timestamp", active)
@@ -354,7 +352,7 @@ INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", pr
 INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", priority, "timestamp") VALUES (4, 3, 'Pompeo to resume Madison Dinners despite controversy', 5, CURRENT_TIMESTAMP);
 INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", priority, "timestamp") VALUES (1, 3, 'Some State Department officials have complained about the dinners, saying they have little to do with diplomacy and will unduly burden the staff amid a pandemic.', 7, CURRENT_TIMESTAMP);
 INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", priority, "timestamp") VALUES (2, 1, 'Trump team says history will vindicate him on coronavirus', 5, CURRENT_TIMESTAMP);
-INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", priority, "timestamp") VALUES (3, 2, 'Top advisers blame everyone but the president for the nation�s plight during the pandemic.', 4, CURRENT_TIMESTAMP);
+INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", priority, "timestamp") VALUES (3, 2, 'Top advisers blame everyone but the president for the nation’s plight during the pandemic.', 4, CURRENT_TIMESTAMP);
 INSERT INTO social_media_db.post (user_internal_id, post_category_id, "text", priority, "timestamp") VALUES (4, 1, 'The pandemic has left airlines hard-hit amid safety concerns and as other countries bar American travelers from entry.', 5, CURRENT_TIMESTAMP);
 
 INSERT INTO social_media_db.resource (post_id, resource, "type", "timestamp") VALUES (1, 'https://static.toiimg.com/thumb/msid-67586673,width-800,height-600,resizemode-75,imgsize-3918697,pt-32,y_pad-40/67586673.jpg', 'IMAGE', CURRENT_TIMESTAMP);
@@ -458,5 +456,5 @@ VALUES (6, 1, 15);
 INSERT INTO social_media_db.post_tag (tag_id, post_id, interest)
 VALUES (3, 2, 15);
 
-INSERT INTO social_media_db.notification (receiver, sender, "timestamp", message, type, info)
-VALUES (-1, -3, CURRENT_TIMESTAMP, 'Welcome everybody', 'alert', NULL);
+INSERT INTO social_media_db.notification (user_internal_id, "timestamp", message, type, info)
+VALUES (-1, CURRENT_TIMESTAMP, 'Welcome everybody', 'alert', NULL);

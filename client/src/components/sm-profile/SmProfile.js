@@ -9,7 +9,7 @@ import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import { red } from '@material-ui/core/colors';
+import {red} from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -76,17 +76,18 @@ class SmProfile extends Component {
             let subscriptionIsSelected = subscription.id == this.props.currentUser.subscription_id;
             let className = subscriptionIsSelected ? "sm-profile-subscription-selected" : null;
             let selectButton = subscriptionIsSelected ? null :
-                <Button onClick={(event) => this.__handleSubscriptionSelection(event, subscription.id)} color="primary">Select</Button>;
+                <Button onClick={(event) => this.__handleSubscriptionSelection(event, subscription.id)}
+                        color="primary">Select</Button>;
 
-            return <Card key={subscription.id} className={className}>
-                <CardHeader
+            return <Card key={subscription.id} className={className + " subscription-cards"}>
+                <CardHeader>
                     title={subscription.name}
                     subheader={subscription.description}
                     titleTypographyProps={{variant: "h5"}}
                     subheaderTypographyProps={{variant: "h6"}}
-                />
+                </CardHeader>
                 <CardContent>
-                    <div style={{display: "block", height: 60}}>
+                    <div>
                         <Typography variant="subtitle1" component="p">
                             {subscription.post_limit === 99999999 ? 'Unlimited' : subscription.post_limit} Posts
                         </Typography>
@@ -94,10 +95,12 @@ class SmProfile extends Component {
                             {subscription.questionnaire_limit === 99999999 ? 'Unlimited' : subscription.questionnaire_limit} Questionnaires
                         </Typography>
                         {
-                            subscription.comments_active ? <Typography variant="subtitle1" component="p">Comment capability</Typography> : null
+                            subscription.comments_active ?
+                                <Typography variant="subtitle1" component="p">Comment capability</Typography> : null
                         }
                         {
-                            subscription.reactions_active ? <Typography variant="subtitle1" component="p">Reaction capability</Typography> : null
+                            subscription.reactions_active ?
+                                <Typography variant="subtitle1" component="p">Reaction capability</Typography> : null
                         }
                         <Typography variant="subtitle1" component="p">
                             {subscription.support} Support
@@ -105,7 +108,7 @@ class SmProfile extends Component {
                     </div>
                 </CardContent>
                 <CardContent className={"sm-profile-subscription-footer"}>
-                    <div className={"float_left"}>
+                    <div className={"float_left" + " price"}>
                         ${subscription.price}
                     </div>
                     <div className={"float_right"}>
@@ -124,15 +127,17 @@ class SmProfile extends Component {
 
     render() {
         let subscriptions = this.getSubscriptionsDiv();
-        let headerInfo = this.props.userWasNotInit ? <Typography variant="h4" component="h2" className={"sm-profile-header-info"}>
-            Before we continue, please complete the following details
-        </Typography> : null;
+        let headerInfo = this.props.userWasNotInit ?
+            <Typography variant="h4" component="h2" className={"sm-profile-header-info"}>
+                Before we continue, please complete the following details
+            </Typography> : null;
         return (
             <div className={this.props.userWasNotInit ? "sm-profile-init" : "sm-profile"}>
                 {headerInfo}
                 <Card>
                     <CardHeader titleTypographyProps={{variant: "h5"}}
-                        title={this.props.currentUser.full_name}
+                                title={this.props.currentUser.full_name}
+                                className={"profile-header"}
                     />
                     <CardContent>
                         <Grid container spacing={3}>
@@ -203,10 +208,12 @@ class SmProfile extends Component {
                     </CardContent>
                 </Card>
 
-                <Button variant="contained" color="primary"
-                        onClick={this.__handleContentChange}>
-                    {this.state.actionButtonName}
-                </Button>
+                <div className={"action-button-bar"}>
+                    <Button variant="contained" color="primary" className={"action-button"}
+                            onClick={this.__handleContentChange}>
+                        {this.state.actionButtonName}
+                    </Button>
+                </div>
 
                 <div className={"sm-profile-subscriptions"}>
                     {subscriptions}

@@ -273,7 +273,7 @@ class SmAdminPosts extends Component {
                         </div>
                         <div className={"sm-admin-posts-right-panel"}>
                             <div className={"sm-admin-row"}>
-                                <FormControl>
+                                <FormControl className={"category-element"}>
                                     <InputLabel id="demo-simple-select-label">Category</InputLabel>
                                     <Select
                                         labelId="demo-simple-select-label"

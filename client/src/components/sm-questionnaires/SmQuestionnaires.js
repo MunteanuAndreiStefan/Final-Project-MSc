@@ -59,7 +59,8 @@ class SmQuestionnaires extends Component {
             .filter((questionnaire) => questionnaire.title.toLowerCase().includes(searchElement))
             .map((questionnaire, index) => {
                 let panelName = 'panel' + questionnaire.id;
-                return <Accordion questionnaire={questionnaire} expanded={this.state.accordionControlExpand === panelName}
+                return <Accordion questionnaire={questionnaire}
+                                  expanded={this.state.accordionControlExpand === panelName}
                                   onChange={this.__handleAccordionChange(panelName)}>
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon/>}
@@ -81,7 +82,7 @@ class SmQuestionnaires extends Component {
                         </div>
                     </AccordionDetails>
                 </Accordion>;
-        });
+            });
 
         let selectedIndex = this.state.selectedQuestionnaireIndex;
         let currentQuestionnaireComponent = selectedIndex < 0 ? null :
@@ -100,7 +101,7 @@ class SmQuestionnaires extends Component {
                                 <div id={"search-field"}>
                                     <Grid container spacing={1} alignItems="flex-end">
                                         <Grid item>
-                                            <SearchIcon />
+                                            <SearchIcon/>
                                         </Grid>
                                         <Grid item>
                                             <TextField
@@ -116,7 +117,10 @@ class SmQuestionnaires extends Component {
                                 </div>
                             </div>
 
-                            {questionnaireList}
+                            <div className={"block-of-categories"}>
+
+                                {questionnaireList}
+                            </div>
                         </div>
                         <div className={"sm-questionnaires-right-panel"}>
                             {currentQuestionnaireComponent}

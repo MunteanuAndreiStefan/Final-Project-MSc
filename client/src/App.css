@@ -3,113 +3,130 @@
 }
 
 .AppNavbar {
-	height: 60px;
-	box-shadow: 17px 15px 26px 0 rgba(5,5,5,0.22);
+    height: 60px;
+    box-shadow: 17px 15px 26px 0 rgba(5, 5, 5, 0.22);
 }
 
 .AppContainer .navbar-brand {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .AppContainer nav {
-	margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 .sm-navbar {
-	height: 7%;
-	min-height: 50px;
+    height: 7%;
+    min-height: 50px;
 }
 
 .sm-content {
-	height: 90%;
-	display: flex;
+    height: 90%;
+    display: flex;
 }
 
 .sm-sidebar {
-	width: 15%;
-	height: 95vh;
-	min-width: 180px;
-	background-color: #1769aa;
+    width: 15%;
+    height: 95vh;
+    min-width: 180px;
+    background-color: #1769aa;
 }
 
-.sm-dashboard {
+/*iulica*/
+/*.sm-dashboard {
 	width: max-content;
 	min-width: 1000px;
 	padding: 25px;
+}*/
+.sm-dashboard {
+    width: auto;
+    margin: 0 !important;
 }
 
-.sm-dashboard>div {
-	overflow-y: auto;
-	width: auto;
-	max-width: 80vw;
+.sm-dashboard > div {
+    overflow-y: auto;
+    width: 80%;
+    max-width: 1200px !important;
+    margin: 12px auto;
+    height: 85vh;
+    /*iulica*/
 }
 
 .sm-sidebar, .sm-dashboard {
-	padding-top: 15px;
+    padding-top: 15px;
 }
 
+/*iulica
 #search-field {
-	margin-bottom: 20px;
-}
-#search-field .MuiFormControl-root{
-	width: 300px;
+    margin-bottom: 20px;
+}*/
+
+#search-field .MuiFormControl-root {
+    max-width: 300px;
+    min-width: 100px;
 }
 
 .sm-row {
-	display: flex;
+    display: flex;
 }
 
 .sm-left-panel {
-	z-index: 1;
-	left: 0;
-	overflow-x: hidden;
-	height: 100%;
+    z-index: 1;
+    left: 0;
+    overflow-x: hidden;
+    height: 100%;
 }
 
 .sm-left-panel a {
-	padding: 6px 8px 6px 16px;
-	text-decoration: none;
-	font-size: 20px;
-	color: white;
-	display: block;
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 20px;
+    color: white;
+    display: block;
 }
 
 .sm-left-panel a:hover {
-	color: #33eaff;
+    color: #33eaff;
 }
 
 .sm-left-panel > * {
-	margin: 10px 0 10px 0;
+    margin: 10px 0 10px 0;
 }
 
 .MuiPaper-root.MuiCard-root.card-root.MuiPaper-elevation1.MuiPaper-rounded {
-	max-width: 100%;
+    max-width: 100%;
 }
 
 .MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-6 {
-	display: none;
+    display: none;
 }
+
 
 .MuiChip-outlinedPrimary {
-	color: white !important;
-	border: 1px solid white !important;
+    color: white !important;
+    border: 1px solid #f7f7f7 !important;
 }
 
-.notification-icon-wrapper>button {
-	color: white !important;
+/*.MuiChip-outlined{
+    background-color: #3f51b5 !important;
+    opacity: 0.7;
+}*/
+
+.notification-icon-wrapper > button {
+    color: white !important;
 }
 
 .top-grid {
-	display: contents !important;
+    display: contents !important;
 }
 
 #primary-search-account-menu > div.MuiPaper-root.MuiMenu-paper.MuiPopover-paper.MuiPaper-elevation8.MuiPaper-rounded {
-	top: 54px !important;
+    top: 54px !important;
 }
 
 .MuiChip-root .MuiChip-avatarColorPrimary {
-	background-color: greenyellow !important;
-	color: black !important;
+    background-color: greenyellow !important;
+    color: black !important;
 }
 
 /*#sm-notifications > div.MuiPaper-root.MuiMenu-paper.Component-paper-1.MuiPopover-paper.MuiPaper-elevation0.MuiPaper-rounded > ul > li {*/
@@ -117,27 +134,60 @@
 /*}*/
 
 #root > div > div > header > div > div > div:nth-child(2) > div > div {
-	font-size: 15px;
+    font-size: 15px;
 }
 
 .root {
-	width: 100%;
+    width: 100%;
 }
+
+/*.MuiBox-root-21 {
+    padding: 0px !important;
+}
+
+.MuiBox-root-34 {
+    padding: 0px !important;
+}
+
+.MuiBox-root-15 {
+    padding: 0px !important;
+
+}*/
 
 #scrollable-force-tabpanel-1,
-#scrollable-force-tabpanel-0>div{
-	overflow-y: auto;
-	height: 80vh;
-}
+/*#scrollable-force-tabpanel-0 > div {
+    overflow-y: auto;
+    height: 80vh;
+}*/
 
 .sidebar-links .MuiSvgIcon-root {
-	font-size: 1.5em;
+    font-size: 1.5em;
 }
 
-.sidebar-links .MuiTypography-body1{
-	font-size: 1.7rem;
+.sidebar-links .MuiTypography-body1 {
+    font-size: 1.7rem;
 }
 
 a .MuiListItemIcon-root {
-	font-size: 18px;
+    font-size: 18px;
 }
+
+.admin-dashboard .scrollableList {
+    height: calc(100vh - 300px);
+}
+
+@media only screen and (max-width: 900px) {
+    .sm-dashboard > div {
+        width: 90%;
+    }
+
+    .MuiPaper-root.MuiCard-root.card-root.MuiPaper-elevation1.MuiPaper-rounded {
+        display: block;
+    }
+
+    .post-comments {
+        overflow-y: scroll;
+        max-height: 300px;
+    }
+}
+

@@ -1,4 +1,4 @@
-.sm-admin-questionnaires-top-panel {
+/*.sm-admin-questionnaires-top-panel {
 
 }
 
@@ -40,11 +40,13 @@
     width: 90%;
     display: flex;
     justify-content: flex-end;
-}
+}*/
+/*
 
 .w80percent .MuiChip-clickable {
     margin: 0 5px 5px 5px !important;
 }
+*/
 
 .answers-list {
     display: flex;
@@ -55,6 +57,7 @@
 .w10percent {
     width: 10%;
 }
+
 .w8percent {
     width: 8%;
 }
@@ -69,21 +72,65 @@
 }
 
 .sm-admin-q-row {
-    display: flex;
+    display: block;
 }
 
 .sm-fresh-question > * {
-    margin: 0 10px !important;
+    margin: 0 10px;
 }
 
-.sm-admin-q-row .w31percent > * {
-    margin-right: 5px;
+
+/*.sm-admin-q-row .form-item{
+    width: 100%;
+    margin-bottom: 12px;
+}*/
+/*
+.sm-admin-q-row .form-item .title{
+    width: 40%;
+    padding: 0 5px;
+    box-sizing: border-box;
 }
 
-.sm-admin-q-row .w80percent .MuiChip-root {
-    margin: 0 5px 5px 0;
+.sm-admin-q-row .form-item .description{
+    width: 40%;
+    padding: 0 5px;
+    box-sizing: border-box;
 }
 
-.sm-admin-q-row .w80percent {
-    display: flow-root;
+.sm-admin-q-row .form-item .priority{
+    width: 20%;
+    padding: 0 5px;
+    box-sizing: border-box;
+}*/
+@media only screen and (max-width: 900px) {
+    .sm-fresh-question {
+        display: block;
+    }
+
+    .sm-admin-q-row {
+        display: block !important;
+    }
+
+    .sm-admin-q-row .form-item {
+        width: 100%;
+        margin: 6px 0;
+    }
+
+    .sm-fresh-question > * {
+        margin: 0px 0px !important;
+    }
+
+    .card-element {
+        display: block !important;
+    }
+
+    .answers-list {
+        display: block;
+    }
+
+    .add-question {
+        width: 100%;
+    }
 }
+
+

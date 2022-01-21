@@ -307,7 +307,7 @@ class SmAdminQuestionnaires extends Component {
         }
 
         if (!this.tagsAreValid(body.tags)) {
-                return this.handleAlertShow("Please fill in all the tags details...", this.state.alert.types.ERROR);
+            return this.handleAlertShow("Please fill in all the tags details...", this.state.alert.types.ERROR);
         }
 
         let validQuestions = body.questions.filter(q => q.title && q.description && q.type && q.hasOwnProperty('multiple_answers')
@@ -355,26 +355,24 @@ class SmAdminQuestionnaires extends Component {
                         <div className={"sm-admin-questionnaires-top-panel"}>
                             <div className={"sm-admin-q-row"}>
                                 <TextField
-                                    className={"w30percent"}
+                                    className={"form-item" + " title"}
                                     id="outlined-multiline-static"
                                     label="Title"
-                                    variant="outlined"
                                     value={this.state.title}
                                     onChange={this.handleTitleChange}
                                 />
+
                                 <TextField
-                                    className={"w60percent"}
+                                    className={"form-item" + " description"}
                                     id="outlined-multiline-static"
                                     label="Description"
-                                    variant="outlined"
                                     value={this.state.description}
                                     onChange={this.handleDescriptionChange}
                                 />
                                 <TextField
-                                    className={"w10percent"}
+                                    className={"form-item" + "  priority"}
                                     label="Priority"
                                     type="number"
-                                    variant="outlined"
                                     value={this.state.priority}
                                     onChange={this.handlePriorityChange}
                                 />
@@ -386,8 +384,9 @@ class SmAdminQuestionnaires extends Component {
                             </div>
 
                             <div className={"sm-admin-q-row"}>
-                                <div className={"w10percent"}>
+                                <div className={"form-item"}>
                                     <Button
+                                        className={"add-question"}
                                         variant="outlined"
                                         color="primary"
                                         onClick={this.handleAddFreshQuestion}
@@ -396,7 +395,7 @@ class SmAdminQuestionnaires extends Component {
                                         Add Question
                                     </Button>
                                 </div>
-                                <div className={"w80percent"}>
+                                <div className={"form-item"}>
                                     {
                                         this.state.tags.map((tag) => this.getChipFromTag(tag))
                                     }

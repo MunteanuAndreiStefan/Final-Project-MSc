@@ -33,7 +33,7 @@
     background-color: green;
 }
 
-.sm-post-panel{
+.sm-post-panel {
     width: 50%;
 }
 
@@ -42,14 +42,18 @@
 }
 
 .sm-post-interaction-panel-actions {
-    margin-left: 10px;
+    margin-left: 0px;
+}
+
+.comment-area{
+    display: grid;
 }
 
 .sm-post-interaction-panel-actions .MuiSvgIcon-root {
     font-size: 2rem;
 }
 
-.sm-post-panel .MuiSvgIcon-root{
+.sm-post-panel .MuiSvgIcon-root {
     font-size: 2rem;
 }
 
@@ -59,7 +63,7 @@
     margin-bottom: 10px;
 }
 
-.post-comments .MuiCardHeader-root{
+.post-comments .MuiCardHeader-root {
     padding: 6px;
 }
 
@@ -76,8 +80,54 @@
 }
 
 .post-comment-input-field .MuiOutlinedInput-multiline {
-    width: 300px;
+    width: 100%;
     height: 30px;
     margin: 5px 10px 0 0;
 }
 
+.post-comment-input-field{
+    float: left;
+    width: calc(100% - 100px);
+}
+
+.comment-label-button{
+    float: right;
+}
+
+/*iulica resize*/
+@media only screen and (max-width: 900px) {
+    .MuiPaper-root MuiCard-root card-root MuiPaper-elevation1 MuiPaper-rounded {
+        width: 100%;
+        display: block;
+    }
+
+    .sm-post-panel {
+        width: 100%;
+        border-bottom: 1px dashed #f7f7f7;
+    }
+
+    .sm-post-interaction-panel {
+        width: 100%;
+    }
+
+    .post-comments {
+        max-height: 300px;
+        height: auto;
+    }
+
+    .sm-post-interaction-panel-actions {
+        margin: 0;
+    }
+
+    .MuiCardActions-root {
+        padding: 8px 0 !important;
+    }
+
+    .MuiCardContent-root {
+        padding: 8px;
+    }
+
+    .MuiCardContent-root:last-child {
+        padding-bottom: 8px;
+    }
+}

@@ -1,3 +1,25 @@
 .admin-dashboard {
     width: 80vw !important;
 }
+
+.MuiTabs-flexContainer{
+    display: initial;
+}
+
+.MuiTabs-fixed{
+    overflow-x: auto !important;
+}
+
+.MuiTabs-flexContainer {
+    display: initial !important;
+}
+
+
+
+
+@media only screen and (max-width: 450px) {
+    .MuiTabs-flexContainer {
+        display: initial !important;
+    }
+
+}

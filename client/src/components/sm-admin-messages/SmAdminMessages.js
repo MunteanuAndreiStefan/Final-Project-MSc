@@ -185,7 +185,7 @@ class SmAdminMessages extends Component {
                         <div className={"sm-questionnaires-panel"}>
                             <div className={"sm-questionnaires-left-panel"}>
                                 <div className={"sm-line"}>
-                                    <div id={"search-field"}>
+                                    <div id={"search-field" + " search-without-counter"}>
                                         <Grid container spacing={1} alignItems="flex-end">
                                             <Grid item>
                                                 <SearchIcon />
@@ -201,7 +201,9 @@ class SmAdminMessages extends Component {
                                     </div>
                                 </div>
 
-                                {userList}
+                               <div className={"admin-user-list"}>
+                                   {userList}
+                               </div>
                             </div>
                             <div className={"sm-questionnaires-right-panel"}>
                                 {currentQuestionnaireComponent}

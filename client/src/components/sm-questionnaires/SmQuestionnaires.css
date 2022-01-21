@@ -23,16 +23,17 @@
 }
 
 .sm-questionnaires .sm-questionnaires-left-panel {
-    width: 30%;
-    min-width: 500px;
-    overflow-y: scroll;
+    width: 100%;
+    /*min-width: 500px;*/
+    /*overflow-y: scroll;*/
     height: auto;
-    padding: 10px;
+    /*padding: 10px;*/
+    /*iulicaaa*/
 }
 
 .sm-questionnaires .sm-questionnaires-right-panel {
-    width: 70%;
-    margin: 0 15px;
+    width: 100%;
+    margin: 1px;
 }
 
 .sm-questionnaires .sm-questionnaires-right-panel .card-root {
@@ -43,9 +44,10 @@
     display: flow-root !important;
 }
 
+/* iulica
 .sm-line {
     display: flex !important;
-}
+}*/
 
 .sm-left-align {
     float: left;
@@ -55,10 +57,25 @@
     float: right;
 }
 
-.sm-questionnaire-statistics {
-    margin: 25px 0 0 10px;
+.sm-questionnaire-statistics,
+.sm-posts-statistics {
+    margin: 10px;
 }
 
-.sm-posts-statistics {
-    margin: 25px 0 0 10px;
+.block-of-categories {
+    overflow-y: auto;
+    height: auto;
+    max-height: calc(85vh - 70px);
+}
+
+/*iulica resize*/
+@media only screen and (max-width: 900px) {
+    .sm-questionnaires .sm-questionnaires-panel {
+        display: block;
+    }
+
+    .sm-questionnaires .sm-questionnaires-right-panel {
+        margin: 0px;
+        width: calc(100% - 6px);
+    }
 }

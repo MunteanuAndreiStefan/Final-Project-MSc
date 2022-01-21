@@ -33,3 +33,7 @@
     height: auto;
     max-height: 85vh;
 }
+
+.sm-line .search-element{
+    display: block !important;
+}

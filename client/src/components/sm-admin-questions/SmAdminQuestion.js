@@ -147,20 +147,20 @@ class SmAdminQuestion extends Component {
                     <CardContent className={"sm-admin-questionnaires-panel"}>
                         <div className={"sm-fresh-question"}>
                             <TextField
-                                className={"w31percent"}
+                                className={"form-item"}
                                 id="outlined-multiline-static"
                                 label="Title"
                                 value={this.props.question.title}
                                 onChange={this.handleTitleChange}
                             />
                             <TextField
-                                className={"w40percent"}
+                                className={"form-item"}
                                 id="outlined-multiline-static"
                                 label="Description"
                                 value={this.props.question.description}
                                 onChange={this.handleDescriptionChange}
                             />
-                            <FormControl className={"w8percent"}>
+                            <FormControl className={"form-item"}>
                                 <InputLabel id="demo-simple-select-label">Question types</InputLabel>
                                 <Select
                                     labelId="demo-simple-select-label"
@@ -176,7 +176,7 @@ class SmAdminQuestion extends Component {
                                     }
                                 </Select>
                             </FormControl>
-                            <FormControl className={"w8percent"}>
+                            <FormControl className={"form-item"}>
                                 <InputLabel id="demo-simple-select-label">Multiple answers</InputLabel>
                                 <Select
                                     labelId="demo-simple-select-label"
@@ -195,10 +195,10 @@ class SmAdminQuestion extends Component {
                             }
                         </div>
                     </CardContent>
-                    <CardActions>
-                        <div className={"sm-admin-q-row"}>
-                            <div className={"w31percent"}>
+                    <CardActions className={"card-element"}>
+                            <div className={"action-buttons"}>
                                 <Button
+                                    className={"action-button-add"}
                                     variant="outlined"
                                     color="primary"
                                     onClick={() => this.handleAddFreshAnswer()}
@@ -208,6 +208,7 @@ class SmAdminQuestion extends Component {
                                     Add Answer
                                 </Button>
                                 <Button
+                                    className={"action-button-delete"}
                                     variant="outlined"
                                     color="secondary"
                                     onClick={() => this.props.handleDeleteQuestion(this.props.question)}
@@ -216,13 +217,11 @@ class SmAdminQuestion extends Component {
                                     Delete Question
                                 </Button>
                             </div>
-                            <div className={"w70percent"}>
+                            <div className={"tags-list"}>
                                 {
                                     this.props.question.tags.map((tag) => this.getChipFromTag(tag, "small"))
                                 }
                             </div>
-                        </div>
-
                     </CardActions>
                 </Card>
             </div>

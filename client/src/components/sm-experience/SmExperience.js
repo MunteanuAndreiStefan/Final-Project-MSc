@@ -89,9 +89,9 @@ class SmExperience extends Component {
                     <div className={"sm-experience-panel"}>
                         <div className={"sm-experience-left-panel"}>
                             <div className={"sm-line"}>
-                                <div id={"search-field"}>
+                                <div id={"search-field" + " search-without-counter"}>
                                     <Grid container spacing={1} alignItems="flex-end">
-                                        <Grid item>
+                                        <Grid item className={"icon-search"}>
                                             <SearchIcon />
                                         </Grid>
                                         <Grid item>
