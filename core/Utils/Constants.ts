@@ -2,6 +2,7 @@ import {ALGORITHM} from './ALGORITHM_QUERIES'
 
 const SCHEMAS = {
     SOCIAL_MEDIA_DB: {
+        TEST: 'A',
         NAME: 'social_media_db',
         TABLES: {
             QUESTIONNAIRE: {

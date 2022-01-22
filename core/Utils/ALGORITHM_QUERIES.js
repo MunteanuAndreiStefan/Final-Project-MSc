@@ -83,8 +83,12 @@ export const ALGORITHM = {
                 ORDER BY p.priority DESC, p."timestamp" DESC`;
     },
     GET_BULK: (email, recommendedPostIds) => {
+        let notInCondition = ' ';
+        if (recommendedPostIds !== undefined && recommendedPostIds !== null && recommendedPostIds.length > 0) {
+            notInCondition = `WHERE p.id NOT IN (${recommendedPostIds.join(', ')})`;
+        }
         return `SELECT p.id, p.post_category_id, p.user_internal_id, p."text", p.priority, p."timestamp" FROM social_media_db.post p
-                WHERE p.id NOT IN (${recommendedPostIds.join(', ')})
+                ${notInCondition}
                 ORDER BY priority DESC, "timestamp" DESC 
                 LIMIT (
                  SELECT s.post_limit FROM social_media_db."user" u 

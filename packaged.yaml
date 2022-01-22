@@ -38,6 +38,8 @@ Resources:
         - Password
         - Value
     DeletionPolicy: Snapshot
+    Metadata:
+      SamResourceId: SocialMediaMasterDB
   SocialMediaAPI:
     Type: AWS::Serverless::Api
     Properties:
@@ -55,12 +57,14 @@ Resources:
               Fn::GetAtt:
               - SocialMediaCognitoUserPool
               - Arn
+    Metadata:
+      SamResourceId: SocialMediaAPI
   SocialMediaCore:
     Type: AWS::Serverless::Function
     Properties:
       Handler: handler.hello
       Runtime: nodejs10.x
-      CodeUri: s3://cf-templates-1j38krxlf5m0l-eu-west-1/659466f2ba5b473026dbb1beba3ee324
+      CodeUri: s3://cf-templates-1j38krxlf5m0l-eu-west-1/741acc9794fa836ad428159cd4ee8431
       Policies:
       - AmazonS3FullAccess
       - AWSLambdaBasicExecutionRole
@@ -100,6 +104,8 @@ Resources:
               Ref: SocialMediaAPI
             Path: /{proxy+}
             Method: ANY
+    Metadata:
+      SamResourceId: SocialMediaCore
   SocialMediaCognitoUserPool:
     Type: AWS::Cognito::UserPool
     Properties:
@@ -118,6 +124,8 @@ Resources:
       - AttributeDataType: String
         Name: email
         Required: false
+    Metadata:
+      SamResourceId: SocialMediaCognitoUserPool
   SocialMediaCognitoUserDomain:
     Type: AWS::Cognito::UserPoolDomain
     Properties:
@@ -125,6 +133,8 @@ Resources:
         Ref: SocialMediaAPI
       UserPoolId:
         Ref: SocialMediaCognitoUserPool
+    Metadata:
+      SamResourceId: SocialMediaCognitoUserDomain
   CognitoUserPoolClient:
     Type: AWS::Cognito::UserPoolClient
     Properties:
@@ -144,6 +154,8 @@ Resources:
       - COGNITO
       UserPoolId:
         Ref: SocialMediaCognitoUserPool
+    Metadata:
+      SamResourceId: CognitoUserPoolClient
   PreSignupLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -153,6 +165,8 @@ Resources:
       MemorySize: 128
       Runtime: nodejs10.x
       Timeout: 3
+    Metadata:
+      SamResourceId: PreSignupLambdaFunction
   LambdaCognitoUserPoolExecutionPermission:
     Type: AWS::Lambda::Permission
     Properties:
@@ -164,6 +178,8 @@ Resources:
       Principal: cognito-idp.amazonaws.com
       SourceArn:
         Fn::Sub: arn:${AWS::Partition}:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${SocialMediaCognitoUserPool}
+    Metadata:
+      SamResourceId: LambdaCognitoUserPoolExecutionPermission
   S3Bucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -173,6 +189,8 @@ Resources:
         ErrorDocument: error.html
       BucketName: social-media-app-hosting-bucket
     DeletionPolicy: Retain
+    Metadata:
+      SamResourceId: S3Bucket
   BucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
@@ -192,12 +210,16 @@ Resources:
               - /*
       Bucket:
         Ref: S3Bucket
+    Metadata:
+      SamResourceId: BucketPolicy
   MainS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
       AccessControl: PublicRead
       BucketName: social-media-app-main-bucket
     DeletionPolicy: Retain
+    Metadata:
+      SamResourceId: MainS3Bucket
   MainBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
@@ -217,6 +239,8 @@ Resources:
               - /*
       Bucket:
         Ref: MainS3Bucket
+    Metadata:
+      SamResourceId: MainBucketPolicy
 Outputs:
   Region:
     Description: Region
